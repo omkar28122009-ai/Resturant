@@ -1,1316 +1,393 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Customer Portal | Premium Restaurant Marketplace</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* ==========================================================================
-           1. DESIGN SYSTEM & CSS VARIABLES
-           ========================================================================== */
-        :root {
-            --bg-base: #0B0F12;
-            --bg-surface: #12181F;
-            --bg-card: #182029;
-            --bg-elevated: #222C38;
-            --glass-bg: rgba(24, 32, 41, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.08);
-
-            --accent-primary: #10B981; /* Emerald */
-            --accent-primary-hover: #059669;
-            --accent-primary-glow: rgba(16, 185, 129, 0.25);
-            
-            --accent-gold: #F59E0B; /* Champagne / Gold */
-            --accent-gold-glow: rgba(245, 158, 11, 0.2);
-
-            --text-main: #F9FAFB;
-            --text-muted: #9CA3AF;
-            --text-dark: #111827;
-
-            --status-open: #10B981;
-            --status-closed: #EF4444;
-            --status-busy: #F59E0B;
-            --status-paused: #6B7280;
-
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-full: 9999px;
-
-            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 25px var(--accent-primary-glow);
-            
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --font-heading: 'Playfair Display', serif;
-
-            --sidebar-width: 280px;
-            --header-height: 72px;
-            --bottom-nav-height: 68px;
-        }
-
-        /* Reset & Base Styles */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            font-size: 15px;
-            line-height: 1.5;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        a { color: inherit; text-decoration: none; }
-        button { cursor: pointer; border: none; outline: none; background: none; font-family: inherit; color: inherit; }
-        input, select, textarea { font-family: inherit; color: inherit; border: none; outline: none; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: var(--radius-full); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-        /* App Layout Shell */
-        #appShell {
-            display: flex;
-            min-height: 100vh;
-            width: 100vw;
-            position: relative;
-        }
-
-        /* Guard Overlay (Auth Loading) */
-        #guardOverlay {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-base);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--bg-elevated);
-            border-top-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 0.8s cubic-bezier(0.6, 0.2, 0.1, 1) infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Desktop Sidebar */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--bg-surface);
-            border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-        }
-
-        .sidebar-brand {
-            height: var(--header-height);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 24px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-md);
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-gold));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-dark);
-            font-size: 20px;
-            font-weight: 800;
-        }
-        .brand-title {
-            font-family: var(--font-heading);
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: var(--text-main);
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 20px 16px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            color: var(--text-muted);
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .nav-item:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.04);
-        }
-        .nav-item.active {
-            color: var(--accent-primary);
-            background: var(--accent-primary-glow);
-            font-weight: 600;
-        }
-        .nav-item i { font-size: 18px; width: 22px; text-align: center; }
-
-        .sidebar-user {
-            padding: 16px;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-elevated);
-            object-fit: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--accent-gold);
-            border: 1px solid var(--glass-border);
-        }
-
-        /* Main Content Wrapper */
-        .main-wrapper {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        /* Desktop Top Header */
-        .top-header {
-            height: var(--header-height);
-            background: rgba(18, 24, 31, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            z-index: 90;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-        }
-        .page-title {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        .header-actions { display: flex; align-items: center; gap: 16px; }
-        .action-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: all 0.2s;
-        }
-        .action-btn:hover { background: var(--bg-elevated); border-color: var(--accent-primary); }
-        .badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: var(--accent-primary);
-            color: var(--text-dark);
-            font-size: 11px;
-            font-weight: 800;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Views Container */
-        .view-container {
-            padding: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            flex: 1;
-        }
-        .view-section { display: none; animation: fadeIn 0.25s ease-in-out; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Mobile Header & Navigation */
-        .mobile-header {
-            display: none;
-            height: 60px;
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 0 16px;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 90;
-        }
-        .bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: var(--bottom-nav-height);
-            background: var(--bg-surface);
-            border-top: 1px solid var(--glass-border);
-            z-index: 95;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .bottom-nav-items { display: flex; height: 100%; align-items: center; justify-content: space-around; }
-        .bottom-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-muted);
-            font-size: 11px;
-            font-weight: 500;
-        }
-        .bottom-item.active { color: var(--accent-primary); font-weight: 700; }
-        .bottom-item i { font-size: 20px; }
-
-        /* Floating Cart Pill */
-        .floating-cart-pill {
-            position: fixed;
-            bottom: 84px;
-            right: 24px;
-            background: var(--accent-primary);
-            color: var(--text-dark);
-            padding: 14px 24px;
-            border-radius: var(--radius-full);
-            font-weight: 700;
-            box-shadow: var(--shadow-glow);
-            display: none;
-            align-items: center;
-            gap: 12px;
-            z-index: 85;
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .floating-cart-pill:hover { transform: scale(1.04); }
-
-        /* UI Cards & Elements */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-subtle);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .card-title { font-size: 18px; font-weight: 700; }
-
-        /* Status Pills */
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .status-pill.OPEN { background: rgba(16, 185, 129, 0.15); color: var(--status-open); }
-        .status-pill.CLOSED { background: rgba(239, 68, 68, 0.15); color: var(--status-closed); }
-        .status-pill.BUSY { background: rgba(245, 158, 11, 0.15); color: var(--status-busy); }
-        .status-pill.PAUSED { background: rgba(107, 114, 128, 0.15); color: var(--status-paused); }
-
-        /* Quick Action Grid */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .action-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .action-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-2px);
-            background: var(--bg-elevated);
-        }
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-md);
-            background: var(--accent-primary-glow);
-            color: var(--accent-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        /* Order Progress Tracker */
-        .tracker-steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin: 24px 0 12px 0;
-        }
-        .tracker-steps::before {
-            content: '';
-            position: absolute;
-            top: 14px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--bg-elevated);
-            z-index: 1;
-        }
-        .tracker-progress-bar {
-            position: absolute;
-            top: 14px;
-            left: 0;
-            height: 3px;
-            background: var(--accent-primary);
-            z-index: 2;
-            transition: width 0.3s ease;
-        }
-        .step-item {
-            position: relative;
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .step-dot {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 3px solid var(--bg-elevated);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .step-item.completed .step-dot {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: var(--text-dark);
-        }
-        .step-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-align: center; }
-        .step-item.completed .step-label { color: var(--text-main); }
-
-        /* Menu Grid & Filter Tabs */
-        .category-tabs {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 24px;
-            scrollbar-width: none;
-        }
-        .category-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn {
-            padding: 10px 20px;
-            border-radius: var(--radius-full);
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            white-space: nowrap;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .tab-btn.active {
-            background: var(--accent-primary);
-            color: var(--text-dark);
-            border-color: var(--accent-primary);
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .food-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, border-color 0.2s;
-            position: relative;
-        }
-        .food-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.15); }
-        .food-thumb {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: var(--bg-elevated);
-        }
-        .food-details { padding: 16px; flex: 1; display: flex; flex-direction: column; }
-        .food-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-        .food-title { font-weight: 700; font-size: 16px; }
-        .food-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; flex: 1; line-clamp: 2; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
-        .food-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-        .food-price { font-weight: 800; font-size: 16px; color: var(--accent-gold); }
-
-        /* Buttons & Controls */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-            min-height: 44px;
-        }
-        .btn-primary { background: var(--accent-primary); color: var(--text-dark); }
-        .btn-primary:hover { background: var(--accent-primary-hover); }
-        .btn-secondary { background: var(--bg-elevated); color: var(--text-main); border: 1px solid var(--glass-border); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
-        .btn-outline { border: 1px solid var(--accent-primary); color: var(--accent-primary); }
-        .btn-outline:hover { background: var(--accent-primary-glow); }
-        .btn-sm { padding: 6px 12px; min-height: 32px; font-size: 12px; border-radius: var(--radius-sm); }
-        .btn-block { width: 100%; }
-
-        /* Modals & Drawers */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            animation: fadeIn 0.2s ease;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 520px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-subtle);
-            position: relative;
-            animation: slideUp 0.25s ease;
-        }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            background: var(--bg-surface);
-            z-index: 10;
-        }
-        .modal-body { padding: 20px; }
-        .modal-footer {
-            padding: 16px 20px;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            background: var(--bg-surface);
-        }
-
-        /* Form Controls */
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            color: var(--text-main);
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-        .form-control:focus { border-color: var(--accent-primary); }
-
-        /* Toast Notifications */
-        #toastContainer {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-        .toast {
-            pointer-events: auto;
-            min-width: 280px;
-            padding: 14px 18px;
-            border-radius: var(--radius-md);
-            background: var(--bg-card);
-            border-left: 4px solid var(--accent-primary);
-            box-shadow: var(--shadow-subtle);
-            color: var(--text-main);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: slideInRight 0.3s ease;
-        }
-        .toast.error { border-left-color: var(--status-closed); }
-        .toast.warning { border-left-color: var(--accent-gold); }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 992px) {
-            .sidebar { display: none; }
-            .main-wrapper { margin-left: 0; padding-bottom: calc(var(--bottom-nav-height) + 20px); }
-            .top-header { display: none; }
-            .mobile-header { display: flex; }
-            .bottom-nav { display: block; }
-            .view-container { padding: 16px; }
-            .modal-card { max-width: 100%; margin: 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0; align-self: flex-end; }
-            .modal-overlay { align-items: flex-end; padding: 0; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f12">
+<title>Customer Portal | Premium Restaurant Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--bg:#0b0f12;--surface:#12181f;--card:#182029;--elev:#222c38;--line:rgba(255,255,255,.08);--text:#f8fafc;--muted:#9ca3af;--green:#10b981;--green2:#059669;--gold:#f59e0b;--red:#ef4444;--blue:#60a5fa;--r:18px;--side:276px;--header:70px;--font:'Plus Jakarta Sans',sans-serif;--head:'Playfair Display',serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}body{min-height:100vh;background:var(--bg);color:var(--text);font:14px/1.5 var(--font);overflow-x:hidden}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer;color:inherit;background:none}a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:var(--elev);border-radius:99px}
+#boot{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px}
+.bootbox{width:min(430px,100%);text-align:center;padding:34px;border:1px solid var(--line);border-radius:24px;background:var(--surface);box-shadow:0 25px 80px #0008}
+.logo{width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,var(--green),var(--gold));display:grid;place-items:center;color:#111827;font-size:22px;font-weight:800;margin:0 auto 16px}
+.spinner{width:38px;height:38px;border:4px solid var(--elev);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:18px auto}@keyframes spin{to{transform:rotate(360deg)}}
+#bootTitle{font-weight:800;font-size:17px}.bootmsg{color:var(--muted);font-size:13px;margin-top:6px}.boot-actions{display:none;gap:10px;margin-top:18px}.boot-actions .btn{flex:1}
+#app{display:none;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:100}
+.brand{height:var(--header);display:flex;align-items:center;gap:11px;padding:0 20px;border-bottom:1px solid var(--line)}.brand .logo{width:38px;height:38px;margin:0;border-radius:12px;font-size:17px}.brandname{font:700 18px var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav{padding:16px 12px;overflow:auto;flex:1}.nav a{display:flex;align-items:center;gap:13px;padding:12px 14px;margin:3px 0;border-radius:13px;color:var(--muted);font-weight:600}.nav a:hover{background:#ffffff08;color:var(--text)}.nav a.active{background:#10b98122;color:var(--green)}.nav i{width:21px;text-align:center}
+.userbar{padding:14px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.user{display:flex;align-items:center;gap:10px;min-width:0}.avatar{width:40px;height:40px;flex:none;border-radius:50%;background:var(--elev);display:grid;place-items:center;color:var(--gold);font-weight:800}.uname{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.role{font-size:11px;color:var(--muted)}
+.main{margin-left:var(--side);min-height:100vh;padding-bottom:30px}.top{height:var(--header);position:sticky;top:0;z-index:80;background:#12181fcc;backdrop-filter:blur(15px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}.title{font-size:21px;font-weight:800}.actions{display:flex;gap:10px}.iconbtn{width:42px;height:42px;border:1px solid var(--line);background:var(--card);border-radius:50%;display:grid;place-items:center;position:relative}.badge{position:absolute;right:-2px;top:-2px;min-width:18px;height:18px;padding:0 4px;border-radius:99px;background:var(--green);color:#07110d;font-size:10px;font-weight:900;display:grid;place-items:center}
+.mobiletop,.bottom{display:none}.content{max-width:1240px;margin:auto;padding:28px}.view{display:none}.view.active{display:block;animation:in .2s ease}@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:0 10px 35px #0003;margin-bottom:18px}.hero{background:linear-gradient(135deg,#182029,rgba(16,185,129,.11));border-color:#10b98133}.hero h2{font:700 29px var(--head);margin-bottom:5px}.muted{color:var(--muted)}.row{display:flex;align-items:center;justify-content:space-between;gap:14px}.grid{display:grid;gap:16px}.quick{grid-template-columns:repeat(3,1fr);margin:18px 0}.quick .card{margin:0;cursor:pointer;display:flex;gap:14px;align-items:center;transition:.2s}.quick .card:hover{transform:translateY(-2px);border-color:#10b98166}.qicon{width:46px;height:46px;border-radius:13px;background:#10b98120;color:var(--green);display:grid;place-items:center;font-size:19px;flex:none}
+.btn{min-height:42px;padding:10px 17px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;transition:.18s}.btn-primary{background:var(--green);color:#06120d}.btn-primary:hover{background:var(--green2)}.btn-secondary{background:var(--elev);border:1px solid var(--line)}.btn-outline{border:1px solid #10b98199;color:var(--green)}.btn-danger{background:#ef44441c;color:#f87171;border:1px solid #ef444433}.btn-sm{min-height:34px;padding:7px 11px;font-size:12px}.block{width:100%}
+.status{padding:5px 10px;border-radius:99px;font-size:11px;font-weight:800;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px}.open{background:#10b9811c;color:var(--green)}.pending{background:#f59e0b1c;color:var(--gold)}.closed,.cancelled{background:#ef44441c;color:#f87171}.info{background:#60a5fa1c;color:var(--blue)}
+.search{display:flex;gap:10px;margin-bottom:16px}.input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px 14px;outline:0}.input:focus{border-color:#10b98188}.label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px}.field{margin-bottom:15px}
+.tabs{display:flex;gap:9px;overflow:auto;padding-bottom:8px;margin-bottom:17px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab{white-space:nowrap;padding:9px 15px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700}.tab.active{background:var(--green);color:#06120d;border-color:var(--green)}
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:17px}.food{overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:17px;display:flex;flex-direction:column}.foodimg{height:175px;width:100%;object-fit:cover;background:var(--elev)}.foodbody{padding:15px;display:flex;flex-direction:column;min-height:170px}.foodname{font-weight:800;font-size:16px}.foodcat{font-size:11px;color:var(--green);font-weight:700;margin:2px 0 6px}.fooddesc{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:12px;flex:1}.price{font-weight:900;color:var(--gold);font-size:16px}.empty{text-align:center;padding:42px 18px;color:var(--muted)}.empty i{font-size:32px;margin-bottom:10px;color:#66707d}
+.list{display:grid;gap:14px}.order{border:1px solid var(--line);background:var(--card);border-radius:17px;padding:18px}.orderitems{margin:13px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.orderitem{display:flex;justify-content:space-between;padding:9px 0;font-size:13px}.total{font-weight:900;font-size:16px;color:var(--gold)}
+.tracker{display:flex;align-items:flex-start;margin:18px 0}.trackstep{flex:1;text-align:center;position:relative;font-size:10px;color:var(--muted)}.trackstep:before{content:"";position:absolute;top:13px;left:50%;right:-50%;height:3px;background:var(--elev);z-index:0}.trackstep:last-child:before{display:none}.dot{width:28px;height:28px;border-radius:50%;background:var(--elev);display:grid;place-items:center;margin:0 auto 6px;position:relative;z-index:1}.trackstep.done{color:var(--text);font-weight:700}.trackstep.done .dot{background:var(--green);color:#06120d}.trackstep.done:before{background:var(--green)}
+.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.notice{padding:12px 14px;border-radius:12px;background:#60a5fa12;border:1px solid #60a5fa22;color:#cbd5e1;font-size:12px}
+.modal{position:fixed;inset:0;background:#000b;backdrop-filter:blur(7px);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.dialog{width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 25px 90px #0009}.mhead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface);z-index:2}.mbody{padding:20px}.mfoot{padding:15px 20px;border-top:1px solid var(--line);display:flex;gap:10px}.cartline{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.qty{display:flex;align-items:center;gap:8px}.qty button{width:30px;height:30px;border-radius:9px;background:var(--elev)}
+#toast{position:fixed;right:18px;top:18px;z-index:99999;display:grid;gap:9px}.toast{min-width:260px;max-width:360px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:12px;padding:12px 14px;box-shadow:0 12px 40px #0008}.toast.err{border-left-color:var(--red)}.toast.warn{border-left-color:var(--gold)}
+.floating{position:fixed;right:22px;bottom:24px;z-index:90;background:var(--green);color:#06120d;border-radius:99px;padding:13px 19px;font-weight:900;box-shadow:0 0 30px #10b98155;display:none;align-items:center;gap:9px}
+@media(max-width:992px){.sidebar{display:none}.main{margin-left:0;padding-bottom:78px}.top{display:none}.mobiletop{display:flex;height:60px;position:sticky;top:0;z-index:80;background:#12181feF;border-bottom:1px solid var(--line);align-items:center;justify-content:space-between;padding:0 15px;backdrop-filter:blur(15px)}.mobilebrand{display:flex;align-items:center;gap:9px;font:700 17px var(--head)}.mobilebrand .logo{width:32px;height:32px;font-size:14px;margin:0;border-radius:10px}.content{padding:17px 14px}.bottom{position:fixed;display:block;left:0;right:0;bottom:0;height:68px;padding-bottom:env(safe-area-inset-bottom);background:var(--surface);border-top:1px solid var(--line);z-index:95}.bottomnav{display:flex;height:100%;align-items:center;justify-content:space-around}.bottom a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--muted);font-weight:700}.bottom a.active{color:var(--green)}.bottom i{font-size:19px}.quick{grid-template-columns:1fr}.quick .card{padding:15px}.hero h2{font-size:25px}.menu{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.foodimg{height:135px}.foodbody{padding:11px;min-height:155px}.foodname{font-size:14px}.two{grid-template-columns:1fr}.floating{bottom:78px;right:13px}.modal{align-items:flex-end;padding:0}.dialog{border-radius:20px 20px 0 0;max-height:92vh}.mfoot{padding-bottom:calc(15px + env(safe-area-inset-bottom))}}
+@media(max-width:470px){.menu{grid-template-columns:1fr}.foodimg{height:185px}.search{margin-bottom:11px}}
+</style>
 </head>
 <body>
 
-    <!-- Security Auth Guard Loading Overlay -->
-    <div id="guardOverlay">
-        <div class="spinner"></div>
-        <div style="font-weight: 600; color: var(--text-muted);">Authenticating Secure Portal...</div>
+<div id="boot">
+  <div class="bootbox">
+    <div class="logo"><i class="fa-solid fa-utensils"></i></div>
+    <div id="bootTitle">Opening Customer Portal</div>
+    <div class="spinner" id="bootSpinner"></div>
+    <div class="bootmsg" id="bootMsg">Checking your secure customer session…</div>
+    <div class="boot-actions" id="bootActions">
+      <button class="btn btn-primary" id="retryBtn">Retry</button>
+      <button class="btn btn-secondary" id="loginBtn">Go to Login</button>
     </div>
+  </div>
+</div>
 
-    <!-- Application Shell -->
-    <div id="appShell">
-        <!-- Desktop Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-logo"><i class="fa-solid => fa-utensils"></i></div>
-                <div class="brand-title" id="restaurantBrandName">Aura Dining</div>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="#home" class="nav-item active" data-view="home"><i class="fa-solid fa-house"></i> Home</a>
-                <a href="#menu" class="nav-item" data-view="menu"><i class="fa-solid fa-utensils"></i> Discover / Menu</a>
-                <a href="#orders" class="nav-item" data-view="orders"><i class="fa-solid fa-receipt"></i> Orders</a>
-                <a href="#reservations" class="nav-item" data-view="reservations"><i class="fa-solid fa-calendar-check"></i> Reservations</a>
-                <a href="#favorites" class="nav-item" data-view="favorites"><i class="fa-solid fa-heart"></i> Favorites</a>
-                <a href="#addresses" class="nav-item" data-view="addresses"><i class="fa-solid fa-location-dot"></i> Addresses</a>
-                <a href="#invoices" class="nav-item" data-view="invoices"><i class="fa-solid fa-file-invoice-dollar"></i> Invoices</a>
-                <a href="#notifications" class="nav-item" data-view="notifications"><i class="fa-solid fa-bell"></i> Notifications</a>
-                <a href="#profile" class="nav-item" data-view="profile"><i class="fa-solid fa-user"></i> Profile</a>
-                <a href="#support" class="nav-item" data-view="support"><i class="fa-solid fa-headset"></i> Help & Support</a>
-            </nav>
-            <div class="sidebar-user">
-                <div class="user-info">
-                    <div class="avatar" id="sidebarAvatar">U</div>
-                    <div style="overflow: hidden;">
-                        <div id="sidebarUserName" style="font-weight: 700; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">User</div>
-                        <div style="font-size: 11px; color: var(--text-muted);">Customer</div>
-                    </div>
-                </div>
-                <button id="logoutBtnBtn" title="Sign Out" style="color: var(--text-muted); font-size: 16px;"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </div>
-        </aside>
+<div id="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo"><i class="fa-solid fa-utensils"></i></div><div class="brandname" id="brandName">Aura Dining</div></div>
+  <nav class="nav">
+    <a href="#home" data-view="home" class="active"><i class="fa-solid fa-house"></i>Home</a>
+    <a href="#menu" data-view="menu"><i class="fa-solid fa-utensils"></i>Discover / Menu</a>
+    <a href="#orders" data-view="orders"><i class="fa-solid fa-receipt"></i>Orders</a>
+    <a href="#reservations" data-view="reservations"><i class="fa-solid fa-calendar-check"></i>Reservations</a>
+    <a href="#favorites" data-view="favorites"><i class="fa-solid fa-heart"></i>Favorites</a>
+    <a href="#addresses" data-view="addresses"><i class="fa-solid fa-location-dot"></i>Addresses</a>
+    <a href="#invoices" data-view="invoices"><i class="fa-solid fa-file-invoice-dollar"></i>Invoices</a>
+    <a href="#notifications" data-view="notifications"><i class="fa-solid fa-bell"></i>Notifications</a>
+    <a href="#profile" data-view="profile"><i class="fa-solid fa-user"></i>Profile</a>
+    <a href="#support" data-view="support"><i class="fa-solid fa-headset"></i>Help & Support</a>
+  </nav>
+  <div class="userbar">
+    <div class="user"><div class="avatar" id="avatar">U</div><div style="min-width:0"><div class="uname" id="sideName">Customer</div><div class="role">Customer Account</div></div></div>
+    <button id="logoutBtn" class="iconbtn" title="Sign out"><i class="fa-solid fa-right-from-bracket"></i></button>
+  </div>
+</aside>
 
-        <!-- Main Content Area -->
-        <div class="main-wrapper">
-            <!-- Desktop Top Header -->
-            <header class="top-header">
-                <h1 class="page-title" id="desktopPageTitle">Good Evening</h1>
-                <div class="header-actions">
-                    <button class="action-btn" onclick="app.router.navigate('notifications')">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="badge" id="unreadNotifBadge" style="display:none;">0</span>
-                    </button>
-                    <button class="action-btn" onclick="app.cart.openDrawer()">
-                        <i class="fa-solid fa-basket-shopping"></i>
-                        <span class="badge" id="cartCountBadge" style="display:none;">0</span>
-                    </button>
-                </div>
-            </header>
+<main class="main">
+  <header class="top">
+    <h1 class="title" id="pageTitle">Good Evening</h1>
+    <div class="actions"><button class="iconbtn" id="notifBtn"><i class="fa-solid fa-bell"></i><span class="badge" id="notifBadge" style="display:none">0</span></button><button class="iconbtn" id="cartBtn"><i class="fa-solid fa-basket-shopping"></i><span class="badge" id="cartBadge" style="display:none">0</span></button></div>
+  </header>
+  <header class="mobiletop">
+    <div class="mobilebrand"><div class="logo"><i class="fa-solid fa-utensils"></i></div><span id="mobileBrand">Aura</span></div>
+    <div class="actions"><button class="iconbtn" style="width:37px;height:37px" id="mNotif"><i class="fa-solid fa-bell" style="font-size:13px"></i></button><button class="iconbtn" style="width:37px;height:37px" id="mCart"><i class="fa-solid fa-basket-shopping" style="font-size:13px"></i></button></div>
+  </header>
 
-            <!-- Mobile Top Header -->
-            <header class="mobile-header">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="brand-logo" style="width:32px; height:32px; font-size:14px;"><i class="fa-solid fa-utensils"></i></div>
-                    <span style="font-family: var(--font-heading); font-weight: 700;" id="mobileBrandName">Aura</span>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <button class="action-btn" style="width:36px; height:36px;" onclick="app.router.navigate('notifications')">
-                        <i class="fa-solid fa-bell" style="font-size:14px;"></i>
-                    </button>
-                    <button class="action-btn" style="width:36px; height:36px;" onclick="app.cart.openDrawer()">
-                        <i class="fa-solid fa-basket-shopping" style="font-size:14px;"></i>
-                    </button>
-                </div>
-            </header>
-
-            <!-- Dynamic View Container -->
-            <main class="view-container">
-                
-                <!-- VIEW 1: HOME -->
-                <section id="view-home" class="view-section active">
-                    <div class="card" style="background: linear-gradient(135deg, rgba(24, 32, 41, 0.9), rgba(16, 185, 129, 0.1)); border-color: rgba(16, 185, 129, 0.2);">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
-                            <div>
-                                <h2 id="homeGreeting" style="font-family: var(--font-heading); font-size: 26px; font-weight: 700; margin-bottom: 4px;">Welcome Back</h2>
-                                <p style="color: var(--text-muted);">Discover fine dining and exquisite culinary creations today.</p>
-                            </div>
-                            <div id="restaurantStatusPill" class="status-pill OPEN"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Open Now</div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Action Cards -->
-                    <div class="quick-actions">
-                        <div class="action-card" onclick="app.router.navigate('menu')">
-                            <div class="action-icon"><i class="fa-solid fa-utensils"></i></div>
-                            <div>
-                                <div style="font-weight:700;">Order Food</div>
-                                <div style="font-size:12px; color:var(--text-muted);">Explore live menu</div>
-                            </div>
-                        </div>
-                        <div class="action-card" onclick="app.router.navigate('reservations')">
-                            <div class="action-icon" style="background:var(--accent-gold-glow); color:var(--accent-gold);"><i class="fa-solid fa-calendar-days"></i></div>
-                            <div>
-                                <div style="font-weight:700;">Reserve Table</div>
-                                <div style="font-size:12px; color:var(--text-muted);">Book fine seating</div>
-                            </div>
-                        </div>
-                        <div class="action-card" onclick="app.router.navigate('orders')">
-                            <div class="action-icon"><i class="fa-solid fa-truck-fast"></i></div>
-                            <div>
-                                <div style="font-weight:700;">Track Order</div>
-                                <div style="font-size:12px; color:var(--text-muted);">Live order status</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Active Order Card -->
-                    <div id="activeOrderContainer">
-                        <div class="card" style="text-align: center; padding: 40px 20px;">
-                            <i class="fa-solid fa-bowl-food" style="font-size: 36px; color: var(--text-muted); margin-bottom: 12px;"></i>
-                            <h3 style="font-size: 16px; margin-bottom: 6px;">Your next delicious order starts here</h3>
-                            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">No active orders currently in progress.</p>
-                            <button class="btn btn-primary btn-sm" onclick="app.router.navigate('menu')">Browse Menu</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- VIEW 2: MENU -->
-                <section id="view-menu" class="view-section">
-                    <div style="display:flex; gap:12px; margin-bottom: 20px;">
-                        <div class="form-group" style="flex:1; margin:0;">
-                            <input type="text" id="menuSearchInput" class="form-control" placeholder="Search dishes, ingredients, tags...">
-                        </div>
-                    </div>
-                    <div class="category-tabs" id="categoryTabs">
-                        <button class="tab-btn active" data-cat="ALL">All Items</button>
-                    </div>
-                    <div class="menu-grid" id="menuGrid">
-                        <!-- Dynamically Populated -->
-                    </div>
-                </section>
-
-                <!-- VIEW 3: ORDERS -->
-                <section id="view-orders" class="view-section">
-                    <div id="ordersList"></div>
-                </section>
-
-                <!-- VIEW 4: RESERVATIONS -->
-                <section id="view-reservations" class="view-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h2 style="font-size: 18px; font-weight: 700;">Table Bookings</h2>
-                        <button class="btn btn-primary btn-sm" onclick="app.reservations.openModal()"><i class="fa-solid fa-plus"></i> New Reservation</button>
-                    </div>
-                    <div id="reservationsList"></div>
-                </section>
-
-                <!-- VIEW 5: FAVORITES -->
-                <section id="view-favorites" class="view-section">
-                    <div class="menu-grid" id="favoritesGrid"></div>
-                </section>
-
-                <!-- VIEW 6: ADDRESSES -->
-                <section id="view-addresses" class="view-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h2 style="font-size: 18px; font-weight: 700;">Saved Locations</h2>
-                        <button class="btn btn-primary btn-sm" onclick="app.addresses.openModal()"><i class="fa-solid fa-plus"></i> Add Address</button>
-                    </div>
-                    <div id="addressesList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:16px;"></div>
-                </section>
-
-                <!-- VIEW 7: INVOICES -->
-                <section id="view-invoices" class="view-section">
-                    <div id="invoicesList"></div>
-                </section>
-
-                <!-- VIEW 8: NOTIFICATIONS -->
-                <section id="view-notifications" class="view-section">
-                    <div id="notificationsList"></div>
-                </section>
-
-                <!-- VIEW 9: PROFILE -->
-                <section id="view-profile" class="view-section">
-                    <div class="card" style="max-width: 600px; margin: 0 auto;">
-                        <div class="card-header"><h3 class="card-title">Personal Profile</h3></div>
-                        <form id="profileForm" onsubmit="app.profile.save(event)">
-                            <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" id="profileName" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Phone Number</label>
-                                <input type="tel" id="profilePhone" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Email Address (Read-only)</label>
-                                <input type="email" id="profileEmail" class="form-control" disabled style="opacity:0.6;">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
-                        </form>
-                    </div>
-                </section>
-
-                <!-- VIEW 10: SUPPORT -->
-                <section id="view-support" class="view-section">
-                    <div class="card" style="max-width: 600px; margin: 0 auto;">
-                        <div class="card-header"><h3 class="card-title">Customer Support</h3></div>
-                        <form id="supportForm" onsubmit="app.support.submit(event)">
-                            <div class="form-group">
-                                <label class="form-label">Category</label>
-                                <select id="supportCategory" class="form-control" required>
-                                    <option value="Order Issue">Order Issue</option>
-                                    <option value="Payment Issue">Payment Issue</option>
-                                    <option value="Reservation Issue">Reservation Issue</option>
-                                    <option value="Other">Other Query</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Message</label>
-                                <textarea id="supportMessage" class="form-control" rows="4" required placeholder="Describe your issue..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Submit Support Ticket</button>
-                        </form>
-                    </div>
-                </section>
-
-            </main>
+  <div class="content">
+    <section class="view active" id="view-home">
+      <div class="card hero">
+        <div class="row" style="align-items:flex-start;flex-wrap:wrap">
+          <div><h2 id="greeting">Welcome Back</h2><p class="muted">Discover restaurants, order delicious food and reserve your table.</p></div>
+          <span class="status open" id="restaurantStatus"><i class="fa-solid fa-circle" style="font-size:7px"></i> Open Now</span>
         </div>
+      </div>
+      <div class="grid quick">
+        <div class="card" data-go="menu"><div class="qicon"><i class="fa-solid fa-bowl-food"></i></div><div><b>Order Food</b><div class="muted" style="font-size:11px">Explore live menu</div></div></div>
+        <div class="card" data-go="reservations"><div class="qicon" style="background:#f59e0b1c;color:var(--gold)"><i class="fa-solid fa-calendar-days"></i></div><div><b>Reserve Table</b><div class="muted" style="font-size:11px">Book your seating</div></div></div>
+        <div class="card" data-go="orders"><div class="qicon"><i class="fa-solid fa-truck-fast"></i></div><div><b>Track Order</b><div class="muted" style="font-size:11px">View order status</div></div></div>
+      </div>
+      <div id="homeOrder"></div>
+      <div class="card"><div class="row"><div><b>Everything in one place</b><p class="muted" style="font-size:12px">Manage orders, bookings, addresses, invoices and support from your customer account.</p></div><button class="btn btn-outline btn-sm" data-go="profile">My Profile</button></div></div>
+    </section>
 
-        <!-- Mobile Bottom Navigation -->
-        <nav class="bottom-nav">
-            <div class="bottom-nav-items">
-                <a href="#home" class="bottom-item active" data-view="home"><i class="fa-solid fa-house"></i>Home</a>
-                <a href="#menu" class="bottom-item" data-view="menu"><i class="fa-solid fa-utensils"></i>Menu</a>
-                <a href="#orders" class="bottom-item" data-view="orders"><i class="fa-solid fa-receipt"></i>Orders</a>
-                <a href="#reservations" class="bottom-item" data-view="reservations"><i class="fa-solid fa-calendar-check"></i>Bookings</a>
-                <a href="#profile" class="bottom-item" data-view="profile"><i class="fa-solid fa-user"></i>Profile</a>
-            </div>
-        </nav>
+    <section class="view" id="view-menu">
+      <div class="search"><input class="input" id="menuSearch" placeholder="Search dishes, ingredients or tags…"><button class="btn btn-secondary" id="clearSearch" title="Clear"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="tabs" id="menuTabs"></div>
+      <div class="menu" id="menuGrid"></div>
+    </section>
 
-        <!-- Floating Cart Pill Button -->
-        <div class="floating-cart-pill" id="floatingCartPill" onclick="app.cart.openDrawer()">
-            <i class="fa-solid fa-basket-shopping"></i>
-            <span id="pillCartItems">0 Items</span>
-            <span>•</span>
-            <span id="pillCartTotal">₹0</span>
-        </div>
-    </div>
+    <section class="view" id="view-orders"><div class="row" style="margin-bottom:16px"><div><h2>My Orders</h2><p class="muted">Your recent food orders and live status.</p></div><button class="btn btn-secondary btn-sm" id="refreshOrders"><i class="fa-solid fa-rotate"></i> Refresh</button></div><div class="list" id="ordersList"></div></section>
 
-    <!-- CART DRAWER / MODAL -->
-    <div class="modal-overlay" id="cartModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 style="font-weight:700;">Your Cart</h3>
-                <button onclick="app.ui.closeModal('cartModal')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body" id="cartDrawerBody">
-                <!-- Cart items list dynamically injected -->
-            </div>
-            <div class="modal-footer" style="flex-direction: column;">
-                <div style="display:flex; justify-content:space-between; width:100%; font-weight:700; font-size:16px; margin-bottom:12px;">
-                    <span>Grand Total:</span>
-                    <span id="cartGrandTotal">₹0</span>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="app.cart.checkout()">Proceed to Checkout</button>
-            </div>
-        </div>
-    </div>
+    <section class="view" id="view-reservations"><div class="row" style="margin-bottom:17px"><div><h2>Table Reservations</h2><p class="muted">Create and manage your dining bookings.</p></div><button class="btn btn-primary btn-sm" id="newReservation"><i class="fa-solid fa-plus"></i> New</button></div><div class="list" id="reservationsList"></div></section>
 
-    <!-- ADDRESS ADD/EDIT MODAL -->
-    <div class="modal-overlay" id="addressModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 style="font-weight:700;">Add New Delivery Address</h3>
-                <button onclick="app.ui.closeModal('addressModal')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <form id="addressForm" onsubmit="app.addresses.save(event)">
-                    <div class="form-group">
-                        <label class="form-label">Address Title (e.g. Home, Work)</label>
-                        <input type="text" id="addrTitle" class="form-control" required placeholder="Home">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">House / Flat / Floor</label>
-                        <input type="text" id="addrFlat" class="form-control" required placeholder="Flat 402, Building A">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Street / Area</label>
-                        <input type="text" id="addrStreet" class="form-control" required placeholder="Main Street">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Pincode / Zip Code</label>
-                        <input type="text" id="addrPincode" class="form-control" required placeholder="400001">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Save Address</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <section class="view" id="view-favorites"><div class="row" style="margin-bottom:17px"><div><h2>Favorites</h2><p class="muted">Your saved dishes.</p></div></div><div class="menu" id="favoritesGrid"></div></section>
 
-    <!-- RESERVATION MODAL -->
-    <div class="modal-overlay" id="reservationModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 style="font-weight:700;">Table Reservation</h3>
-                <button onclick="app.ui.closeModal('reservationModal')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <form id="reservationForm" onsubmit="app.reservations.submit(event)">
-                    <div class="form-group">
-                        <label class="form-label">Date</label>
-                        <input type="date" id="resDate" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Time Slot</label>
-                        <input type="time" id="resTime" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Number of Guests</label>
-                        <input type="number" id="resGuests" class="form-control" min="1" max="20" value="2" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Special Request</label>
-                        <textarea id="resRequest" class="form-control" rows="2" placeholder="Window table, anniversary, etc."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Confirm Booking Request</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <section class="view" id="view-addresses"><div class="row" style="margin-bottom:17px"><div><h2>Saved Addresses</h2><p class="muted">Manage your delivery locations.</p></div><button class="btn btn-primary btn-sm" id="newAddress"><i class="fa-solid fa-plus"></i> Add Address</button></div><div class="grid two" id="addressesList"></div></section>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer"></div>
+    <section class="view" id="view-invoices"><div class="row" style="margin-bottom:17px"><div><h2>Invoices</h2><p class="muted">Your order billing records.</p></div></div><div class="list" id="invoicesList"></div></section>
 
-    <!-- FIREBASE MODULE INTEGRATION -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-        import { getDatabase, ref, get, child, set, push, update, onValue, off } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-functions.js";
+    <section class="view" id="view-notifications"><div class="row" style="margin-bottom:17px"><div><h2>Notifications</h2><p class="muted">Updates about your orders and bookings.</p></div><button class="btn btn-secondary btn-sm" id="markRead">Mark all read</button></div><div class="list" id="notificationsList"></div></section>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
-            authDomain: "yukti-247.firebaseapp.com",
-            databaseURL: "https://yukti-247-default-rtdb.firebaseio.com",
-            projectId: "yukti-247",
-            storageBucket: "yukti-247.firebasestorage.app",
-            messagingSenderId: "244123454826",
-            appId: "1:244123454826:web:56b4d88c3628bb06cfa913",
-            measurementId: "G-6BGFCBKTD7"
-        };
+    <section class="view" id="view-profile"><div class="card" style="max-width:620px;margin:auto"><h2 style="margin-bottom:5px">Personal Profile</h2><p class="muted" style="margin-bottom:20px">Keep your customer information up to date.</p><form id="profileForm"><div class="field"><label class="label">Full Name</label><input class="input" id="profileName" required maxlength="80"></div><div class="field"><label class="label">Phone Number</label><input class="input" id="profilePhone" type="tel" maxlength="20"></div><div class="field"><label class="label">Email Address</label><input class="input" id="profileEmail" disabled></div><button class="btn btn-primary block">Save Changes</button></form></div></section>
 
-        const firebaseApp = initializeApp(firebaseConfig);
-        const auth = getAuth(firebaseApp);
-        const db = getDatabase(firebaseApp);
-        const functions = getFunctions(firebaseApp);
+    <section class="view" id="view-support"><div class="card" style="max-width:620px;margin:auto"><h2>Customer Support</h2><p class="muted" style="margin:5px 0 20px">Tell us what you need help with.</p><form id="supportForm"><div class="field"><label class="label">Category</label><select class="input" id="supportCategory"><option>Order Issue</option><option>Payment Issue</option><option>Reservation Issue</option><option>Account Issue</option><option>Other Query</option></select></div><div class="field"><label class="label">Message</label><textarea class="input" id="supportMessage" rows="5" required maxlength="2000" placeholder="Describe your issue…"></textarea></div><button class="btn btn-primary block">Submit Support Ticket</button></form></div></section>
+  </div>
+</main>
+</div>
 
-        // Core App Context
-        window.app = {
-            user: null,
-            userData: null,
-            cartItems: [],
-            activeListeners: [],
-            
-            // Toast Notification System
-            toast: function(msg, type = 'info') {
-                const container = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `<i class="fa-solid fa-${type === 'error' ? 'circle-exclamation' : 'circle-check'}"></i> <span>${msg}</span>`;
-                container.appendChild(toast);
-                setTimeout(() => toast.remove(), 4000);
-            },
+<nav class="bottom"><div class="bottomnav">
+  <a href="#home" data-view="home" class="active"><i class="fa-solid fa-house"></i>Home</a>
+  <a href="#menu" data-view="menu"><i class="fa-solid fa-utensils"></i>Menu</a>
+  <a href="#orders" data-view="orders"><i class="fa-solid fa-receipt"></i>Orders</a>
+  <a href="#reservations" data-view="reservations"><i class="fa-solid fa-calendar-check"></i>Bookings</a>
+  <a href="#profile" data-view="profile"><i class="fa-solid fa-user"></i>Profile</a>
+</div></nav>
+<div class="floating" id="floatingCart"><i class="fa-solid fa-basket-shopping"></i><span id="floatCount">0 items</span><span>•</span><span id="floatTotal">₹0</span></div>
 
-            // UI Utility Helpers
-            ui: {
-                openModal: (id) => document.getElementById(id).classList.add('active'),
-                closeModal: (id) => document.getElementById(id).classList.remove('active'),
-            },
+<!-- Cart -->
+<div class="modal" id="cartModal"><div class="dialog"><div class="mhead"><b>Your Cart</b><button class="iconbtn" style="width:34px;height:34px" data-close="cartModal"><i class="fa-solid fa-xmark"></i></button></div><div class="mbody" id="cartBody"></div><div class="mfoot" style="display:block"><div class="row" style="margin-bottom:12px"><b>Grand Total</b><strong class="total" id="cartTotal">₹0</strong></div><button class="btn btn-primary block" id="checkoutBtn">Place Order</button></div></div></div>
 
-            // Hash Router System
-            router: {
-                init: function() {
-                    window.addEventListener('hashchange', () => this.handleRoute());
-                    this.handleRoute();
-                },
-                navigate: function(viewId) {
-                    window.location.hash = viewId;
-                },
-                handleRoute: function() {
-                    const hash = window.location.hash.replace('#', '') || 'home';
-                    const views = document.querySelectorAll('.view-section');
-                    views.forEach(v => v.classList.remove('active'));
-                    
-                    const targetView = document.getElementById(`view-${hash}`) || document.getElementById('view-home');
-                    targetView.classList.add('active');
+<!-- Address -->
+<div class="modal" id="addressModal"><div class="dialog"><div class="mhead"><b>Add Delivery Address</b><button class="iconbtn" style="width:34px;height:34px" data-close="addressModal"><i class="fa-solid fa-xmark"></i></button></div><form id="addressForm"><div class="mbody"><div class="field"><label class="label">Title</label><input class="input" id="addrTitle" placeholder="Home" required></div><div class="field"><label class="label">Flat / House / Floor</label><input class="input" id="addrFlat" required></div><div class="field"><label class="label">Street / Area</label><input class="input" id="addrStreet" required></div><div class="field"><label class="label">City</label><input class="input" id="addrCity" value="Mumbai" required></div><div class="field"><label class="label">Pincode</label><input class="input" id="addrPincode" pattern="[0-9]{5,6}" required></div></div><div class="mfoot"><button type="button" class="btn btn-secondary" data-close="addressModal">Cancel</button><button class="btn btn-primary" type="submit">Save Address</button></div></form></div></div>
 
-                    // Sync Navigation Highlight State
-                    document.querySelectorAll('.nav-item, .bottom-item').forEach(el => {
-                        if (el.dataset.view === hash) el.classList.add('active');
-                        else el.classList.remove('active');
-                    });
+<!-- Reservation -->
+<div class="modal" id="reservationModal"><div class="dialog"><div class="mhead"><b>New Table Reservation</b><button class="iconbtn" style="width:34px;height:34px" data-close="reservationModal"><i class="fa-solid fa-xmark"></i></button></div><form id="reservationForm"><div class="mbody"><div class="field"><label class="label">Date</label><input class="input" type="date" id="resDate" required></div><div class="field"><label class="label">Time</label><input class="input" type="time" id="resTime" required></div><div class="field"><label class="label">Guests</label><input class="input" type="number" id="resGuests" min="1" max="30" value="2" required></div><div class="field"><label class="label">Special Request</label><textarea class="input" id="resRequest" rows="3" maxlength="500" placeholder="Birthday, window table, dietary note…"></textarea></div></div><div class="mfoot"><button type="button" class="btn btn-secondary" data-close="reservationModal">Cancel</button><button class="btn btn-primary" type="submit">Send Booking Request</button></div></form></div></div>
 
-                    // Update Title
-                    const titles = {
-                        home: 'Good Evening',
-                        menu: 'Exquisite Menu',
-                        orders: 'Your Orders',
-                        reservations: 'Table Reservations',
-                        favorites: 'Saved Favorites',
-                        addresses: 'Delivery Addresses',
-                        invoices: 'Tax Invoices',
-                        notifications: 'Notifications',
-                        profile: 'Account Profile',
-                        support: 'Customer Support'
-                    };
-                    document.getElementById('desktopPageTitle').innerText = titles[hash] || 'Dashboard';
-                }
-            },
+<div id="toast"></div>
 
-            // Cart Logic System
-            cart: {
-                addItem: function(item) {
-                    window.app.cartItems.push(item);
-                    this.updateUI();
-                    window.app.toast(`Added ${item.name} to cart`, 'success');
-                },
-                updateUI: function() {
-                    const count = window.app.cartItems.length;
-                    const total = window.app.cartItems.reduce((acc, curr) => acc + (curr.price || 0), 0);
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import {getDatabase,ref,get,set,push,update,onValue} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-                    document.getElementById('cartCountBadge').innerText = count;
-                    document.getElementById('cartCountBadge').style.display = count > 0 ? 'flex' : 'none';
+const firebaseConfig={
+ apiKey:"AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
+ authDomain:"yukti-247.firebaseapp.com",
+ databaseURL:"https://yukti-247-default-rtdb.firebaseio.com",
+ projectId:"yukti-247",
+ storageBucket:"yukti-247.firebasestorage.app",
+ messagingSenderId:"244123454826",
+ appId:"1:244123454826:web:56b4d88c3628bb06cfa913",
+ measurementId:"G-6BGFCBKTD7"
+};
 
-                    const pill = document.getElementById('floatingCartPill');
-                    if (count > 0) {
-                        pill.style.display = 'flex';
-                        document.getElementById('pillCartItems').innerText = `${count} ${count === 1 ? 'Item' : 'Items'}`;
-                        document.getElementById('pillCartTotal').innerText = `₹${total}`;
-                    } else {
-                        pill.style.display = 'none';
-                    }
-                    document.getElementById('cartGrandTotal').innerText = `₹${total}`;
-                },
-                openDrawer: function() {
-                    const body = document.getElementById('cartDrawerBody');
-                    if (window.app.cartItems.length === 0) {
-                        body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">Your cart is empty</div>`;
-                    } else {
-                        body.innerHTML = window.app.cartItems.map((item, idx) => `
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--glass-border);">
-                                <div>
-                                    <div style="font-weight:600;">${item.name}</div>
-                                    <div style="font-size:12px; color:var(--text-muted);">₹${item.price}</div>
-                                </div>
-                                <button onclick="app.cart.removeItem(${idx})" style="color:var(--status-closed);"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        `).join('');
-                    }
-                    window.app.ui.openModal('cartModal');
-                },
-                removeItem: function(idx) {
-                    window.app.cartItems.splice(idx, 1);
-                    this.updateUI();
-                    this.openDrawer();
-                },
-                checkout: async function() {
-                    if (window.app.cartItems.length === 0) return;
-                    try {
-                        const createOrderFn = httpsCallable(functions, 'createOrder');
-                        const res = await createOrderFn({ items: window.app.cartItems });
-                        window.app.toast('Order placed successfully!', 'success');
-                        window.app.cartItems = [];
-                        this.updateUI();
-                        window.app.ui.closeModal('cartModal');
-                        window.app.router.navigate('orders');
-                    } catch(e) {
-                        window.app.toast('Server Function unavailable. Local Simulation: Order placed.', 'warning');
-                        window.app.cartItems = [];
-                        this.updateUI();
-                        window.app.ui.closeModal('cartModal');
-                    }
-                }
-            },
+let fb,auth,db,user=null,userData={},menuItems={},categories=["ALL"],activeCat="ALL",query="",cart=[];
+const listeners=[];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const money=n=>"₹"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2});
+const path=(p)=>ref(db,p);
 
-            // Address Sub-Module
-            addresses: {
-                openModal: () => window.app.ui.openModal('addressModal'),
-                save: async function(e) {
-                    e.preventDefault();
-                    const addr = {
-                        title: document.getElementById('addrTitle').value,
-                        flat: document.getElementById('addrFlat').value,
-                        street: document.getElementById('addrStreet').value,
-                        pincode: document.getElementById('addrPincode').value
-                    };
-                    const uid = window.app.user.uid;
-                    await push(ref(db, `addresses/${uid}`), addr);
-                    window.app.toast('Address saved', 'success');
-                    window.app.ui.closeModal('addressModal');
-                }
-            },
+function toast(msg,type="ok"){const el=document.createElement("div");el.className="toast "+(type==="error"?"err":type==="warning"?"warn":"");el.innerHTML=`<i class="fa-solid fa-${type==="error"?"circle-exclamation":type==="warning"?"triangle-exclamation":"circle-check"}"></i> ${esc(msg)}`;$("toast").appendChild(el);setTimeout(()=>el.remove(),3800)}
+function openModal(id){$(id).classList.add("show");document.body.style.overflow="hidden"}
+function closeModal(id){$(id).classList.remove("show");document.body.style.overflow=""}
+function empty(el,icon,title,text=""){el.innerHTML=`<div class="card empty"><i class="fa-solid ${icon}"></i><div style="color:var(--text);font-weight:800">${esc(title)}</div><div style="font-size:12px;margin-top:4px">${esc(text)}</div></div>`}
 
-            // Reservation Sub-Module
-            reservations: {
-                openModal: () => window.app.ui.openModal('reservationModal'),
-                submit: async function(e) {
-                    e.preventDefault();
-                    try {
-                        const createResFn = httpsCallable(functions, 'createReservation');
-                        await createResFn({
-                            date: document.getElementById('resDate').value,
-                            time: document.getElementById('resTime').value,
-                            guests: document.getElementById('resGuests').value,
-                            request: document.getElementById('resRequest').value
-                        });
-                        window.app.toast('Reservation request sent!', 'success');
-                    } catch(err) {
-                        window.app.toast('Backend Function unavailable for Reservations.', 'error');
-                    }
-                    window.app.ui.closeModal('reservationModal');
-                }
-            },
+function bootMessage(title,msg,actions=false){
+ $("bootTitle").textContent=title;$("bootMsg").textContent=msg;$("bootSpinner").style.display=actions?"none":"block";$("bootActions").style.display=actions?"flex":"none";
+}
+function showApp(){ $("boot").style.display="none";$("app").style.display="block" }
+function goLogin(){location.href="index.html"}
 
-            // Profile Sub-Module
-            profile: {
-                save: async function(e) {
-                    e.preventDefault();
-                    const uid = window.app.user.uid;
-                    const name = document.getElementById('profileName').value;
-                    const phone = document.getElementById('profilePhone').value;
-                    await update(ref(db, `users/${uid}`), { name, phone });
-                    window.app.toast('Profile updated successfully', 'success');
-                }
-            },
+function route(){
+ const key=(location.hash.replace("#","")||"home").split("?")[0];
+ const allowed=["home","menu","orders","reservations","favorites","addresses","invoices","notifications","profile","support"];
+ const v=allowed.includes(key)?key:"home";
+ document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id==="view-"+v));
+ document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("active",x.dataset.view===v));
+ const titles={home:"Good Evening",menu:"Exquisite Menu",orders:"Your Orders",reservations:"Table Reservations",favorites:"Saved Favorites",addresses:"Delivery Addresses",invoices:"Tax Invoices",notifications:"Notifications",profile:"Account Profile",support:"Customer Support"};
+ $("pageTitle").textContent=titles[v];
+ if(v==="menu")renderMenu();if(v==="favorites")renderFavorites();
+}
+window.addEventListener("hashchange",route);
 
-            // Support Sub-Module
-            support: {
-                submit: async function(e) {
-                    e.preventDefault();
-                    const ticket = {
-                        uid: window.app.user.uid,
-                        category: document.getElementById('supportCategory').value,
-                        message: document.getElementById('supportMessage').value,
-                        status: 'OPEN',
-                        createdAt: Date.now()
-                    };
-                    await push(ref(db, 'supportTickets'), ticket);
-                    window.app.toast('Support ticket submitted', 'success');
-                    document.getElementById('supportForm').reset();
-                }
-            }
-        };
+function renderUser(){
+ const name=userData.name||user.displayName||user.email?.split("@")[0]||"Customer";
+ $("sideName").textContent=name;$("avatar").textContent=name.charAt(0).toUpperCase();$("greeting").textContent=`Good Evening, ${name}`;
+ $("profileName").value=userData.name||"";$("profilePhone").value=userData.phone||"";$("profileEmail").value=user.email||"";
+}
+function renderMenu(){
+ const grid=$("menuGrid"), term=query.trim().toLowerCase();
+ const rows=Object.entries(menuItems).map(([id,x])=>({id,...x})).filter(x=>{
+   const cat=String(x.category||"General").toUpperCase();
+   const okCat=activeCat==="ALL"||cat===activeCat;
+   const hay=[x.name,x.description,x.category,...(Array.isArray(x.tags)?x.tags:Object.values(x.tags||{}))].join(" ").toLowerCase();
+   return okCat&&(!term||hay.includes(term))&&(x.available!==false&&x.isAvailable!==false);
+ });
+ if(!rows.length){empty(grid,"fa-utensils","No dishes found","Try another category or search term.");return}
+ grid.innerHTML=rows.map(x=>{
+   const fav=isFav(x.id),img=x.image||"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80";
+   return `<article class="food">
+    <img class="foodimg" src="${esc(img)}" alt="${esc(x.name||"Dish")}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80'">
+    <div class="foodbody"><div class="row" style="align-items:flex-start"><div><div class="foodname">${esc(x.name||"Unnamed dish")}</div><div class="foodcat">${esc(x.category||"Chef Special")}</div></div>
+    <button class="iconbtn" style="width:32px;height:32px;flex:none" data-fav="${esc(x.id)}"><i class="${fav?"fa-solid":"fa-regular"} fa-heart" style="${fav?"color:#f87171":""}"></i></button></div>
+    <div class="fooddesc">${esc(x.description||"Prepared with selected ingredients and premium care.")}</div>
+    <div class="row"><span class="price">${money(x.price)}</span><button class="btn btn-primary btn-sm" data-add="${esc(x.id)}"><i class="fa-solid fa-plus"></i> Add</button></div></div>
+   </article>`;
+ }).join("");
+}
+function renderTabs(){
+ const set=new Set(["ALL"]);
+ Object.values(menuItems).forEach(x=>x.category&&set.add(String(x.category).toUpperCase()));
+ categories=[...set];
+ $("menuTabs").innerHTML=categories.map(c=>`<button class="tab ${c===activeCat?"active":""}" data-cat="${esc(c)}">${c==="ALL"?"All Items":esc(c.charAt(0)+c.slice(1).toLowerCase())}</button>`).join("");
+}
+function isFav(id){return !!(userData.favorites&&userData.favorites[id])}
+async function toggleFav(id){
+ const next=!isFav(id),updates={};
+ updates[`users/${user.uid}/favorites/${id}`]=next?true:null;
+ try{await update(path(""),updates);userData.favorites=userData.favorites||{};if(next)userData.favorites[id]=true;else delete userData.favorites[id];renderMenu();renderFavorites();toast(next?"Added to favorites":"Removed from favorites")}catch(e){toast(e.message||"Could not update favorite","error")}
+}
+function renderFavorites(){
+ const grid=$("favoritesGrid"), rows=Object.entries(menuItems).filter(([id])=>isFav(id)).map(([id,x])=>({id,...x}));
+ if(!rows.length){empty(grid,"fa-heart","No favorites yet","Tap the heart on a dish to save it here.");return}
+ grid.innerHTML=rows.map(x=>`<article class="food"><img class="foodimg" src="${esc(x.image||"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80")}" alt=""><div class="foodbody"><div class="foodname">${esc(x.name)}</div><div class="fooddesc">${esc(x.description||"")}</div><div class="row"><span class="price">${money(x.price)}</span><button class="btn btn-primary btn-sm" data-add="${esc(x.id)}">Add</button></div></div></article>`).join("");
+}
 
-        /* ==========================================================================
-           SECURITY / ROLE GUARD INTEGRATION
-           ========================================================================== */
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = "index.html";
-                return;
-            }
+function addCart(id){
+ const x=menuItems[id];if(!x)return;
+ const found=cart.find(i=>i.id===id);if(found)found.qty++;else cart.push({id,name:x.name,price:Number(x.price)||0,qty:1});
+ saveCart();renderCart();toast(`${x.name} added to cart`);
+}
+function saveCart(){localStorage.setItem("customerCart:"+user.uid,JSON.stringify(cart))}
+function loadCart(){try{cart=JSON.parse(localStorage.getItem("customerCart:"+user.uid)||"[]")}catch{cart=[]}renderCart()}
+function cartTotal(){return cart.reduce((s,x)=>s+x.price*x.qty,0)}
+function renderCart(){
+ const count=cart.reduce((s,x)=>s+x.qty,0),total=cartTotal();
+ ["cartBadge"].forEach(id=>{$(id).textContent=count;$(id).style.display=count?"grid":"none"});
+ $("floatingCart").style.display=count?"flex":"none";$("floatCount").textContent=`${count} ${count===1?"item":"items"}`;$("floatTotal").textContent=money(total);$("cartTotal").textContent=money(total);
+ if(!count){empty($("cartBody"),"fa-basket-shopping","Your cart is empty","Add dishes from the menu to begin.");return}
+ $("cartBody").innerHTML=cart.map((x,i)=>`<div class="cartline"><div style="min-width:0"><b>${esc(x.name)}</b><div class="muted" style="font-size:12px">${money(x.price)} each</div></div><div class="qty"><button data-dec="${i}">−</button><b>${x.qty}</b><button data-inc="${i}">+</button><button style="color:#f87171;margin-left:4px" data-del="${i}"><i class="fa-solid fa-trash"></i></button></div></div>`).join("");
+}
+function changeQty(i,d){if(!cart[i])return;cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);saveCart();renderCart()}
 
-            const uid = user.uid;
-            const userSnap = await get(child(ref(db), `users/${uid}`));
+function statusClass(s){s=String(s||"PENDING").toUpperCase();if(["DELIVERED","COMPLETED","CONFIRMED","PAID","OPEN"].includes(s))return"open";if(["CANCELLED","REJECTED","FAILED"].includes(s))return"cancelled";if(["OUT_FOR_DELIVERY","PREPARING","READY","PARTIAL"].includes(s))return"info";return"pending"}
+function statusPill(s){return `<span class="status ${statusClass(s)}">${esc(String(s||"PENDING").replaceAll("_"," "))}</span>`}
+function orderSteps(status){
+ const s=String(status||"PLACED").toUpperCase();const steps=["PLACED","CONFIRMED","PREPARING","OUT_FOR_DELIVERY","DELIVERED"];let idx=steps.indexOf(s);if(s==="COMPLETED")idx=4;if(idx<0)idx=0;
+ return `<div class="tracker">${steps.map((x,i)=>`<div class="trackstep ${i<=idx?"done":""}"><div class="dot">${i<=idx?"✓":i+1}</div>${x.replaceAll("_"," ")}</div>`).join("")}</div>`;
+}
+function normalizeItems(items){
+ if(Array.isArray(items))return items;return Object.values(items||{});
+}
+function renderOrders(data){
+ const list=$("ordersList"),rows=Object.entries(data||{}).map(([id,x])=>({id,...x})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ if(!rows.length){empty(list,"fa-receipt","No orders yet","Your completed and active orders will appear here.");$("homeOrder").innerHTML="";return}
+ list.innerHTML=rows.map(o=>`<div class="order"><div class="row"><div><b>Order #${esc(o.orderNumber||o.id.slice(-7).toUpperCase())}</b><div class="muted" style="font-size:11px">${o.createdAt?new Date(o.createdAt).toLocaleString("en-IN"):""}</div></div>${statusPill(o.status)}</div>${orderSteps(o.status)}<div class="orderitems">${normalizeItems(o.items).map(i=>`<div class="orderitem"><span>${esc(i.name||i.title||"Item")} × ${Number(i.qty||i.quantity||1)}</span><b>${money((Number(i.price)||0)*Number(i.qty||i.quantity||1))}</b></div>`).join("")}</div><div class="row"><span class="muted">Total</span><span class="total">${money(o.total??o.grandTotal)}</span></div></div>`).join("");
+ const active=rows.find(o=>!["DELIVERED","COMPLETED","CANCELLED","REJECTED"].includes(String(o.status||"").toUpperCase()));
+ $("homeOrder").innerHTML=active?`<div class="card"><div class="row"><div><b>Active Order #${esc(active.orderNumber||active.id.slice(-7).toUpperCase())}</b><div class="muted" style="font-size:12px">Your order is being processed.</div></div>${statusPill(active.status)}</div>${orderSteps(active.status)}<button class="btn btn-outline btn-sm" data-go="orders">View Order</button></div>`:"";
+}
+function renderReservations(data){
+ const list=$("reservationsList"),rows=Object.entries(data||{}).map(([id,x])=>({id,...x})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ if(!rows.length){empty(list,"fa-calendar-xmark","No reservations","Book a table whenever you are ready.");return}
+ list.innerHTML=rows.map(r=>`<div class="card" style="margin:0"><div class="row"><div><b>${esc(r.date||"")}</b><div class="muted">${esc(r.time||"")} · ${Number(r.guests||0)} guests</div></div>${statusPill(r.status||"PENDING")}</div>${r.request?`<p class="muted" style="margin-top:10px;font-size:12px">“${esc(r.request)}”</p>`:""}<div class="muted" style="font-size:11px;margin-top:10px">Reservation #${esc(r.id.slice(-8).toUpperCase())}</div></div>`).join("");
+}
+function renderAddresses(data){
+ const list=$("addressesList"),rows=Object.entries(data||{});
+ if(!rows.length){empty(list,"fa-location-dot","No saved addresses","Add a delivery address during checkout or from this page.");return}
+ list.innerHTML=rows.map(([id,a])=>`<div class="card" style="margin:0"><div class="row"><b><i class="fa-solid fa-location-dot" style="color:var(--green)"></i> ${esc(a.title||"Address")}</b><button class="btn btn-danger btn-sm" data-address-del="${esc(id)}">Delete</button></div><div class="muted" style="font-size:13px;margin-top:7px">${esc(a.flat)}, ${esc(a.street)}, ${esc(a.city||"")}, ${esc(a.pincode)}</div></div>`).join("");
+}
+function renderNotifications(data){
+ const list=$("notificationsList"),rows=Object.entries(data||{}).map(([id,x])=>({id,...x})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ const unread=rows.filter(x=>x.read!==true).length;$("notifBadge").style.display=unread?"grid":"none";$("notifBadge").textContent=unread;
+ if(!rows.length){empty(list,"fa-bell-slash","No notifications","Important account updates will appear here.");return}
+ list.innerHTML=rows.map(n=>`<div class="card" style="margin:0;opacity:${n.read?0.7:1}"><div class="row"><b>${esc(n.title||"Account Update")}</b>${n.read?"":"<span class='status info'>NEW</span>"}</div><p class="muted" style="font-size:12px;margin-top:6px">${esc(n.message||n.body||"")}</p><div class="muted" style="font-size:10px;margin-top:9px">${n.createdAt?new Date(n.createdAt).toLocaleString("en-IN"):""}</div></div>`).join("");
+}
+function renderInvoices(data){
+ const list=$("invoicesList"),rows=Object.entries(data||{}).map(([id,x])=>({id,...x})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ if(!rows.length){empty(list,"fa-file-invoice","No invoices","Invoices will appear after eligible orders are created.");return}
+ list.innerHTML=rows.map(i=>`<div class="card" style="margin:0"><div class="row"><div><b>Invoice #${esc(i.invoiceNumber||i.id.slice(-8).toUpperCase())}</b><div class="muted" style="font-size:11px">${i.createdAt?new Date(i.createdAt).toLocaleDateString("en-IN"):""}</div></div><b class="total">${money(i.total??i.grandTotal)}</b></div><div style="margin-top:12px">${statusPill(i.paymentStatus||"UNPAID")}</div></div>`).join("");
+}
 
-            if (!userSnap.exists()) {
-                // Auto-repair missing customer profile
-                await set(ref(db, `users/${uid}`), {
-                    email: user.email,
-                    role: "CUSTOMER",
-                    createdAt: Date.now()
-                });
-            } else {
-                const role = userSnap.val().role;
-                if (role === "PARTNER") {
-                    window.location.href = "partner.html";
-                    return;
-                } else if (role === "ADMIN" || role === "STAFF") {
-                    window.location.href = "admin.html";
-                    return;
-                } else if (role !== "CUSTOMER") {
-                    window.location.href = "index.html";
-                    return;
-                }
-            }
+function subscribe(){
+ const uid=user.uid;
+ const watch=(p,fn)=>{const r=path(p);onValue(r,fn,e=>toast("Live data error: "+e.message,"error"));listeners.push(()=>{});}
+ watch("restaurant/settings",s=>{const x=s.val()||{};if(x.name){$("brandName").textContent=x.name;$("mobileBrand").textContent=x.name}if(x.status){const st=String(x.status).toUpperCase();$("restaurantStatus").className="status "+(st==="OPEN"?"open":st==="BUSY"?"pending":"closed");$("restaurantStatus").innerHTML=`<i class="fa-solid fa-circle" style="font-size:7px"></i> ${esc(st)}`;}});
+ watch("menuItems",s=>{menuItems=s.val()||{};renderTabs();renderMenu();renderFavorites()});
+ watch(`users/${uid}`,s=>{const x=s.val()||{};userData={...userData,...x};renderUser()});
+ watch(`orders/${uid}`,s=>renderOrders(s.val()||{}));
+ watch(`reservations/${uid}`,s=>renderReservations(s.val()||{}));
+ watch(`addresses/${uid}`,s=>renderAddresses(s.val()||{}));
+ watch(`notifications/${uid}`,s=>renderNotifications(s.val()||{}));
+ watch(`invoices/${uid}`,s=>renderInvoices(s.val()||{}));
+}
 
-            // Bind User Context
-            window.app.user = user;
-            window.app.userData = userSnap.val() || {};
+async function checkout(){
+ if(!cart.length){toast("Your cart is empty","warning");return}
+ const total=cartTotal(),order={uid:user.uid,items:cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty})),total,status:"PLACED",paymentStatus:"PENDING",createdAt:Date.now(),customerName:userData.name||user.email};
+ try{
+   const orderRef=push(path(`orders/${user.uid}`));order.id=orderRef.key;
+   await set(orderRef,order);
+   await push(path(`notifications/${user.uid}`),{title:"Order placed",message:`Your order #${order.id.slice(-7).toUpperCase()} has been placed.`,read:false,createdAt:Date.now(),type:"ORDER"});
+   cart=[];saveCart();renderCart();closeModal("cartModal");location.hash="orders";toast("Order placed successfully");
+ }catch(e){toast(e.message||"Order could not be placed. Check your Firebase Database rules.","error")}
+}
+async function saveAddress(e){
+ e.preventDefault();
+ try{await push(path(`addresses/${user.uid}`),{title:$("addrTitle").value.trim(),flat:$("addrFlat").value.trim(),street:$("addrStreet").value.trim(),city:$("addrCity").value.trim(),pincode:$("addrPincode").value.trim(),createdAt:Date.now()});e.target.reset();$("addrCity").value="Mumbai";closeModal("addressModal");toast("Address saved")}catch(e){toast(e.message,"error")}
+}
+async function saveReservation(e){
+ e.preventDefault();
+ const data={uid:user.uid,date:$("resDate").value,time:$("resTime").value,guests:Number($("resGuests").value),request:$("resRequest").value.trim(),status:"PENDING",createdAt:Date.now(),customerName:userData.name||user.email};
+ try{await push(path(`reservations/${user.uid}`),data);await push(path(`notifications/${user.uid}`),{title:"Reservation request sent",message:`Booking request for ${data.date} at ${data.time}.`,read:false,createdAt:Date.now(),type:"RESERVATION"});e.target.reset();closeModal("reservationModal");location.hash="reservations";toast("Reservation request submitted")}catch(e){toast(e.message,"error")}
+}
+async function saveProfile(e){
+ e.preventDefault();
+ try{await update(path(`users/${user.uid}`),{name:$("profileName").value.trim(),phone:$("profilePhone").value.trim(),updatedAt:Date.now()});toast("Profile updated")}catch(e){toast(e.message,"error")}
+}
+async function support(e){
+ e.preventDefault();
+ try{await push(path("supportTickets"),{uid:user.uid,email:user.email,customerName:userData.name||"",category:$("supportCategory").value,message:$("supportMessage").value.trim(),status:"OPEN",createdAt:Date.now()});e.target.reset();toast("Support ticket submitted")}catch(e){toast(e.message,"error")}
+}
+async function deleteAddress(id){
+ if(!confirm("Delete this saved address?"))return;
+ try{await set(path(`addresses/${user.uid}/${id}`),null);toast("Address deleted")}catch(e){toast(e.message,"error")}
+}
+async function markRead(){
+ try{const snap=await get(path(`notifications/${user.uid}`)),x=snap.val()||{},u={};Object.keys(x).forEach(id=>u[`notifications/${user.uid}/${id}/read`]=true);if(Object.keys(u).length)await update(path(""),u);toast("Notifications marked as read")}catch(e){toast(e.message,"error")}
+}
 
-            // Render User Header / Sidebar info
-            document.getElementById('sidebarUserName').innerText = window.app.userData.name || user.email.split('@')[0];
-            document.getElementById('sidebarAvatar').innerText = (window.app.userData.name || user.email)[0].toUpperCase();
-            document.getElementById('homeGreeting').innerText = `Good Evening, ${window.app.userData.name || 'Valued Guest'}`;
-            document.getElementById('profileEmail').value = user.email;
-            document.getElementById('profileName').value = window.app.userData.name || '';
-            document.getElementById('profilePhone').value = window.app.userData.phone || '';
+function bind(){
+ document.addEventListener("click",e=>{
+   const go=e.target.closest("[data-go]");if(go){location.hash=go.dataset.go;return}
+   const add=e.target.closest("[data-add]");if(add){addCart(add.dataset.add);return}
+   const fav=e.target.closest("[data-fav]");if(fav){toggleFav(fav.dataset.fav);return}
+   const cat=e.target.closest("[data-cat]");if(cat){activeCat=cat.dataset.cat;renderTabs();renderMenu();return}
+   const dec=e.target.closest("[data-dec]");if(dec){changeQty(+dec.dataset.dec,-1);return}
+   const inc=e.target.closest("[data-inc]");if(inc){changeQty(+inc.dataset.inc,1);return}
+   const del=e.target.closest("[data-del]");if(del){cart.splice(+del.dataset.del,1);saveCart();renderCart();return}
+   const ad=e.target.closest("[data-address-del]");if(ad){deleteAddress(ad.dataset.addressDel);return}
+   const close=e.target.closest("[data-close]");if(close){closeModal(close.dataset.close);return}
+ });
+ $("cartBtn").onclick=$("mCart").onclick=$("floatingCart").onclick=()=>openModal("cartModal");
+ $("notifBtn").onclick=$("mNotif").onclick=()=>location.hash="notifications";
+ $("newAddress").onclick=()=>openModal("addressModal");$("newReservation").onclick=()=>openModal("reservationModal");
+ $("checkoutBtn").onclick=checkout;$("addressForm").onsubmit=saveAddress;$("reservationForm").onsubmit=saveReservation;$("profileForm").onsubmit=saveProfile;$("supportForm").onsubmit=support;
+ $("markRead").onclick=markRead;$("logoutBtn").onclick=async()=>{if(confirm("Sign out of this customer account?"))await signOut(auth)};
+ $("menuSearch").oninput=e=>{query=e.target.value;renderMenu()};$("clearSearch").onclick=()=>{$("menuSearch").value="";query="";renderMenu()};
+ document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)closeModal(m.id)}));
+ document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".modal.show").forEach(m=>closeModal(m.id))});
+}
 
-            // Initialize Menu & Realtime Data Engine
-            initDataListeners();
-
-            // Hide Guard Overlay
-            document.getElementById('guardOverlay').style.display = 'none';
-            window.app.router.init();
-        });
-
-        /* Sign Out Handler */
-        document.getElementById('logoutBtnBtn').addEventListener('click', () => {
-            if (confirm("Are you sure you want to sign out?")) {
-                signOut(auth).then(() => window.location.href = "index.html");
-            }
-        });
-
-        /* Realtime Data Handlers */
-        function initDataListeners() {
-            // Restaurant Settings Listener
-            onValue(ref(db, 'restaurant/settings'), (snap) => {
-                const data = snap.val();
-                if (data && data.name) {
-                    document.getElementById('restaurantBrandName').innerText = data.name;
-                    document.getElementById('mobileBrandName').innerText = data.name;
-                }
-            });
-
-            // Menu Items Realtime Fetch
-            onValue(ref(db, 'menuItems'), (snap) => {
-                const items = snap.val() || {};
-                const grid = document.getElementById('menuGrid');
-                grid.innerHTML = '';
-                
-                Object.keys(items).forEach(id => {
-                    const item = items[id];
-                    const card = document.createElement('div');
-                    card.className = 'food-card';
-                    card.innerHTML = `
-                        <img src="${item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'}" class="food-thumb" alt="${item.name}">
-                        <div class="food-details">
-                            <div class="food-header">
-                                <span class="food-title">${item.name}</span>
-                                <span class="food-price">₹${item.price}</span>
-                            </div>
-                            <p class="food-desc">${item.description || 'Prepared with select ingredients and premium care.'}</p>
-                            <div class="food-footer">
-                                <button class="btn btn-primary btn-sm btn-block" onclick='app.cart.addItem(${JSON.stringify({id, name: item.name, price: item.price})})'>ADD TO CART</button>
-                            </div>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            });
-
-            // Address Realtime Fetch
-            onValue(ref(db, `addresses/${window.app.user.uid}`), (snap) => {
-                const addrs = snap.val() || {};
-                const list = document.getElementById('addressesList');
-                list.innerHTML = '';
-                Object.keys(addrs).forEach(id => {
-                    const a = addrs[id];
-                    list.innerHTML += `
-                        <div class="card" style="margin:0;">
-                            <div style="font-weight:700; margin-bottom:4px;"><i class="fa-solid fa-location-dot" style="color:var(--accent-primary);"></i> ${a.title}</div>
-                            <div style="font-size:13px; color:var(--text-muted);">${a.flat}, ${a.street} - ${a.pincode}</div>
-                        </div>
-                    `;
-                });
-            });
-        }
-    </script>
+async function start(){
+ bind();route();
+ try{fb=initializeApp(firebaseConfig);auth=getAuth(fb);db=getDatabase(fb)}catch(e){bootMessage("Firebase could not start",e.message||"Please check the Firebase configuration.",true);return}
+ let finished=false;
+ const timeout=setTimeout(()=>{if(!finished)bootMessage("Sign-in check is taking too long","Firebase did not return an authentication state. Check that Firebase Authentication is enabled and that this page is served over HTTPS/localhost.",true)},10000);
+ onAuthStateChanged(auth,async u=>{
+   if(finished)return;
+   if(!u){finished=true;clearTimeout(timeout);bootMessage("Customer sign-in required","No signed-in customer session was found. Please sign in first.",true);$("loginBtn").onclick=goLogin;$("retryBtn").onclick=()=>location.reload();return}
+   try{
+     user=u;
+     const snap=await get(path(`users/${u.uid}`));
+     if(!snap.exists()){
+       userData={email:u.email||"",role:"CUSTOMER",createdAt:Date.now()};
+       await set(path(`users/${u.uid}`),userData);
+     }else userData=snap.val()||{};
+     const role=String(userData.role||"CUSTOMER").toUpperCase();
+     if(role==="PARTNER"){location.href="partner.html";return}
+     if(["ADMIN","STAFF"].includes(role)){location.href="admin.html";return}
+     if(role!=="CUSTOMER"){await signOut(auth);bootMessage("Customer access required","This account does not have the CUSTOMER role.",true);$("loginBtn").onclick=goLogin;return}
+     loadCart();renderUser();subscribe();finished=true;clearTimeout(timeout);showApp();route();
+   }catch(e){finished=true;clearTimeout(timeout);bootMessage("Customer portal could not load",e.message||"Database access was denied or unavailable.",true);$("retryBtn").onclick=()=>location.reload();$("loginBtn").onclick=goLogin}
+ });
+}
+start();
+</script>
 </body>
 </html>
