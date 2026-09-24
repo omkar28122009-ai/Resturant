@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Étoile Divine | Fine Dining & Artisanal Delivery</title>
+    <meta name="description" content="Experience unparalleled culinary excellence at L'Étoile Divine. Fine dining, artisanal gourmet delivery, and private table reservations.">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#07110D',
+                        bgSurface: '#0B1511',
+                        bgCard: '#11221C',
+                        emeraldPrimary: '#10B981',
+                        emeraldHover: '#059669',
+                        emeraldDark: '#047857',
+                        goldAccent: '#D4AF37',
+                        goldLight: '#F3E5AB',
+                        goldDark: '#AA820A',
+                        textMain: '#F9FAFB',
+                        textMuted: '#8FA89B'
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Custom scrollbar & glassmorphism utilities */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07110D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #11221C;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10B981;
+        }
+        .glass-nav {
+            background: rgba(7, 17, 13, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .glass-card {
+            background: rgba(17, 34, 28, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 175, 55, 0.12);
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #AA820A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border-glow:focus {
+            outline: none;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+            border-color: #D4AF37;
+        }
+        .emerald-glow {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+        }
+        /* Custom skeleton loading animation */
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .skeleton {
+            animation: pulse-slow 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            background: #11221C;
+        }
+    </style>
+</head>
+
+<body class="bg-bgDark text-textMain font-sans antialiased min-h-screen flex flex-col selection:bg-emeraldPrimary selection:text-bgDark overflow-x-hidden">
+
+    <!-- STICKY HEADER -->
+    <header class="sticky top-0 z-40 w-full glass-nav border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo & Name -->
+                <a href="#home" class="flex items-center space-x-3 group">
+                    <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-goldDark via-goldAccent to-goldLight p-0.5 flex items-center justify-center shadow-lg transition duration-300 group-hover:scale-105">
+                        <div class="w-full h-full bg-bgDark rounded-full flex items-center justify-center">
+                            <i class="fa-solid font-serif text-goldAccent text-xl font-bold">É</i>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-white group-hover:text-goldAccent transition">L'Étoile Divine</span>
+                        <span class="block text-[10px] uppercase tracking-widest text-textMuted font-medium -mt-1">Haute Cuisine & Bar</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-7 text-sm font-medium text-textMuted">
+                    <a href="#home" class="hover:text-goldAccent transition hover:scale-105">Home</a>
+                    <a href="#menu" class="hover:text-goldAccent transition hover:scale-105">Menu</a>
+                    <a href="#offers" class="hover:text-goldAccent transition hover:scale-105 relative">
+                        Offers
+                        <span class="absolute -top-2 -right-3 px-1.5 py-0.2 bg-emeraldPrimary text-[9px] text-bgDark font-bold rounded-full uppercase">Hot</span>
+                    </a>
+                    <a href="#reservations" class="hover:text-goldAccent transition hover:scale-105">Reservations</a>
+                    <a href="#about" class="hover:text-goldAccent transition hover:scale-105">Our Story</a>
+                    <a href="#gallery" class="hover:text-goldAccent transition hover:scale-105">Gallery</a>
+                    <a href="#reviews" class="hover:text-goldAccent transition hover:scale-105">Reviews</a>
+                    <a href="#contact" class="hover:text-goldAccent transition hover:scale-105">Contact</a>
+                </nav>
+
+                <!-- Actions: Search, Cart, Auth -->
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <!-- Menu Search Quick Trigger -->
+                    <a href="#menu" onclick="focusMenuSearch()" class="p-2.5 rounded-full text-textMuted hover:text-white hover:bg-white/5 transition" title="Search Dishes">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </a>
+
+                    <!-- Cart Trigger Button -->
+                    <button id="cartBtn" class="relative p-2.5 rounded-full text-textMuted hover:text-white hover:bg-white/5 transition" title="View Cart">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cartBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-emeraldPrimary text-bgDark text-xs font-bold rounded-full items-center justify-center shadow-lg">0</span>
+                    </button>
+
+                    <!-- Account / Auth Button Container -->
+                    <div id="authContainer" class="relative">
+                        <!-- Default Logged Out State -->
+                        <button id="navAuthBtn" onclick="openAuthModal('SIGNIN')" class="flex items-center space-x-2 px-4 py-2 rounded-full border border-goldAccent/40 text-goldAccent hover:bg-goldAccent hover:text-bgDark font-medium text-sm transition duration-300 shadow-sm min-h-[44px]">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Sign In</span>
+                        </button>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuToggle" class="lg:hidden p-2 rounded-lg text-textMuted hover:text-white focus:outline-none" aria-label="Toggle Navigation">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobileDrawer" class="hidden lg:hidden border-t border-white/5 bg-bgSurface/95 px-4 pt-3 pb-6 space-y-3">
+            <a href="#home" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Home</a>
+            <a href="#menu" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Menu & Dishes</a>
+            <a href="#offers" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Special Offers</a>
+            <a href="#reservations" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Reserve a Table</a>
+            <a href="#about" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Our Story</a>
+            <a href="#gallery" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Gallery</a>
+            <a href="#reviews" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Guest Reviews</a>
+            <a href="#contact" class="mobile-link block py-2 px-3 rounded-lg text-textMuted hover:text-goldAccent hover:bg-white/5 font-medium">Location & Hours</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- HERO SECTION -->
+        <section id="home" class="relative min-h-[85vh] flex items-center py-16 lg:py-24 overflow-hidden">
+            <!-- Background Image with Gradient Mask -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1920&q=80" alt="Restaurant Atmosphere" class="w-full h-full object-cover object-center opacity-25 filter brightness-75">
+                <div class="absolute inset-0 bg-gradient-to-t from-bgDark via-bgDark/80 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-bgDark via-bgDark/60 to-transparent"></div>
+            </div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Hero Content Left -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        
+                        <!-- Status Badge & Ratings -->
+                        <div class="inline-flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                            <span id="restaurantStatusBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emeraldPrimary/10 text-emeraldPrimary border border-emeraldPrimary/30">
+                                <span class="w-2 h-2 rounded-full bg-emeraldPrimary animate-ping mr-2"></span>
+                                Dynamic Status
+                            </span>
+                            <div class="flex items-center space-x-1 text-goldAccent text-xs font-semibold bg-bgCard/80 px-3 py-1 rounded-full border border-white/5">
+                                <i class="fa-solid fa-star"></i>
+                                <span id="heroRatingVal">4.9</span>
+                                <span class="text-textMuted font-normal">(<span id="heroReviewCount">1,280</span> reviews)</span>
+                            </div>
+                            <span class="text-xs text-textMuted bg-bgCard/60 px-2.5 py-1 rounded-full border border-white/5">
+                                <i class="fa-solid fa-utensils text-goldAccent mr-1"></i> French & Contemporary Mediterranean
+                            </span>
+                        </div>
+
+                        <!-- Main Headline -->
+                        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+                            Artisanal Culinary Mastery <br class="hidden sm:inline">
+                            <span class="gold-gradient-text">Delivered & Served.</span>
+                        </h1>
+
+                        <!-- Tagline & Description -->
+                        <p class="text-textMuted text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
+                            Experience Michelin-inspired dining crafted with locally sourced organic ingredients. Order gourmet delivery, select fine dining pickup, or reserve an unforgettable evening.
+                        </p>
+
+                        <!-- Key Highlights Pills -->
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs font-medium text-textMuted pt-2">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-clock text-emeraldPrimary"></i>
+                                <span>Avg. Delivery: <strong>30-40 mins</strong></span>
+                            </div>
+                            <span class="text-white/20">•</span>
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-motorcycle text-emeraldPrimary"></i>
+                                <span>Min. Order: <strong>₹500</strong></span>
+                            </div>
+                            <span class="text-white/20">•</span>
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-location-dot text-emeraldPrimary"></i>
+                                <span>Connaught Place, New Delhi</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                            <a href="#menu" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-emeraldPrimary text-bgDark hover:bg-emeraldHover font-semibold text-center transition duration-300 shadow-lg shadow-emeraldPrimary/20 emerald-glow min-h-[48px] flex items-center justify-center">
+                                <i class="fa-solid fa-utensils mr-2"></i> Order Online
+                            </a>
+                            <a href="#reservations" class="w-full sm:w-auto px-8 py-3.5 rounded-full border border-goldAccent text-goldAccent hover:bg-goldAccent hover:text-bgDark font-semibold text-center transition duration-300 min-h-[48px] flex items-center justify-center">
+                                <i class="fa-regular fa-calendar-check mr-2"></i> Reserve a Table
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Hero Visual Card Right -->
+                    <div class="lg:col-span-5">
+                        <div class="relative glass-card rounded-3xl p-4 sm:p-6 shadow-2xl border border-goldAccent/20">
+                            <!-- Hero Featured Image Carousel / Static Showcase -->
+                            <div class="relative h-72 sm:h-80 rounded-2xl overflow-hidden group">
+                                <img id="heroDishImage" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" alt="Featured Dish" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-bgDark/90 via-transparent to-transparent"></div>
+                                <div class="absolute bottom-4 left-4 right-4 text-left">
+                                    <span class="px-2.5 py-1 bg-goldAccent text-bgDark font-bold text-[10px] uppercase rounded-full tracking-wider">Chef's Signature</span>
+                                    <h3 class="text-lg font-serif font-bold text-white mt-1">Truffle Infused Filet Mignon</h3>
+                                    <p class="text-xs text-textMuted line-clamp-1">Grass-fed beef tenderloin, black winter truffle jus, pomme purée</p>
+                                </div>
+                            </div>
+
+                            <!-- Live Counter Stats -->
+                            <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+                                <div class="bg-bgDark/60 p-3 rounded-xl border border-white/5">
+                                    <span class="block text-goldAccent font-serif text-xl font-bold">100%</span>
+                                    <span class="text-[10px] text-textMuted uppercase tracking-wider">Organic</span>
+                                </div>
+                                <div class="bg-bgDark/60 p-3 rounded-xl border border-white/5">
+                                    <span class="block text-goldAccent font-serif text-xl font-bold">4.9 ★</span>
+                                    <span class="text-[10px] text-textMuted uppercase tracking-wider">Top Rated</span>
+                                </div>
+                                <div class="bg-bgDark/60 p-3 rounded-xl border border-white/5">
+                                    <span class="block text-emeraldPrimary font-serif text-xl font-bold">Fast</span>
+                                    <span class="text-[10px] text-textMuted uppercase tracking-wider">Express Dispatch</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- THREE ORDERING MODES -->
+        <section class="py-10 bg-bgSurface border-y border-white/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Delivery Option -->
+                    <div class="glass-card rounded-2xl p-6 transition duration-300 hover:border-emeraldPrimary/50 group flex flex-col justify-between">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-emeraldPrimary/10 border border-emeraldPrimary/30 flex items-center justify-center text-emeraldPrimary text-xl group-hover:bg-emeraldPrimary group-hover:text-bgDark transition">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif text-lg font-bold text-white">Gourmet Delivery</h3>
+                                <p class="text-xs text-textMuted mt-1">Insulated eco-friendly packaging ensuring kitchen-fresh temperature at your doorstep.</p>
+                            </div>
+                        </div>
+                        <a href="#menu" onclick="setOrderType('DELIVERY')" class="mt-6 w-full py-2.5 rounded-xl border border-white/10 hover:border-emeraldPrimary text-xs font-semibold text-center text-textMain hover:text-emeraldPrimary transition">
+                            Order Delivery <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+
+                    <!-- Pickup Option -->
+                    <div class="glass-card rounded-2xl p-6 transition duration-300 hover:border-goldAccent/50 group flex flex-col justify-between">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-goldAccent/10 border border-goldAccent/30 flex items-center justify-center text-goldAccent text-xl group-hover:bg-goldAccent group-hover:text-bgDark transition">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif text-lg font-bold text-white">Curbside Pickup</h3>
+                                <p class="text-xs text-textMuted mt-1">Skip the queue. Prepared precisely to your estimated arrival window.</p>
+                            </div>
+                        </div>
+                        <a href="#menu" onclick="setOrderType('PICKUP')" class="mt-6 w-full py-2.5 rounded-xl border border-white/10 hover:border-goldAccent text-xs font-semibold text-center text-textMain hover:text-goldAccent transition">
+                            Order Pickup <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+
+                    <!-- Dine-In Reservation -->
+                    <div class="glass-card rounded-2xl p-6 transition duration-300 hover:border-emeraldPrimary/50 group flex flex-col justify-between">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-emeraldPrimary/10 border border-emeraldPrimary/30 flex items-center justify-center text-emeraldPrimary text-xl group-hover:bg-emeraldPrimary group-hover:text-bgDark transition">
+                                <i class="fa-solid fa-chair"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif text-lg font-bold text-white">Dine-In Reservation</h3>
+                                <p class="text-xs text-textMuted mt-1">Reserve private booths, terrace tables, or chef counter seats effortlessy.</p>
+                            </div>
+                        </div>
+                        <a href="#reservations" class="mt-6 w-full py-2.5 rounded-xl border border-white/10 hover:border-emeraldPrimary text-xs font-semibold text-center text-textMain hover:text-emeraldPrimary transition">
+                            Reserve Table <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED MENU & LIVE DISH CATALOGUE -->
+        <section id="menu" class="py-16 sm:py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto space-y-3">
+                    <span class="text-xs uppercase font-bold tracking-widest text-goldAccent">Artisanal Offerings</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold">Explore Our Fine Menu</h2>
+                    <p class="text-textMuted text-sm sm:text-base">Every dish is prepared freshly upon order by Executive Chef Antoine Laurent and team.</p>
+                </div>
+
+                <!-- Search & Filter Bar Controls -->
+                <div class="mt-10 space-y-6">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        
+                        <!-- Search Box -->
+                        <div class="relative w-full md:w-96">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-textMuted"></i>
+                            <input type="text" id="menuSearchInput" placeholder="Search dishes, ingredients, tags..." class="w-full pl-11 pr-10 py-3 rounded-full bg-bgCard border border-white/10 text-sm text-textMain placeholder-textMuted focus:outline-none focus:border-goldAccent gold-border-glow transition">
+                            <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-white p-1">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <!-- Diet & Quick Filter Pills -->
+                        <div class="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+                            <button onclick="filterDiet('ALL')" class="diet-btn active px-4 py-2 rounded-full text-xs font-semibold border border-white/10 bg-emeraldPrimary text-bgDark transition">All Items</button>
+                            <button onclick="filterDiet('VEG')" class="diet-btn px-4 py-2 rounded-full text-xs font-semibold border border-white/10 bg-bgCard text-textMuted hover:text-white transition flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span> Vegetarian
+                            </button>
+                            <button onclick="filterDiet('NON-VEG')" class="diet-btn px-4 py-2 rounded-full text-xs font-semibold border border-white/10 bg-bgCard text-textMuted hover:text-white transition flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span> Non-Veg
+                            </button>
+                            <button onclick="filterDiet('BESTSELLER')" class="diet-btn px-4 py-2 rounded-full text-xs font-semibold border border-white/10 bg-bgCard text-textMuted hover:text-white transition">
+                                <i class="fa-solid fa-fire text-goldAccent mr-1"></i> Bestseller
+                            </button>
+                        </div>
+
+                        <!-- Sorting Selector -->
+                        <div class="w-full md:w-auto flex items-center justify-end">
+                            <select id="menuSortSelect" class="w-full md:w-auto px-4 py-2.5 rounded-full bg-bgCard border border-white/10 text-xs font-medium text-textMuted focus:outline-none focus:border-goldAccent">
+                                <option value="recommended">Sort: Recommended</option>
+                                <option value="popular">Sort: Most Popular</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- Category Scroll Tabs -->
+                    <div id="categoryTabsContainer" class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none border-b border-white/5">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Dishes Grid Container -->
+                <div id="menuGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
+                    <!-- Skeleton Loader State -->
+                    <div class="glass-card rounded-2xl p-4 space-y-4 skeleton h-80"></div>
+                    <div class="glass-card rounded-2xl p-4 space-y-4 skeleton h-80"></div>
+                    <div class="glass-card rounded-2xl p-4 space-y-4 skeleton h-80"></div>
+                    <div class="glass-card rounded-2xl p-4 space-y-4 skeleton h-80"></div>
+                </div>
+
+                <!-- Empty State Message -->
+                <div id="noDishesFound" class="hidden text-center py-16 space-y-4">
+                    <div class="w-16 h-16 rounded-full bg-bgCard border border-white/10 flex items-center justify-center mx-auto text-textMuted text-2xl">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                    <h3 class="font-serif text-xl font-bold text-white">No dishes found</h3>
+                    <p class="text-textMuted text-sm max-w-sm mx-auto">We couldn't find any dishes matching your current filter or search criteria.</p>
+                    <button onclick="resetMenuFilters()" class="px-5 py-2 rounded-full border border-goldAccent text-goldAccent text-xs font-semibold hover:bg-goldAccent hover:text-bgDark transition">Reset All Filters</button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- OFFERS & PROMOTIONS SECTION -->
+        <section id="offers" class="py-16 bg-bgSurface border-y border-white/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="text-xs uppercase font-bold tracking-widest text-emeraldPrimary">Exclusive Privileges</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold mt-1">Special Culinary Offers</h2>
+                    </div>
+                    <p class="text-textMuted text-sm max-w-md">Apply eligible coupon codes during checkout to unlock chef compliments and dining privileges.</p>
+                </div>
+
+                <div id="offersContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Offers render here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- RESERVATION SECTION -->
+        <section id="reservations" class="py-20 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <div class="lg:col-span-5 space-y-6">
+                        <span class="text-xs uppercase font-bold tracking-widest text-goldAccent">Table Booking</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">Reserve Your Dining Experience</h2>
+                        <p class="text-textMuted text-sm sm:text-base leading-relaxed">
+                            Whether celebrating an intimate anniversary or hosting executive guests, secure your preferred seating area and dining hour in advance.
+                        </p>
+                        
+                        <div class="space-y-4 pt-2">
+                            <div class="flex items-start space-x-3">
+                                <i class="fa-solid fa-circle-check text-emeraldPrimary mt-1"></i>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Instant Confirmation</h4>
+                                    <p class="text-xs text-textMuted">Realtime seat allocation managed directly by our maître d'hôtel.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i class="fa-solid fa-circle-check text-emeraldPrimary mt-1"></i>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Custom Dietary Arrangements</h4>
+                                    <p class="text-xs text-textMuted">Provide special request instructions for customized tasting menus.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reservation Form Card -->
+                    <div class="lg:col-span-7">
+                        <form id="reservationForm" onsubmit="handleReservationSubmit(event)" class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 border border-goldAccent/30 shadow-2xl">
+                            <h3 class="font-serif text-2xl font-bold text-white">Table Details</h3>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-textMuted uppercase mb-2">Date</label>
+                                    <input type="date" id="resDate" required class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-textMuted uppercase mb-2">Preferred Time</label>
+                                    <select id="resTime" required class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                                        <option value="18:00">06:00 PM - Dinner</option>
+                                        <option value="19:00">07:00 PM - Dinner</option>
+                                        <option value="20:00" selected>08:00 PM - Prime Hour</option>
+                                        <option value="21:00">09:00 PM - Late Dining</option>
+                                        <option value="22:00">10:00 PM - Night Service</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-textMuted uppercase mb-2">Number of Guests</label>
+                                    <select id="resGuests" required class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                                        <option value="1">1 Person (Solo Dining)</option>
+                                        <option value="2" selected>2 Guests (Couple Table)</option>
+                                        <option value="4">4 Guests (Standard)</option>
+                                        <option value="6">6 Guests (Executive Table)</option>
+                                        <option value="8">8+ Guests (Private Dining Hall)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-textMuted uppercase mb-2">Seating Preference</label>
+                                    <select id="resSeating" class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                                        <option value="Main Dining Room">Main Dining Room</option>
+                                        <option value="Terrace Garden">Terrace Garden View</option>
+                                        <option value="Chef Counter">Chef's Interactive Counter</option>
+                                        <option value="Private Salon">Private Salon Booth</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-textMuted uppercase mb-2">Special Requests or Allergies</label>
+                                <textarea id="resNotes" rows="3" placeholder="Anniversaries, birthday arrangements, severe nut allergies, etc." class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent placeholder-textMuted/50"></textarea>
+                            </div>
+
+                            <button type="submit" id="resSubmitBtn" class="w-full py-4 rounded-xl bg-gradient-to-r from-goldDark via-goldAccent to-goldLight text-bgDark font-bold text-sm tracking-wide uppercase hover:opacity-95 transition duration-300 shadow-xl min-h-[48px]">
+                                Check & Reserve Table
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT / STORY SECTION -->
+        <section id="about" class="py-20 bg-bgSurface border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <div class="lg:col-span-6 relative">
+                        <div class="grid grid-cols-2 gap-4">
+                            <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=600&q=80" alt="Executive Chef" class="rounded-2xl object-cover h-64 sm:h-80 w-full shadow-lg border border-white/10">
+                            <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80" alt="Plating Dish" class="rounded-2xl object-cover h-64 sm:h-80 w-full shadow-lg border border-white/10 mt-8">
+                        </div>
+                        <div class="absolute -bottom-6 right-6 glass-card p-4 rounded-2xl border border-goldAccent/30 hidden sm:block">
+                            <p class="font-serif text-2xl font-bold text-goldAccent">15+ Years</p>
+                            <p class="text-xs text-textMuted">Culinary Heritage</p>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-6 space-y-6">
+                        <span class="text-xs uppercase font-bold tracking-widest text-goldAccent">Our Heritage</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold leading-tight">Culinary Perfection Rooted in Passion</h2>
+                        <p class="text-textMuted text-sm sm:text-base leading-relaxed">
+                            Founded under the visionary direction of Executive Chef Antoine Laurent, L'Étoile Divine blends classical French culinary precision with fresh Mediterranean influences.
+                        </p>
+                        <p class="text-textMuted text-sm leading-relaxed">
+                            Our philosophy centers around sustainable farm-to-table sourcing, aged artisanal meats, hand-pressed extra virgin olive oils, and zero-waste kitchen standards.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-6 pt-2">
+                            <div>
+                                <h4 class="font-serif text-lg font-bold text-white">Farm Fresh</h4>
+                                <p class="text-xs text-textMuted mt-1">100% organic produce delivered daily from local estates.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-serif text-lg font-bold text-white">Master Sommelier</h4>
+                                <p class="text-xs text-textMuted mt-1">Curated vintage wine pairings for every signature course.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION -->
+        <section id="gallery" class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto space-y-2 mb-12">
+                    <span class="text-xs uppercase font-bold tracking-widest text-emeraldPrimary">Visual Symphony</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold">Restaurant & Dish Gallery</h2>
+                </div>
+
+                <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Gallery items rendered dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- REVIEWS SECTION -->
+        <section id="reviews" class="py-20 bg-bgSurface border-y border-white/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                    <div>
+                        <span class="text-xs uppercase font-bold tracking-widest text-goldAccent">Testimonials</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold mt-1">Gourmet Guest Reviews</h2>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-bgDark px-4 py-2 rounded-full border border-white/10">
+                        <span class="text-goldAccent text-lg font-bold">4.9 / 5.0</span>
+                        <div class="text-goldAccent text-xs">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <span class="text-xs text-textMuted ml-2">Verified Orders</span>
+                    </div>
+                </div>
+
+                <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Reviews rendered dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT & LOCATION -->
+        <section id="contact" class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    
+                    <div class="lg:col-span-5 space-y-6">
+                        <span class="text-xs uppercase font-bold tracking-widest text-emeraldPrimary">Get In Touch</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold">Location & Hours</h2>
+                        
+                        <div class="space-y-4 pt-2">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-emeraldPrimary/10 border border-emeraldPrimary/30 flex items-center justify-center text-emeraldPrimary flex-shrink-0">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Address</h4>
+                                    <p class="text-xs text-textMuted mt-0.5">Block B, Inner Circle, Connaught Place, New Delhi, India</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-goldAccent/10 border border-goldAccent/30 flex items-center justify-center text-goldAccent flex-shrink-0">
+                                    <i class="fa-solid fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Opening Hours</h4>
+                                    <p class="text-xs text-textMuted mt-0.5">Lunch: 12:00 PM – 03:30 PM</p>
+                                    <p class="text-xs text-textMuted">Dinner: 06:30 PM – 11:30 PM (Daily)</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-emeraldPrimary/10 border border-emeraldPrimary/30 flex items-center justify-center text-emeraldPrimary flex-shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white">Phone & Concierge</h4>
+                                    <p class="text-xs text-textMuted mt-0.5">+91 11 4567 8900 | +91 98765 43210</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3 pt-4">
+                            <a href="tel:+919876543210" class="px-5 py-2.5 rounded-full bg-emeraldPrimary text-bgDark text-xs font-bold flex items-center gap-2 hover:bg-emeraldHover transition min-h-[44px]">
+                                <i class="fa-solid fa-phone"></i> Call Now
+                            </a>
+                            <a href="https://wa.me/919876543210" target="_blank" class="px-5 py-2.5 rounded-full border border-emeraldPrimary text-emeraldPrimary text-xs font-bold flex items-center gap-2 hover:bg-emeraldPrimary hover:text-bgDark transition min-h-[44px]">
+                                <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Location Visual Card -->
+                    <div class="lg:col-span-7">
+                        <div class="glass-card rounded-3xl p-4 sm:p-6 border border-white/10 h-full flex flex-col justify-between">
+                            <div class="relative w-full h-80 rounded-2xl overflow-hidden border border-white/10">
+                                <!-- Styled Map Placeholder Visual -->
+                                <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1000&q=80" alt="Map View" class="w-full h-full object-cover filter contrast-125 opacity-60">
+                                <div class="absolute inset-0 bg-gradient-to-t from-bgDark via-bgDark/40 to-transparent"></div>
+                                <div class="absolute bottom-6 left-6 glass-card p-4 rounded-xl border border-goldAccent/30 max-w-xs">
+                                    <span class="text-xs font-bold text-goldAccent uppercase">L'Étoile Divine</span>
+                                    <p class="text-xs text-textMuted mt-1">Valet Parking Available at Rear Entrance</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-bgSurface border-t border-white/10 py-12 text-xs text-textMuted">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="space-y-3">
+                    <span class="font-serif text-lg font-bold text-white block">L'Étoile Divine</span>
+                    <p class="text-textMuted">Luxury restaurant management and fine ordering ecosystem.</p>
+                </div>
+                <div>
+                    <h5 class="text-white font-bold mb-3 uppercase tracking-wider">Quick Navigation</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#menu" class="hover:text-goldAccent transition">Menu & Ordering</a></li>
+                        <li><a href="#reservations" class="hover:text-goldAccent transition">Table Reservations</a></li>
+                        <li><a href="#offers" class="hover:text-goldAccent transition">Discounts & Offers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-white font-bold mb-3 uppercase tracking-wider">Staff & Partners</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" onclick="openAuthModal('SIGNUP'); return false;" class="hover:text-emeraldPrimary transition">Delivery Partner Registration</a></li>
+                        <li><a href="admin.html" class="hover:text-emeraldPrimary transition">Staff / Admin Portal</a></li>
+                        <li><a href="partner.html" class="hover:text-emeraldPrimary transition">Partner Dashboard</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="text-white font-bold mb-3 uppercase tracking-wider">Connect</h5>
+                    <div class="flex items-center space-x-4 text-base">
+                        <a href="#" class="hover:text-goldAccent"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="hover:text-goldAccent"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="hover:text-goldAccent"><i class="fa-brands fa-x-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p>&copy; 2026 L'Étoile Divine. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="customer.html" class="hover:text-white">Customer Hub</a>
+                    <span>•</span>
+                    <a href="partner.html" class="hover:text-white">Partner Hub</a>
+                    <span>•</span>
+                    <a href="admin.html" class="hover:text-white">Admin Hub</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FOOD CUSTOMIZATION MODAL -->
+    <div id="foodCustomModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-card rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-goldAccent/30 shadow-2xl relative flex flex-col">
+            
+            <!-- Close Button -->
+            <button onclick="closeFoodModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-bgDark/80 border border-white/10 flex items-center justify-center text-textMuted hover:text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Image Header -->
+            <div class="relative h-56 w-full">
+                <img id="modalDishImg" src="" alt="Dish Detail" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-bgCard via-transparent to-transparent"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 space-y-6 flex-grow">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span id="modalDietBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase">VEG</span>
+                        <span id="modalBestsellerBadge" class="hidden px-2 py-0.5 rounded bg-goldAccent text-bgDark text-[10px] font-bold uppercase">Bestseller</span>
+                    </div>
+                    <h3 id="modalDishTitle" class="font-serif text-2xl font-bold text-white mt-1">Dish Title</h3>
+                    <p id="modalDishDesc" class="text-xs text-textMuted mt-1 leading-relaxed">Dish description text here.</p>
+                </div>
+
+                <!-- Variant Options (Radio) -->
+                <div id="variantsContainer" class="space-y-2">
+                    <h4 class="text-xs font-bold uppercase text-textMuted tracking-wider">Select Portion / Variant</h4>
+                    <div id="variantsList" class="space-y-2"></div>
+                </div>
+
+                <!-- Add-ons Options (Checkbox) -->
+                <div id="addonsContainer" class="space-y-2">
+                    <h4 class="text-xs font-bold uppercase text-textMuted tracking-wider">Customize Add-ons</h4>
+                    <div id="addonsList" class="space-y-2"></div>
+                </div>
+
+                <!-- Special Instructions -->
+                <div>
+                    <label class="block text-xs font-bold uppercase text-textMuted tracking-wider mb-2">Special Chef Instructions</label>
+                    <input type="text" id="modalInstructions" placeholder="e.g. Extra spicy, sauce on the side..." class="w-full px-4 py-2.5 rounded-xl bg-bgDark border border-white/10 text-xs text-textMain focus:outline-none focus:border-goldAccent">
+                </div>
+            </div>
+
+            <!-- Modal Footer Price & Action -->
+            <div class="p-4 border-t border-white/10 bg-bgSurface/90 flex items-center justify-between gap-4">
+                <!-- Quantity Controls -->
+                <div class="flex items-center border border-white/10 rounded-xl bg-bgDark p-1">
+                    <button onclick="updateModalQty(-1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-textMuted hover:text-white hover:bg-white/5 font-bold">-</button>
+                    <span id="modalQtyVal" class="w-8 text-center text-sm font-bold text-white">1</span>
+                    <button onclick="updateModalQty(1)" class="w-8 h-8 rounded-lg flex items-center justify-center text-textMuted hover:text-white hover:bg-white/5 font-bold">+</button>
+                </div>
+
+                <button id="modalAddToCartBtn" onclick="confirmModalAddToCart()" class="flex-grow py-3 px-6 rounded-xl bg-emeraldPrimary text-bgDark font-bold text-sm hover:bg-emeraldHover transition shadow-lg flex items-center justify-between min-h-[44px]">
+                    <span>Add to Cart</span>
+                    <span id="modalTotalPrice">₹0</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SLIDE-OUT CART DRAWER -->
+    <div id="cartDrawerBackdrop" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm transition-opacity"></div>
+    <div id="cartDrawer" class="fixed top-0 right-0 z-50 h-full w-full sm:w-96 bg-bgSurface border-l border-white/10 shadow-2xl transform translate-x-full transition duration-300 flex flex-col">
+        
+        <!-- Cart Drawer Header -->
+        <div class="p-5 border-b border-white/10 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-bag-shopping text-goldAccent text-xl"></i>
+                <h3 class="font-serif text-xl font-bold text-white">Your Order</h3>
+            </div>
+            <button id="closeCartBtn" class="p-2 text-textMuted hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div id="cartItemsContainer" class="flex-grow overflow-y-auto p-5 space-y-4">
+            <!-- Dynamic Cart Items Rendered Here -->
+        </div>
+
+        <!-- Cart Footer -->
+        <div id="cartFooter" class="p-5 border-t border-white/10 bg-bgDark space-y-4">
+            <!-- Coupon Code Input -->
+            <div class="flex gap-2">
+                <input type="text" id="cartCouponInput" placeholder="Enter Promo Code" class="flex-grow px-3 py-2 rounded-xl bg-bgCard border border-white/10 text-xs text-textMain uppercase placeholder-textMuted focus:outline-none focus:border-goldAccent">
+                <button onclick="applyCartCoupon()" class="px-4 py-2 rounded-xl bg-goldAccent/20 border border-goldAccent/40 text-goldAccent text-xs font-bold hover:bg-goldAccent hover:text-bgDark transition">Apply</button>
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="space-y-1.5 text-xs">
+                <div class="flex justify-between text-textMuted">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotalVal">₹0</span>
+                </div>
+                <div class="flex justify-between text-textMuted">
+                    <span>Taxes & Service Fees</span>
+                    <span id="cartTaxVal">₹0</span>
+                </div>
+                <div id="cartDiscountRow" class="hidden flex justify-between text-emeraldPrimary font-bold">
+                    <span>Discount Promo</span>
+                    <span id="cartDiscountVal">-₹0</span>
+                </div>
+                <div class="flex justify-between text-textMuted">
+                    <span>Delivery Fee</span>
+                    <span id="cartDeliveryVal">₹50</span>
+                </div>
+                <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-white/10">
+                    <span>Grand Total</span>
+                    <span id="cartTotalVal" class="text-goldAccent">₹0</span>
+                </div>
+            </div>
+
+            <button onclick="proceedToCheckout()" class="w-full py-3.5 rounded-xl bg-emeraldPrimary text-bgDark font-bold text-sm tracking-wide uppercase hover:bg-emeraldHover transition shadow-lg flex items-center justify-center gap-2 min-h-[48px]">
+                Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION MODAL -->
+    <div id="authModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-card rounded-3xl max-w-md w-full border border-goldAccent/30 shadow-2xl p-6 sm:p-8 relative">
+            
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-textMuted hover:text-white p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Auth Mode Switch Tabs -->
+            <div class="flex border-b border-white/10 mb-6">
+                <button id="tabSignIn" onclick="switchAuthTab('SIGNIN')" class="w-1/2 py-2.5 text-sm font-bold border-b-2 border-goldAccent text-goldAccent">Sign In</button>
+                <button id="tabSignUp" onclick="switchAuthTab('SIGNUP')" class="w-1/2 py-2.5 text-sm font-bold border-b-2 border-transparent text-textMuted hover:text-white">Create Account</button>
+            </div>
+
+            <!-- Sign In Form -->
+            <form id="signInForm" onsubmit="handleAuthSignIn(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-1">Email Address</label>
+                    <input type="email" id="signInEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-1">Password</label>
+                    <input type="password" id="signInPassword" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                </div>
+                
+                <button type="submit" id="signInSubmitBtn" class="w-full py-3.5 rounded-xl bg-goldAccent text-bgDark font-bold text-sm hover:opacity-90 transition shadow-lg min-h-[44px]">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signUpForm" onsubmit="handleAuthSignUp(event)" class="hidden space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-1">Full Name</label>
+                    <input type="text" id="signUpName" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-1">Email Address</label>
+                    <input type="email" id="signUpEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-textMuted uppercase mb-1">Password</label>
+                        <input type="password" id="signUpPassword" minlength="6" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-textMuted uppercase mb-1">Confirm</label>
+                        <input type="password" id="signUpPasswordConfirm" minlength="6" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-bgDark border border-white/10 text-sm text-textMain focus:outline-none focus:border-goldAccent">
+                    </div>
+                </div>
+
+                <!-- Account Type Selection (Customer vs Delivery Partner) -->
+                <div>
+                    <label class="block text-xs font-semibold text-textMuted uppercase mb-2">Select Account Type</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="flex items-center space-x-2 p-3 rounded-xl border border-white/10 bg-bgDark cursor-pointer hover:border-goldAccent transition">
+                            <input type="radio" name="accountType" value="CUSTOMER" checked class="text-goldAccent focus:ring-0">
+                            <span class="text-xs font-bold text-white">Customer</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 rounded-xl border border-white/10 bg-bgDark cursor-pointer hover:border-goldAccent transition">
+                            <input type="radio" name="accountType" value="PARTNER" class="text-goldAccent focus:ring-0">
+                            <span class="text-xs font-bold text-white">Delivery Partner</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" id="signUpSubmitBtn" class="w-full py-3.5 rounded-xl bg-emeraldPrimary text-bgDark font-bold text-sm hover:bg-emeraldHover transition shadow-lg min-h-[44px]">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Social Google Sign In -->
+            <div class="mt-6 pt-6 border-t border-white/10 space-y-3">
+                <button onclick="handleGoogleSignIn()" class="w-full py-3 px-4 rounded-xl border border-white/10 bg-bgDark hover:bg-white/5 text-textMain text-xs font-semibold flex items-center justify-center gap-3 transition min-h-[44px]">
+                    <i class="fa-brands fa-google text-red-400 text-sm"></i> Continue with Google
+                </button>
+            </div>
+
+            <!-- Error/Status Box -->
+            <div id="authStatusBox" class="hidden mt-4 p-3 rounded-xl text-xs font-medium text-center"></div>
+
+        </div>
+    </div>
+
+    <!-- IMAGE LIGHTBOX MODAL -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 hidden bg-black/95 flex items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white hover:text-goldAccent text-2xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-4xl w-full text-center space-y-4">
+            <img id="lightboxImg" src="" alt="Enlarged Gallery" class="max-h-[80vh] mx-auto rounded-2xl border border-white/10 shadow-2xl">
+            <p id="lightboxCaption" class="text-sm font-serif text-goldAccent"></p>
+        </div>
+    </div>
+
+    <!-- CUSTOM TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 space-y-3 pointer-events-none"></div>
+
+
+    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged, 
+            GoogleAuthProvider, 
+            signInWithPopup 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getDatabase, 
+            ref, 
+            set, 
+            get, 
+            child, 
+            onValue, 
+            push 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+        /* Firebase Project Configuration */
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
+            authDomain: "yukti-247.firebaseapp.com",
+            databaseURL: "https://yukti-247-default-rtdb.firebaseio.com",
+            projectId: "yukti-247",
+            storageBucket: "yukti-247.firebasestorage.app",
+            messagingSenderId: "244123454826",
+            appId: "1:244123454826:web:56b4d88c3628bb06cfa913",
+            measurementId: "G-6BGFCBKTD7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        /* Application Global State */
+        let currentUser = null;
+        let currentUserRole = null;
+        let menuItemsData = [];
+        let activeCategory = 'ALL';
+        let activeDiet = 'ALL';
+        let searchQuery = '';
+        let cartItems = [];
+        let appliedCoupon = null;
+        let selectedCustomDish = null;
+        let selectedVariant = null;
+        let selectedAddons = [];
+        let customModalQty = 1;
+
+        /* Seed Mock Menu Fallback Data (In case Database is empty) */
+        const fallbackMenu = [
+            {
+                id: 'dish_01',
+                name: 'Truffle Filet Mignon',
+                category: 'Main Course',
+                diet: 'NON-VEG',
+                bestseller: true,
+                price: 1250,
+                comparePrice: 1400,
+                description: 'Grass-fed beef tenderloin served with black winter truffle jus, pomme purée, and roasted shallots.',
+                image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Medium Rare (250g)', priceOffset: 0 },
+                    { name: 'Medium Well (350g)', priceOffset: 300 }
+                ],
+                addons: [
+                    { name: 'Extra Truffle Butter', price: 150 },
+                    { name: 'Seared Foie Gras', price: 450 }
+                ]
+            },
+            {
+                id: 'dish_02',
+                name: 'Artisanal Burrata Caprese',
+                category: 'Starters',
+                diet: 'VEG',
+                bestseller: true,
+                price: 680,
+                comparePrice: 750,
+                description: 'Fresh Puglia burrata, heirloom organic tomatoes, basil oil, and aged Modena balsamic glaze.',
+                image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb12765?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Standard (150g)', priceOffset: 0 }
+                ],
+                addons: [
+                    { name: 'Extra Pesto Toast', price: 90 }
+                ]
+            },
+            {
+                id: 'dish_03',
+                name: 'Wild Mushroom Risotto',
+                category: 'Main Course',
+                diet: 'VEG',
+                bestseller: false,
+                price: 890,
+                comparePrice: 990,
+                description: 'Carnaroli rice, porcini mushrooms, Parmigiano-Reggiano aged 24 months, and micro-herbs.',
+                image: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Regular Portion', priceOffset: 0 }
+                ],
+                addons: [
+                    { name: 'Shaved Fresh Truffle', price: 350 }
+                ]
+            },
+            {
+                id: 'dish_04',
+                name: 'Woodfired Lobster Pizza',
+                category: 'Pizzas',
+                diet: 'NON-VEG',
+                bestseller: true,
+                price: 1450,
+                comparePrice: 1600,
+                description: 'Sourdough crust, Butter poached Maine lobster tail, fior di latte, saffron bisque sauce.',
+                image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: '10 inch Medium', priceOffset: 0 },
+                    { name: '12 inch Large', priceOffset: 400 }
+                ],
+                addons: [
+                    { name: 'Extra Truffle Oil Drizzle', price: 120 }
+                ]
+            },
+            {
+                id: 'dish_05',
+                name: 'Valrhona Chocolate Soufflé',
+                category: 'Desserts',
+                diet: 'VEG',
+                bestseller: true,
+                price: 520,
+                comparePrice: 600,
+                description: '70% Dark Valrhona chocolate molten center, house-made Tahitian vanilla bean gelato.',
+                image: 'https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Single Soufflé', priceOffset: 0 }
+                ],
+                addons: [
+                    { name: 'Extra Gelato Scoop', price: 120 }
+                ]
+            },
+            {
+                id: 'dish_06',
+                name: 'Smoked Old Fashioned Cocktail',
+                category: 'Beverages',
+                diet: 'VEG',
+                bestseller: false,
+                price: 750,
+                comparePrice: 850,
+                description: 'Bourbon whiskey, Angostura bitters, organic maple, infused with hickory smoke.',
+                image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=600&q=80',
+                variants: [
+                    { name: 'Standard Serve', priceOffset: 0 }
+                ],
+                addons: []
+            }
+        ];
+
+        /* Fallback Active Offers Data */
+        const fallbackOffers = [
+            {
+                code: 'DIVINE20',
+                title: '20% OFF Gourmet Dining',
+                description: 'Valid on orders above ₹1,000 for delivery or dine-in reservations.',
+                discount: 20
+            },
+            {
+                code: 'CHEFCOMP',
+                title: 'Complimentary Soufflé',
+                description: 'Free Valrhona Soufflé on orders exceeding ₹2,500.',
+                discount: 15
+            }
+        ];
+
+        /* Fallback Reviews Data */
+        const fallbackReviews = [
+            {
+                name: 'Sophia Montgomery',
+                rating: 5,
+                date: '2 days ago',
+                comment: 'An exquisite culinary experience. The Truffle Filet Mignon was melted perfection.',
+                verified: true
+            },
+            {
+                name: 'Vikramaditya Rao',
+                rating: 5,
+                date: '1 week ago',
+                comment: 'Packaging for delivery was top-tier. Kept the soufflé warm and velvety.',
+                verified: true
+            },
+            {
+                name: 'Elena Rostova',
+                rating: 5,
+                date: '2 weeks ago',
+                comment: 'The ambience during our anniversary dinner was breathtaking. Outstanding service.',
+                verified: true
+            }
+        ];
+
+        /* Gallery Images */
+        const galleryImages = [
+            { url: 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=600&q=80', caption: 'Artisanal Plating' },
+            { url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80', caption: 'Main Dining Hall' },
+            { url: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80', caption: 'Private Terrace View' },
+            { url: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80', caption: 'Sommelier Wine Vault' }
+        ];
+
+        /* Initialize Page & Listeners */
+        window.addEventListener('DOMContentLoaded', () => {
+            initAuthMonitoring();
+            initRealtimeData();
+            renderGallery();
+            renderReviews(fallbackReviews);
+            renderOffers(fallbackOffers);
+            loadLocalCart();
+            setupSearchAndFilterListeners();
+        });
+
+        /* --- AUTHENTICATION & ROLE ROUTING LOGIC --- */
+        function initAuthMonitoring() {
+            onAuthStateChanged(auth, async (user) => {
+                currentUser = user;
+                if (user) {
+                    currentUserRole = await getUserRole(user.uid);
+                    updateAuthUI(user);
+                    checkPendingAction();
+                } else {
+                    currentUserRole = null;
+                    updateAuthUI(null);
+                }
+            });
+        }
+
+        async function getUserRole(uid) {
+            try {
+                const snapshot = await get(ref(db, `users/${uid}`));
+                if (snapshot.exists()) {
+                    return snapshot.val().role || 'CUSTOMER';
+                }
+            } catch (err) {
+                console.error("Error fetching user role:", err);
+            }
+            return 'CUSTOMER';
+        }
+
+        function redirectByRole(role) {
+            if (role === 'PARTNER') {
+                window.location.href = 'partner.html';
+            } else if (role === 'ADMIN' || role === 'STAFF') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'customer.html';
+            }
+        }
+
+        function updateAuthUI(user) {
+            const container = document.getElementById('authContainer');
+            if (user) {
+                container.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 px-4 py-2 rounded-full border border-emeraldPrimary/50 bg-emeraldPrimary/10 text-emeraldPrimary font-medium text-xs hover:bg-emeraldPrimary hover:text-bgDark transition min-h-[44px]">
+                            <i class="fa-solid fa-user-circle text-sm"></i>
+                            <span>My Account</span>
+                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 glass-card rounded-2xl py-2 hidden group-hover:block border border-white/10 shadow-2xl z-50">
+                            <button onclick="goToUserDashboard()" class="w-full text-left px-4 py-2 text-xs text-textMain hover:bg-white/5 flex items-center gap-2">
+                                <i class="fa-solid fa-gauge text-goldAccent"></i> Dashboard
+                            </button>
+                            <button onclick="handleLogout()" class="w-full text-left px-4 py-2 text-xs text-red-400 hover:bg-white/5 flex items-center gap-2">
+                                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button onclick="openAuthModal('SIGNIN')" class="flex items-center space-x-2 px-4 py-2 rounded-full border border-goldAccent/40 text-goldAccent hover:bg-goldAccent hover:text-bgDark font-medium text-sm transition duration-300 shadow-sm min-h-[44px]">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Sign In</span>
+                    </button>
+                `;
+            }
+        }
+
+        window.goToUserDashboard = () => {
+            redirectByRole(currentUserRole);
+        };
+
+        window.handleLogout = async () => {
+            await signOut(auth);
+            showToast("Successfully signed out.", "info");
+        };
+
+        /* Auth Form Handlers */
+        window.switchAuthTab = (mode) => {
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+            const tabSignIn = document.getElementById('tabSignIn');
+            const tabSignUp = document.getElementById('tabSignUp');
+
+            if (mode === 'SIGNIN') {
+                signInForm.classList.remove('hidden');
+                signUpForm.classList.add('hidden');
+                tabSignIn.className = "w-1/2 py-2.5 text-sm font-bold border-b-2 border-goldAccent text-goldAccent";
+                tabSignUp.className = "w-1/2 py-2.5 text-sm font-bold border-b-2 border-transparent text-textMuted hover:text-white";
+            } else {
+                signInForm.classList.add('hidden');
+                signUpForm.classList.remove('hidden');
+                tabSignUp.className = "w-1/2 py-2.5 text-sm font-bold border-b-2 border-emeraldPrimary text-emeraldPrimary";
+                tabSignIn.className = "w-1/2 py-2.5 text-sm font-bold border-b-2 border-transparent text-textMuted hover:text-white";
+            }
+        };
+
+        window.openAuthModal = (mode = 'SIGNIN') => {
+            document.getElementById('authModal').classList.remove('hidden');
+            switchAuthTab(mode);
+        };
+
+        window.closeAuthModal = () => {
+            document.getElementById('authModal').classList.add('hidden');
+        };
+
+        window.handleAuthSignIn = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signInEmail').value;
+            const password = document.getElementById('signInPassword').value;
+            const statusBox = document.getElementById('authStatusBox');
+
+            try {
+                statusBox.className = "mt-4 p-3 rounded-xl text-xs font-medium text-center bg-goldAccent/10 text-goldAccent block";
+                statusBox.innerText = "Signing in...";
+                const res = await signInWithEmailAndPassword(auth, email, password);
+                const role = await getUserRole(res.user.uid);
+                closeAuthModal();
+                showToast("Signed in successfully!", "success");
+                redirectByRole(role);
+            } catch (err) {
+                statusBox.className = "mt-4 p-3 rounded-xl text-xs font-medium text-center bg-red-500/20 text-red-300 block";
+                statusBox.innerText = err.message.replace("Firebase: ", "");
+            }
+        };
+
+        window.handleAuthSignUp = async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signUpName').value;
+            const email = document.getElementById('signUpEmail').value;
+            const password = document.getElementById('signUpPassword').value;
+            const confirm = document.getElementById('signUpPasswordConfirm').value;
+            const accountType = document.querySelector('input[name="accountType"]:checked').value;
+            const statusBox = document.getElementById('authStatusBox');
+
+            if (password !== confirm) {
+                statusBox.className = "mt-4 p-3 rounded-xl text-xs font-medium text-center bg-red-500/20 text-red-300 block";
+                statusBox.innerText = "Passwords do not match.";
+                return;
+            }
+
+            try {
+                statusBox.className = "mt-4 p-3 rounded-xl text-xs font-medium text-center bg-emeraldPrimary/10 text-emeraldPrimary block";
+                statusBox.innerText = "Creating account...";
+
+                const res = await createUserWithEmailAndPassword(auth, email, password);
+                const uid = res.user.uid;
+                const timestamp = new Date().toISOString();
+
+                if (accountType === 'CUSTOMER') {
+                    await set(ref(db, `users/${uid}`), { uid, name, email, role: 'CUSTOMER', createdAt: timestamp, updatedAt: timestamp });
+                    await set(ref(db, `customers/${uid}`), { uid, name, email, phone: '', profileImage: '', createdAt: timestamp, updatedAt: timestamp });
+                    closeAuthModal();
+                    showToast("Account created successfully!", "success");
+                    window.location.href = 'customer.html';
+                } else if (accountType === 'PARTNER') {
+                    await set(ref(db, `users/${uid}`), { uid, name, email, role: 'PARTNER', createdAt: timestamp, updatedAt: timestamp });
+                    await set(ref(db, `partners/${uid}`), { uid, name, email, phone: '', status: 'PENDING_APPROVAL', availability: 'OFFLINE', profileImage: '', createdAt: timestamp, updatedAt: timestamp });
+                    closeAuthModal();
+                    showToast("Partner registration submitted for review.", "info");
+                    window.location.href = 'partner.html';
+                }
+            } catch (err) {
+                statusBox.className = "mt-4 p-3 rounded-xl text-xs font-medium text-center bg-red-500/20 text-red-300 block";
+                statusBox.innerText = err.message.replace("Firebase: ", "");
+            }
+        };
+
+        window.handleGoogleSignIn = async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const res = await signInWithPopup(auth, provider);
+                const uid = res.user.uid;
+                const userRef = ref(db, `users/${uid}`);
+                const snapshot = await get(userRef);
+
+                if (snapshot.exists()) {
+                    const role = snapshot.val().role || 'CUSTOMER';
+                    closeAuthModal();
+                    redirectByRole(role);
+                } else {
+                    const selectedRole = document.querySelector('input[name="accountType"]:checked')?.value || 'CUSTOMER';
+                    const timestamp = new Date().toISOString();
+                    const name = res.user.displayName || 'Google User';
+                    const email = res.user.email || '';
+
+                    await set(ref(db, `users/${uid}`), { uid, name, email, role: selectedRole, createdAt: timestamp, updatedAt: timestamp });
+                    
+                    if (selectedRole === 'PARTNER') {
+                        await set(ref(db, `partners/${uid}`), { uid, name, email, phone: '', status: 'PENDING_APPROVAL', availability: 'OFFLINE', profileImage: res.user.photoURL || '', createdAt: timestamp, updatedAt: timestamp });
+                        closeAuthModal();
+                        window.location.href = 'partner.html';
+                    } else {
+                        await set(ref(db, `customers/${uid}`), { uid, name, email, phone: '', profileImage: res.user.photoURL || '', createdAt: timestamp, updatedAt: timestamp });
+                        closeAuthModal();
+                        window.location.href = 'customer.html';
+                    }
+                }
+            } catch (err) {
+                showToast("Google Auth Error: " + err.message, "error");
+            }
+        };
+
+        /* Preserve & Check Intended Action */
+        function savePendingAction(actionData) {
+            localStorage.setItem('pendingAction', JSON.stringify(actionData));
+        }
+
+        function checkPendingAction() {
+            const raw = localStorage.getItem('pendingAction');
+            if (!raw) return;
+            try {
+                const action = JSON.parse(raw);
+                localStorage.removeItem('pendingAction');
+                if (action.type === 'CHECKOUT') {
+                    window.location.href = 'customer.html?action=checkout';
+                } else if (action.type === 'RESERVATION') {
+                    window.location.href = 'customer.html#reservations';
+                }
+            } catch (e) {
+                localStorage.removeItem('pendingAction');
+            }
+        }
+
+        /* --- REALTIME DATA & MENU LOGIC --- */
+        function initRealtimeData() {
+            // Restaurant Realtime Status
+            const statusRef = ref(db, 'settings/restaurantStatus');
+            onValue(statusRef, (snapshot) => {
+                const status = snapshot.val() || 'OPEN';
+                renderRestaurantStatus(status);
+            }, () => renderRestaurantStatus('OPEN'));
+
+            // Realtime Menu Data
+            const menuRef = ref(db, 'menu');
+            onValue(menuRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const val = snapshot.val();
+                    menuItemsData = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+                } else {
+                    menuItemsData = fallbackMenu;
+                }
+                renderCategoryTabs();
+                renderMenuGrid();
+            }, () => {
+                menuItemsData = fallbackMenu;
+                renderCategoryTabs();
+                renderMenuGrid();
+            });
+        }
+
+        function renderRestaurantStatus(status) {
+            const badge = document.getElementById('restaurantStatusBadge');
+            if (status === 'OPEN') {
+                badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emeraldPrimary/10 text-emeraldPrimary border border-emeraldPrimary/30";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emeraldPrimary animate-ping mr-2"></span> Kitchen Open for Orders`;
+            } else if (status === 'BUSY') {
+                badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-goldAccent/10 text-goldAccent border border-goldAccent/30";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-goldAccent mr-2"></span> High Order Volume`;
+            } else {
+                badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/30";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span> Currently Closed`;
+            }
+        }
+
+        function renderCategoryTabs() {
+            const container = document.getElementById('categoryTabsContainer');
+            const categories = ['ALL', ...new Set(menuItemsData.map(item => item.category))];
+
+            container.innerHTML = categories.map(cat => `
+                <button onclick="selectCategory('${cat}')" class="category-tab whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold border transition ${cat === activeCategory ? 'bg-goldAccent text-bgDark border-goldAccent' : 'bg-bgCard text-textMuted border-white/5 hover:text-white'}">
+                    ${cat === 'ALL' ? 'Full Menu' : cat}
+                </button>
+            `).join('');
+        }
+
+        window.selectCategory = (cat) => {
+            activeCategory = cat;
+            renderCategoryTabs();
+            renderMenuGrid();
+        };
+
+        window.filterDiet = (diet) => {
+            activeDiet = diet;
+            document.querySelectorAll('.diet-btn').forEach(btn => {
+                btn.classList.remove('bg-emeraldPrimary', 'text-bgDark');
+                btn.classList.add('bg-bgCard', 'text-textMuted');
+            });
+            event.currentTarget.classList.remove('bg-bgCard', 'text-textMuted');
+            event.currentTarget.classList.add('bg-emeraldPrimary', 'text-bgDark');
+            renderMenuGrid();
+        };
+
+        function setupSearchAndFilterListeners() {
+            const searchInput = document.getElementById('menuSearchInput');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const sortSelect = document.getElementById('menuSortSelect');
+
+            let timer;
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(timer);
+                searchQuery = e.target.value.toLowerCase().trim();
+                clearBtn.classList.toggle('hidden', searchQuery.length === 0);
+                timer = setTimeout(() => {
+                    renderMenuGrid();
+                }, 250);
+            });
+
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                searchQuery = '';
+                clearBtn.classList.add('hidden');
+                renderMenuGrid();
+            });
+
+            sortSelect.addEventListener('change', () => {
+                renderMenuGrid();
+            });
+        }
+
+        window.resetMenuFilters = () => {
+            activeCategory = 'ALL';
+            activeDiet = 'ALL';
+            searchQuery = '';
+            document.getElementById('menuSearchInput').value = '';
+            renderCategoryTabs();
+            renderMenuGrid();
+        };
+
+        window.focusMenuSearch = () => {
+            document.getElementById('menuSearchInput').focus();
+        };
+
+        function renderMenuGrid() {
+            const grid = document.getElementById('menuGrid');
+            const noDishes = document.getElementById('noDishesFound');
+            const sortVal = document.getElementById('menuSortSelect').value;
+
+            let filtered = menuItemsData.filter(item => {
+                const matchCategory = (activeCategory === 'ALL' || item.category === activeCategory);
+                let matchDiet = true;
+                if (activeDiet === 'VEG') matchDiet = item.diet === 'VEG';
+                if (activeDiet === 'NON-VEG') matchDiet = item.diet === 'NON-VEG';
+                if (activeDiet === 'BESTSELLER') matchDiet = item.bestseller === true;
+
+                const matchQuery = !searchQuery || 
+                    item.name.toLowerCase().includes(searchQuery) ||
+                    item.description.toLowerCase().includes(searchQuery) ||
+                    item.category.toLowerCase().includes(searchQuery);
+
+                return matchCategory && matchDiet && matchQuery;
+            });
+
+            // Sorting
+            if (sortVal === 'price-low') filtered.sort((a,b) => a.price - b.price);
+            if (sortVal === 'price-high') filtered.sort((a,b) => b.price - a.price);
+            if (sortVal === 'popular') filtered.sort((a,b) => (b.bestseller ? 1 : 0) - (a.bestseller ? 1 : 0));
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                noDishes.classList.remove('hidden');
+                return;
+            } else {
+                noDishes.classList.add('hidden');
+            }
+
+            grid.innerHTML = filtered.map(dish => `
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-goldAccent/40 transition duration-300">
+                    <div>
+                        <div class="relative h-48 w-full overflow-hidden">
+                            <img src="${dish.image}" alt="${dish.name}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                            <div class="absolute top-3 left-3 flex flex-col gap-1">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${dish.diet === 'VEG' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}">
+                                    ${dish.diet}
+                                </span>
+                                ${dish.bestseller ? `<span class="px-2 py-0.5 rounded bg-goldAccent text-bgDark text-[10px] font-bold uppercase">Bestseller</span>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="p-4 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-semibold text-textMuted">${dish.category}</span>
+                            </div>
+                            <h3 class="font-serif font-bold text-white text-base group-hover:text-goldAccent transition line-clamp-1">${dish.name}</h3>
+                            <p class="text-xs text-textMuted line-clamp-2 leading-relaxed">${dish.description}</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 border-t border-white/5 flex items-center justify-between">
+                        <div>
+                            <span class="text-base font-bold text-emeraldPrimary">₹${dish.price}</span>
+                            ${dish.comparePrice ? `<span class="text-xs text-textMuted line-through ml-1.5">₹${dish.comparePrice}</span>` : ''}
+                        </div>
+                        <button onclick="openFoodCustomModal('${dish.id}')" class="px-4 py-2 rounded-xl bg-goldAccent/10 border border-goldAccent/30 text-goldAccent text-xs font-bold hover:bg-goldAccent hover:text-bgDark transition flex items-center gap-1.5 min-h-[40px]">
+                            <i class="fa-solid fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* --- DISH CUSTOMIZATION MODAL --- */
+        window.openFoodCustomModal = (dishId) => {
+            const dish = menuItemsData.find(d => d.id === dishId);
+            if (!dish) return;
+
+            selectedCustomDish = dish;
+            customModalQty = 1;
+            selectedVariant = dish.variants && dish.variants.length > 0 ? dish.variants[0] : null;
+            selectedAddons = [];
+
+            document.getElementById('modalDishImg').src = dish.image;
+            document.getElementById('modalDishTitle').innerText = dish.name;
+            document.getElementById('modalDishDesc').innerText = dish.description;
+            document.getElementById('modalDietBadge').innerText = dish.diet;
+            document.getElementById('modalDietBadge').className = `px-2 py-0.5 rounded text-[10px] font-bold uppercase ${dish.diet === 'VEG' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`;
+            
+            const bestBadge = document.getElementById('modalBestsellerBadge');
+            if (dish.bestseller) bestBadge.classList.remove('hidden');
+            else bestBadge.classList.add('hidden');
+
+            // Render Variants
+            const varContainer = document.getElementById('variantsContainer');
+            const varList = document.getElementById('variantsList');
+            if (dish.variants && dish.variants.length > 0) {
+                varContainer.classList.remove('hidden');
+                varList.innerHTML = dish.variants.map((v, i) => `
+                    <label class="flex items-center justify-between p-2.5 rounded-xl border border-white/10 bg-bgDark cursor-pointer hover:border-goldAccent">
+                        <div class="flex items-center space-x-2">
+                            <input type="radio" name="modalVariantRadio" value="${i}" ${i === 0 ? 'checked' : ''} onchange="selectModalVariant(${i})" class="text-goldAccent">
+                            <span class="text-xs font-medium text-white">${v.name}</span>
+                        </div>
+                        <span class="text-xs text-emeraldPrimary font-bold">+₹${v.priceOffset}</span>
+                    </label>
+                `).join('');
+            } else {
+                varContainer.classList.add('hidden');
+            }
+
+            // Render Addons
+            const addonContainer = document.getElementById('addonsContainer');
+            const addonList = document.getElementById('addonsList');
+            if (dish.addons && dish.addons.length > 0) {
+                addonContainer.classList.remove('hidden');
+                addonList.innerHTML = dish.addons.map((a, i) => `
+                    <label class="flex items-center justify-between p-2.5 rounded-xl border border-white/10 bg-bgDark cursor-pointer hover:border-emeraldPrimary">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" value="${i}" onchange="toggleModalAddon(${i}, this.checked)" class="text-emeraldPrimary rounded">
+                            <span class="text-xs font-medium text-white">${a.name}</span>
+                        </div>
+                        <span class="text-xs text-goldAccent font-bold">+₹${a.price}</span>
+                    </label>
+                `).join('');
+            } else {
+                addonContainer.classList.add('hidden');
+            }
+
+            document.getElementById('modalInstructions').value = '';
+            document.getElementById('modalQtyVal').innerText = customModalQty;
+            updateModalPrice();
+
+            document.getElementById('foodCustomModal').classList.remove('hidden');
+        };
+
+        window.closeFoodModal = () => {
+            document.getElementById('foodCustomModal').classList.add('hidden');
+        };
+
+        window.selectModalVariant = (idx) => {
+            if (selectedCustomDish && selectedCustomDish.variants) {
+                selectedVariant = selectedCustomDish.variants[idx];
+                updateModalPrice();
+            }
+        };
+
+        window.toggleModalAddon = (idx, isChecked) => {
+            if (!selectedCustomDish || !selectedCustomDish.addons) return;
+            const addon = selectedCustomDish.addons[idx];
+            if (isChecked) {
+                selectedAddons.push(addon);
+            } else {
+                selectedAddons = selectedAddons.filter(a => a.name !== addon.name);
+            }
+            updateModalPrice();
+        };
+
+        window.updateModalQty = (delta) => {
+            customModalQty = Math.max(1, customModalQty + delta);
+            document.getElementById('modalQtyVal').innerText = customModalQty;
+            updateModalPrice();
+        };
+
+        function updateModalPrice() {
+            if (!selectedCustomDish) return;
+            let unitPrice = selectedCustomDish.price;
+            if (selectedVariant) unitPrice += selectedVariant.priceOffset;
+            selectedAddons.forEach(a => unitPrice += a.price);
+
+            const total = unitPrice * customModalQty;
+            document.getElementById('modalTotalPrice').innerText = `₹${total}`;
+        }
+
+        window.confirmModalAddToCart = () => {
+            if (!selectedCustomDish) return;
+            const instructions = document.getElementById('modalInstructions').value;
+
+            let unitPrice = selectedCustomDish.price;
+            if (selectedVariant) unitPrice += selectedVariant.priceOffset;
+            selectedAddons.forEach(a => unitPrice += a.price);
+
+            const cartItem = {
+                cartItemId: 'item_' + Date.now(),
+                dishId: selectedCustomDish.id,
+                name: selectedCustomDish.name,
+                image: selectedCustomDish.image,
+                variant: selectedVariant ? selectedVariant.name : null,
+                addons: [...selectedAddons],
+                instructions: instructions,
+                unitPrice: unitPrice,
+                quantity: customModalQty,
+                totalPrice: unitPrice * customModalQty
+            };
+
+            cartItems.push(cartItem);
+            saveLocalCart();
+            renderCartDrawer();
+            closeFoodModal();
+            showToast(`Added ${selectedCustomDish.name} to cart!`, "success");
+        };
+
+        /* --- CART DRAWER LOGIC --- */
+        function loadLocalCart() {
+            const saved = localStorage.getItem('guestCart');
+            if (saved) {
+                try { cartItems = JSON.parse(saved); } catch (e) { cartItems = []; }
+            }
+            renderCartDrawer();
+        }
+
+        function saveLocalCart() {
+            localStorage.setItem('guestCart', JSON.stringify(cartItems));
+            if (currentUser) {
+                // Synchronize to Firebase /carts/{uid}
+                set(ref(db, `carts/${currentUser.uid}`), cartItems);
+            }
+        }
+
+        function renderCartDrawer() {
+            const badge = document.getElementById('cartBadge');
+            const container = document.getElementById('cartItemsContainer');
+            const totalCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+            if (totalCount > 0) {
+                badge.innerText = totalCount;
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            if (cartItems.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 space-y-3">
+                        <i class="fa-solid fa-bag-shopping text-4xl text-textMuted/40"></i>
+                        <p class="text-sm text-textMuted font-medium">Your cart is currently empty.</p>
+                        <a href="#menu" onclick="closeCart()" class="inline-block text-xs font-bold text-goldAccent border-b border-goldAccent pb-0.5">Explore Menu</a>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = cartItems.map((item, index) => `
+                    <div class="p-3 rounded-2xl bg-bgCard border border-white/5 space-y-2">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex items-center space-x-3">
+                                <img src="${item.image}" class="w-12 h-12 rounded-xl object-cover">
+                                <div>
+                                    <h4 class="text-xs font-bold text-white leading-tight">${item.name}</h4>
+                                    ${item.variant ? `<p class="text-[10px] text-goldAccent mt-0.5">${item.variant}</p>` : ''}
+                                </div>
+                            </div>
+                            <button onclick="removeCartItem(${index})" class="text-textMuted hover:text-red-400 text-xs p-1">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+
+                        ${item.addons && item.addons.length > 0 ? `
+                            <p class="text-[10px] text-textMuted">+ Addons: ${item.addons.map(a => a.name).join(', ')}</p>
+                        ` : ''}
+
+                        <div class="flex items-center justify-between pt-1 border-t border-white/5">
+                            <div class="flex items-center border border-white/10 rounded-lg bg-bgDark px-2 py-0.5">
+                                <button onclick="updateCartQty(${index}, -1)" class="text-xs font-bold text-textMuted hover:text-white px-1.5">-</button>
+                                <span class="text-xs font-bold text-white px-2">${item.quantity}</span>
+                                <button onclick="updateCartQty(${index}, 1)" class="text-xs font-bold text-textMuted hover:text-white px-1.5">+</button>
+                            </div>
+                            <span class="text-xs font-bold text-emeraldPrimary">₹${item.totalPrice}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            calculateCartTotals();
+        }
+
+        window.updateCartQty = (index, delta) => {
+            cartItems[index].quantity += delta;
+            if (cartItems[index].quantity <= 0) {
+                cartItems.splice(index, 1);
+            } else {
+                cartItems[index].totalPrice = cartItems[index].unitPrice * cartItems[index].quantity;
+            }
+            saveLocalCart();
+            renderCartDrawer();
+        };
+
+        window.removeCartItem = (index) => {
+            cartItems.splice(index, 1);
+            saveLocalCart();
+            renderCartDrawer();
+        };
+
+        function calculateCartTotals() {
+            const subtotal = cartItems.reduce((acc, item) => acc + item.totalPrice, 0);
+            const tax = Math.round(subtotal * 0.05);
+            let discount = 0;
+
+            if (appliedCoupon) {
+                discount = Math.round((subtotal * appliedCoupon.discount) / 100);
+            }
+
+            const deliveryFee = subtotal > 0 ? 50 : 0;
+            const grandTotal = Math.max(0, subtotal + tax + deliveryFee - discount);
+
+            document.getElementById('cartSubtotalVal').innerText = `₹${subtotal}`;
+            document.getElementById('cartTaxVal').innerText = `₹${tax}`;
+            document.getElementById('cartDeliveryVal').innerText = `₹${deliveryFee}`;
+            document.getElementById('cartTotalVal').innerText = `₹${grandTotal}`;
+
+            const discRow = document.getElementById('cartDiscountRow');
+            if (discount > 0) {
+                discRow.classList.remove('hidden');
+                document.getElementById('cartDiscountVal').innerText = `-₹${discount}`;
+            } else {
+                discRow.classList.add('hidden');
+            }
+        }
+
+        window.applyCartCoupon = () => {
+            const code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
+            if (!code) return;
+
+            const found = fallbackOffers.find(o => o.code === code);
+            if (found) {
+                appliedCoupon = found;
+                calculateCartTotals();
+                showToast(`Applied ${found.code} (${found.discount}% OFF)`, "success");
+            } else {
+                showToast("Invalid promo code.", "error");
+            }
+        };
+
+        window.proceedToCheckout = () => {
+            if (cartItems.length === 0) {
+                showToast("Your cart is empty.", "error");
+                return;
+            }
+
+            if (!currentUser) {
+                savePendingAction({ type: 'CHECKOUT' });
+                closeCart();
+                openAuthModal('SIGNIN');
+                showToast("Please sign in to complete your order.", "info");
+            } else {
+                saveLocalCart();
+                window.location.href = 'customer.html?action=checkout';
+            }
+        };
+
+        // Cart Drawer Listeners
+        const cartBtn = document.getElementById('cartBtn');
+        const closeCartBtn = document.getElementById('closeCartBtn');
+        const cartDrawer = document.getElementById('cartDrawer');
+        const cartBackdrop = document.getElementById('cartDrawerBackdrop');
+
+        function openCart() {
+            cartDrawer.classList.remove('translate-x-full');
+            cartBackdrop.classList.remove('hidden');
+        }
+
+        function closeCart() {
+            cartDrawer.classList.add('translate-x-full');
+            cartBackdrop.classList.add('hidden');
+        }
+
+        cartBtn.addEventListener('click', openCart);
+        closeCartBtn.addEventListener('click', closeCart);
+        cartBackdrop.addEventListener('click', closeCart);
+
+        /* --- OFFERS, GALLERY & REVIEWS --- */
+        function renderOffers(offers) {
+            const container = document.getElementById('offersContainer');
+            container.innerHTML = offers.map(o => `
+                <div class="glass-card rounded-2xl p-6 border border-goldAccent/20 flex flex-col justify-between">
+                    <div>
+                        <span class="px-2.5 py-1 rounded-full bg-emeraldPrimary/10 text-emeraldPrimary text-[10px] font-bold uppercase tracking-wider">Active Privilege</span>
+                        <h3 class="font-serif text-xl font-bold text-white mt-2">${o.title}</h3>
+                        <p class="text-xs text-textMuted mt-1">${o.description}</p>
+                    </div>
+
+                    <div class="mt-6 flex items-center justify-between pt-4 border-t border-white/5">
+                        <span class="font-mono text-sm font-bold text-goldAccent bg-bgDark px-3 py-1.5 rounded-xl border border-white/10 uppercase">${o.code}</span>
+                        <button onclick="copyOfferCode('${o.code}')" class="px-4 py-2 rounded-xl bg-goldAccent text-bgDark text-xs font-bold hover:opacity-90 transition">
+                            Copy Code
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.copyOfferCode = (code) => {
+            const temp = document.createElement('textarea');
+            temp.value = code;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast(`Copied promo code ${code}!`, "success");
+        };
+
+        window.handleReservationSubmit = async (e) => {
+            e.preventDefault();
+            const date = document.getElementById('resDate').value;
+            const time = document.getElementById('resTime').value;
+            const guests = document.getElementById('resGuests').value;
+            const seating = document.getElementById('resSeating').value;
+            const notes = document.getElementById('resNotes').value;
+
+            const resData = { date, time, guests, seating, notes, createdAt: new Date().toISOString() };
+
+            if (!currentUser) {
+                savePendingAction({ type: 'RESERVATION', data: resData });
+                openAuthModal('SIGNIN');
+                showToast("Please sign in to confirm table reservation.", "info");
+            } else {
+                try {
+                    await push(ref(db, `reservations/${currentUser.uid}`), resData);
+                    showToast("Reservation request submitted successfully!", "success");
+                    window.location.href = 'customer.html#reservations';
+                } catch (err) {
+                    showToast("Failed to book reservation: " + err.message, "error");
+                }
+            }
+        };
+
+        function renderGallery() {
+            const container = document.getElementById('galleryGrid');
+            container.innerHTML = galleryImages.map((g, i) => `
+                <div onclick="openLightbox(${i})" class="relative h-44 sm:h-56 rounded-2xl overflow-hidden cursor-pointer group border border-white/5">
+                    <img src="${g.url}" alt="${g.caption}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-bgDark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-4">
+                        <span class="text-xs font-serif font-bold text-goldAccent">${g.caption}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.openLightbox = (index) => {
+            const item = galleryImages[index];
+            document.getElementById('lightboxImg').src = item.url;
+            document.getElementById('lightboxCaption').innerText = item.caption;
+            document.getElementById('lightboxModal').classList.remove('hidden');
+        };
+
+        window.closeLightbox = () => {
+            document.getElementById('lightboxModal').classList.add('hidden');
+        };
+
+        function renderReviews(reviews) {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = reviews.map(r => `
+                <div class="glass-card rounded-2xl p-6 space-y-4 border border-white/5 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="text-goldAccent text-xs">
+                                ${'<i class="fa-solid fa-star"></i>'.repeat(r.rating)}
+                            </div>
+                            <span class="text-[10px] text-textMuted">${r.date}</span>
+                        </div>
+                        <p class="text-xs text-textMain italic leading-relaxed">"${r.comment}"</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                        <span class="text-xs font-bold text-white">${r.name}</span>
+                        ${r.verified ? `<span class="text-[10px] font-semibold text-emeraldPrimary flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Verified</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* --- TOAST NOTIFICATIONS SYSTEM --- */
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            let icon = 'fa-info-circle';
+            let colorClass = 'bg-bgCard text-white border-goldAccent/40';
+
+            if (type === 'success') {
+                icon = 'fa-circle-check';
+                colorClass = 'bg-bgCard text-emeraldPrimary border-emeraldPrimary/50';
+            } else if (type === 'error') {
+                icon = 'fa-circle-exclamation';
+                colorClass = 'bg-bgCard text-red-400 border-red-500/50';
+            }
+
+            toast.className = `p-4 rounded-2xl border ${colorClass} shadow-2xl flex items-center space-x-3 text-xs font-semibold transform transition duration-300 translate-y-4 opacity-0 max-w-xs pointer-events-auto`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        /* Mobile Drawer Toggle */
+        const mobileToggle = document.getElementById('mobileMenuToggle');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        mobileToggle.addEventListener('click', () => {
+            mobileDrawer.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileDrawer.classList.add('hidden'));
+        });
+    </script>
+</body>
+</html>
