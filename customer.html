@@ -92,7 +92,18 @@ window.feasthubApp = function(){
     isSubmitting:false, bookingError:"", lastBooking:null,
     modal:null, toasts:[], profile:{name:"Guest User",email:"",phone:"",photoURL:""},
     cart:[], selectedServices:[],
-    initApp(){ return window.__feastInit ? window.__feastInit(this) : this.failInit("Application bootstrap did not load."); },
+    async initApp(){
+      /* Alpine can initialize before the ES module below finishes evaluating.
+         Wait for the bootstrap instead of entering permanent fallback mode. */
+      if(window.__feastInit) return window.__feastInit(this);
+      this.loading=true;this.ready=false;
+      const started=Date.now();
+      while(!window.__feastInit && Date.now()-started<12000){
+        await new Promise(resolve=>setTimeout(resolve,50));
+      }
+      if(window.__feastInit) return window.__feastInit(this);
+      return this.failInit("Application bootstrap did not load. Please reload the page.");
+    },
     failInit(msg){ this.appError=msg;this.loading=false;this.ready=true; },
     switchTab(tab){this.currentTab=tab;window.scrollTo({top:0,behavior:"smooth"})},
     selectRestaurant(r){this.selectedRestaurant=r;this.resForm={...this.resForm,date:"",time:"",guests:2};this.availability={state:"idle",available:true,remaining:null,message:"Select a date and time to check availability."};this.bookingStep=1;this.currentTab="booking";window.scrollTo({top:0,behavior:"smooth"})},
