@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950 text-slate-100 antialiased">
+<html lang="en" class="h-full">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#020617">
+<meta name="theme-color" content="#070914">
+<meta name="description" content="FeastHub — premium restaurant discovery and table booking.">
 <title>FeastHub — Premium Dining</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,41 +12,151 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<script>
-/* Tailwind is optional for this version. The app uses stable CSS below. */
-window.tailwind = { config: {} };
-</script>
-<script src="https://cdn.tailwindcss.com"></script>
-
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:"Plus Jakarta Sans",sans-serif;background:#020617;color:#f8fafc}
+:root{
+  --bg:#070914;--bg2:#0b1020;--card:rgba(16,24,43,.72);--card2:rgba(21,31,53,.82);
+  --line:rgba(255,255,255,.09);--muted:#91a0b7;--text:#f8fafc;
+  --brand:#7c5cff;--brand2:#4f46e5;--gold:#f6b73c;--green:#18c88b;
+  --red:#f05b6f;--cyan:#46c8ff;--shadow:0 20px 70px rgba(0,0,0,.38)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:"Plus Jakarta Sans",sans-serif;background:
+radial-gradient(circle at 15% -10%,rgba(124,92,255,.18),transparent 30%),
+radial-gradient(circle at 100% 20%,rgba(24,200,139,.11),transparent 28%),var(--bg);color:var(--text)}
 body{overflow-x:hidden}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.55}
 [x-cloak]{display:none!important}
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#020617}
-::-webkit-scrollbar-thumb{background:#1e293b;border-radius:99px}
-.glass{background:rgba(15,23,42,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.08)}
-.card{background:rgba(30,41,59,.52);border:1px solid rgba(255,255,255,.07);backdrop-filter:blur(12px)}
-.input{background:rgba(15,23,42,.72);border:1px solid rgba(255,255,255,.1);outline:none;color:#fff}
-.input:focus{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.12)}
-.btn{border:0;transition:.2s ease}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:#26314a;border-radius:99px}
+.app{min-height:100vh;padding-bottom:88px}
+.shell{width:min(1180px,100%);margin:auto;padding:0 16px}
+.glass{background:var(--card);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:var(--shadow)}
+.header{position:sticky;top:0;z-index:80;background:rgba(7,9,20,.78);border-bottom:1px solid var(--line);backdrop-filter:blur(22px)}
+.header-inner{height:70px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;border:0;background:none;color:#fff}
+.logo-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--green));display:grid;place-items:center;box-shadow:0 10px 35px rgba(124,92,255,.3)}
+.logo-text{font-weight:800;letter-spacing:.08em}.logo-text span{color:var(--green)}
+.search{position:relative;flex:1;max-width:500px;margin:auto}.search input,.field{
+width:100%;background:rgba(4,8,18,.62);border:1px solid var(--line);color:#fff;outline:0;border-radius:14px;padding:12px 14px}
+.search input{padding-left:42px}.search i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#68758d}
+.field:focus,.search input:focus{border-color:rgba(124,92,255,.7);box-shadow:0 0 0 4px rgba(124,92,255,.11)}
+.icon-btn{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;display:grid;place-items:center}
+.primary{border:0;color:#fff;background:linear-gradient(135deg,var(--brand),#5d4de7);box-shadow:0 10px 28px rgba(124,92,255,.28)}
+.green{border:0;color:#06140f;background:linear-gradient(135deg,#36e0a3,#11b97e);box-shadow:0 10px 28px rgba(24,200,139,.22)}
+.btn{border-radius:13px;padding:12px 15px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;font-weight:800;font-size:12px}
 .btn:active{transform:scale(.98)}
-.glow{box-shadow:0 0 28px -8px rgba(16,185,129,.65)}
-.hero{background:radial-gradient(circle at 80% 20%,rgba(16,185,129,.18),transparent 30%),linear-gradient(135deg,#0f172a,#071d19 70%,#020617)}
-.fade{animation:fade .25s ease}
-@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-.spin{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:640px){.desktop-search{display:none}.hero-title{font-size:2rem!important}.main-pad{padding-left:14px!important;padding-right:14px!important}}
+.hero{margin-top:22px;border-radius:30px;padding:30px;overflow:hidden;position:relative;background:
+radial-gradient(circle at 90% 10%,rgba(70,200,255,.16),transparent 24%),
+radial-gradient(circle at 72% 100%,rgba(124,92,255,.18),transparent 35%),
+linear-gradient(135deg,#11172a,#0a1020 65%,#0a1718);border:1px solid var(--line)}
+.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-90px;border:1px solid rgba(255,255,255,.07);box-shadow:0 0 0 28px rgba(255,255,255,.018),0 0 0 58px rgba(255,255,255,.012)}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:rgba(124,92,255,.12);border:1px solid rgba(124,92,255,.25);color:#c6bbff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.hero h1{font-size:clamp(34px,6vw,64px);line-height:1.02;margin:18px 0 12px;max-width:720px;letter-spacing:-.045em}
+.gradient{background:linear-gradient(90deg,#fff,#b8bfff 48%,#69e4b7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:650px;font-size:14px;line-height:1.75}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.stat{padding:10px 13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035);font-size:11px;color:#cbd5e1}
+.stat b{color:#fff}.section{margin-top:28px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-head h2{font-size:20px;margin:0}.section-head p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.chips{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.chip{white-space:nowrap;border:1px solid var(--line);background:rgba(255,255,255,.035);color:#aeb9ca;padding:9px 13px;border-radius:999px;font-size:11px;font-weight:800}.chip.active{background:rgba(124,92,255,.17);border-color:rgba(124,92,255,.55);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.restaurant{overflow:hidden;border-radius:22px}.cover{height:190px;position:relative;background:#10182a}.cover img{width:100%;height:100%;object-fit:cover;transition:.5s}.restaurant:hover .cover img{transform:scale(1.04)}.cover:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,rgba(3,7,15,.85))}
+.badge{position:absolute;z-index:2;top:12px;left:12px;padding:6px 9px;border-radius:999px;font-size:9px;font-weight:900}.open{background:#b8f8df;color:#062118}.closed{background:#ff7181;color:#fff}
+.favorite{position:absolute;z-index:3;right:12px;top:12px}.restaurant-body{padding:17px}.restaurant-title{display:flex;justify-content:space-between;gap:10px}.restaurant h3{margin:0;font-size:15px}.restaurant p{color:var(--muted);font-size:11px;line-height:1.6}.rating{color:#f9c34f;font-size:11px}.actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:14px}
+.empty{padding:45px 18px;text-align:center;color:var(--muted);border-radius:22px}.empty i{font-size:34px;opacity:.35;margin-bottom:12px}.empty b{display:block;color:#fff;font-size:14px;margin-bottom:5px}
+.page{padding:24px 0}.two{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.card{border-radius:22px;padding:20px}.back{border:0;background:none;color:#9eabc0;font-size:11px;padding:0;margin-bottom:15px}.menu-hero{padding:24px;border-radius:25px}.menu-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}.menu-item{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.025)}.menu-item img{width:78px;height:78px;border-radius:13px;object-fit:cover}.menu-item h3{margin:0;font-size:13px}.menu-item p{font-size:10px;color:var(--muted);line-height:1.5;margin:5px 0}.price{color:#7ff0c5;font-weight:900;font-size:12px}.mini{font-size:10px;color:var(--muted)}
+.booking-shell{display:grid;grid-template-columns:1fr .72fr;gap:16px}.stepper{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.step{white-space:nowrap;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:10px;color:#7e8ba2}.step.active{color:#fff;border-color:rgba(124,92,255,.55);background:rgba(124,92,255,.14)}
+label{display:block;color:#8f9bb0;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin:0 0 12px}.field{margin-top:6px;font-size:12px}textarea.field{min-height:100px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.guest-control{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:14px;padding:9px}.guest-control button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#11192a;color:#fff}.guest-num{font-weight:900}
+.availability{padding:13px;border-radius:15px;border:1px solid rgba(24,200,139,.22);background:rgba(24,200,139,.07);font-size:11px;color:#baf4df;margin:10px 0}.availability.warn{border-color:rgba(246,183,60,.25);background:rgba(246,183,60,.07);color:#ffe2a0}.availability.bad{border-color:rgba(240,91,111,.25);background:rgba(240,91,111,.07);color:#ffc0c9}
+.res-card{position:sticky;top:88px}.res-list{display:grid;gap:12px}.res{border-radius:20px;padding:17px;background:rgba(255,255,255,.035);border:1px solid var(--line)}.res-top{display:flex;justify-content:space-between;gap:10px}.status{font-size:9px;font-weight:900;border-radius:999px;padding:6px 9px}.s-pending{background:#2a2440;color:#cbbfff}.s-verified{background:#17362d;color:#91f0cb}.s-transit{background:#153546;color:#91dcff}.s-completed{background:#17372b;color:#9bf1c5}.s-cancelled{background:#3b2027;color:#ffabb8}.res h3{font-size:14px;margin:0}.res p{font-size:10px;color:var(--muted);margin:5px 0}.res-meta{display:grid;gap:7px;margin-top:12px;color:#b8c2d1;font-size:10px}.res-actions{display:flex;gap:8px;margin-top:13px}.res-actions .btn{flex:1}
+.bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(8,11,22,.86);border-top:1px solid var(--line);backdrop-filter:blur(22px);padding:8px max(10px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-bottom))}
+.bottom-inner{max-width:600px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav-btn{border:0;background:none;color:#68758c;padding:7px 3px;border-radius:13px;font-size:9px}.nav-btn i{display:block;font-size:16px;margin-bottom:4px}.nav-btn.active{color:#bdb3ff;background:rgba(124,92,255,.09)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(9px);z-index:300;display:flex;align-items:flex-end;justify-content:center}.sheet{width:min(620px,100%);max-height:92vh;overflow:auto;background:#0d1322;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:20px;box-shadow:0 -30px 80px rgba(0,0,0,.5);animation:sheet .25s ease}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.sheet h2{font-size:18px;margin:0}@keyframes sheet{from{transform:translateY(30px);opacity:.5}to{transform:none;opacity:1}}
+.toast-wrap{position:fixed;z-index:500;top:16px;left:50%;transform:translateX(-50%);width:min(420px,calc(100% - 28px));display:grid;gap:8px}.toast{padding:12px 14px;border:1px solid var(--line);background:rgba(13,19,34,.94);backdrop-filter:blur(18px);border-radius:14px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:center;font-size:11px;animation:toast .25s ease}.toast.success i{color:#36dda4}.toast.error i{color:#ff7181}.toast.warn i{color:#f7c253}.toast.info i{color:#65cfff}@keyframes toast{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.loading{position:fixed;inset:0;z-index:1000;background:#070914;display:grid;place-items:center;padding:20px}.loader-box{text-align:center}.loader{width:58px;height:58px;border-radius:50%;border:2px solid rgba(124,92,255,.2);border-top-color:#8c7aff;animation:spin 1s linear infinite;margin:auto}@keyframes spin{to{transform:rotate(360deg)}}.loader-box b{display:block;margin-top:17px;letter-spacing:.12em}.loader-box p{font-size:10px;color:var(--muted)}.error-screen{max-width:430px;text-align:center;padding:25px;border:1px solid rgba(240,91,111,.2);background:rgba(240,91,111,.05);border-radius:22px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two,.booking-shell{grid-template-columns:1fr}.res-card{position:static}}
+@media(max-width:640px){.shell{padding:0 13px}.header-inner{height:62px}.logo-text{font-size:13px}.search{display:none}.hero{padding:23px;border-radius:24px}.hero h1{font-size:37px}.grid,.menu-items,.form-grid{grid-template-columns:1fr}.cover{height:205px}.page{padding-top:18px}.card{padding:16px}.desktop-only{display:none}.hero p{font-size:12px}.booking-shell{gap:12px}}
 </style>
 
+<!-- Define the factory BEFORE Alpine is loaded. This is intentionally a classic script. -->
+<script>
+window.feasthubApp = function(){
+  return {
+    ready:false, loading:true, firebaseReady:false, appError:"", isOnline:navigator.onLine,
+    authUser:null, guest:true, currentTab:"home",
+    restaurants:[], filteredRestaurants:[], categories:[], activeRestaurant:null, activeMenuItems:[],
+    searchQuery:"", selectedCategory:"all", filterVegOnly:false, filterOpenOnly:false,
+    favorites:[], bookingStep:1, selectedRestaurant:null,
+    resForm:{date:"",time:"",guests:2,name:"",phone:"",address:"",specialRequest:""},
+    availability:{state:"idle",available:true,remaining:null,message:"Select a date and time to check availability."},
+    userBookings:[], bookingFilter:"all", bookingSearch:"",
+    isSubmitting:false, bookingError:"", lastBooking:null,
+    modal:null, toasts:[], profile:{name:"Guest User",email:"",phone:"",photoURL:""},
+    cart:[], selectedServices:[],
+    initApp(){ return window.__feastInit ? window.__feastInit(this) : this.failInit("Application bootstrap did not load."); },
+    failInit(msg){ this.appError=msg;this.loading=false;this.ready=true; },
+    switchTab(tab){this.currentTab=tab;window.scrollTo({top:0,behavior:"smooth"})},
+    selectRestaurant(r){this.selectedRestaurant=r;this.resForm={...this.resForm,date:"",time:"",guests:2};this.availability={state:"idle",available:true,remaining:null,message:"Select a date and time to check availability."};this.bookingStep=1;this.currentTab="booking";window.scrollTo({top:0,behavior:"smooth"})},
+    openMenu(r){this.activeRestaurant=r;window.__feastLoadMenu?.(r);this.currentTab="menu";window.scrollTo({top:0,behavior:"smooth"})},
+    filterCatalog(){
+      const q=this.searchQuery.trim().toLowerCase(), c=(this.selectedCategory||"all").toLowerCase();
+      this.filteredRestaurants=this.restaurants.filter(r=>{
+        const text=[r.name,r.cuisines,r.area,r.city,r.description].filter(Boolean).join(" ").toLowerCase();
+        return (!q||text.includes(q)) &&
+          (c==="all"||(r.cuisines||"").toLowerCase().includes(c)) &&
+          (!this.filterVegOnly||r.isPureVeg===true)&&(!this.filterOpenOnly||r.isOpen!==false);
+      });
+    },
+    changeGuests(d){this.resForm.guests=Math.max(1,Math.min(20,Number(this.resForm.guests||2)+d));this.checkAvailability()},
+    async checkAvailability(){return window.__feastCheckAvailability?.(this)},
+    async submitBooking(){return window.__feastSubmitBooking?.(this)},
+    openBookingFromCard(r){this.selectRestaurant(r)},
+    cancelBooking(id){return window.__feastCancelBooking?.(this,id)},
+    openSupport(b){this.modal={type:"support",booking:b}},
+    signIn(){return window.__feastLogin?.(this)},
+    signOut(){return window.__feastLogout?.(this)},
+    saveProfile(){return window.__feastSaveProfile?.(this)},
+    get filteredBookings(){
+      const q=this.bookingSearch.trim().toLowerCase();
+      return this.userBookings.filter(b=>{
+        const status=(b.status||"Pending");
+        const ok=this.bookingFilter==="all" || (this.bookingFilter==="Technician Sent"?(status==="Technician Sent"||status==="In-Transit"):status===this.bookingFilter);
+        const text=[b.id,b.customerName,b.customerAddress,(b.services||[]).map(s=>s.name).join(" "),b.restaurantName].join(" ").toLowerCase();
+        return ok&&(!q||text.includes(q));
+      });
+    },
+    statusClass(status){
+      if(status==="Verified")return"s-verified";if(status==="Technician Sent"||status==="In-Transit")return"s-transit";
+      if(status==="Completed")return"s-completed";if(status==="Cancelled")return"s-cancelled";return"s-pending";
+    },
+    statusIcon(status){
+      if(status==="Completed")return"fa-circle-check";if(status==="Cancelled")return"fa-ban";if(status==="Verified")return"fa-shield-halved";
+      if(status==="Technician Sent"||status==="In-Transit")return"fa-truck-fast";return"fa-clock";
+    },
+    formatDate(v){if(!v)return"Awaiting schedule";const d=new Date(v);return isNaN(d)?String(v):d.toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})},
+    shortId(id){return id?String(id).slice(0,8):"—"},
+    totalServices(b){return Array.isArray(b.services)?b.services.length:0},
+    toast(message,type="info"){const id=Date.now()+Math.random();this.toasts.push({id,message,type});setTimeout(()=>this.toasts=this.toasts.filter(x=>x.id!==id),3400)}
+  };
+};
+</script>
+
+<script>
+/* Load Alpine only after the factory above exists. */
+(function(){
+  const s=document.createElement("script");
+  s.defer=true;
+  s.src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js";
+  s.onload=function(){window.__alpineLoaded=true};
+  s.onerror=function(){window.__alpineFailed=true};
+  document.head.appendChild(s);
+})();
+</script>
+
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import {getDatabase,ref,get,set,push,onValue} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import {getFirestore,collection,addDoc,onSnapshot,query,where,doc,updateDoc,getDoc} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import {getDatabase,ref,get} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
@@ -58,492 +169,582 @@ const firebaseConfig={
  measurementId:"G-6BGFCBKTD7"
 };
 
-let firebaseApp,auth,db;
-try{
- firebaseApp=initializeApp(firebaseConfig);
- auth=getAuth(firebaseApp);
- db=getDatabase(firebaseApp);
-}catch(e){console.error("Firebase initialization:",e)}
-
-const demoCategories=[
- {id:"all",name:"All Cuisines",icon:"fa-solid fa-border-all"},
- {id:"indian",name:"Indian",icon:"fa-solid fa-bowl-food"},
- {id:"italian",name:"Italian",icon:"fa-solid fa-pizza-slice"},
- {id:"chinese",name:"Chinese",icon:"fa-solid fa-bowl-rice"},
- {id:"burger",name:"Burgers",icon:"fa-solid fa-burger"},
- {id:"dessert",name:"Desserts",icon:"fa-solid fa-ice-cream"}
+let app=null,auth=null,firestore=null,rtdb=null,unsubscribeBookings=null;
+const FALLBACK_RESTAURANTS=[
+ {id:"demo-1",name:"The Green Table",cuisines:"Indian • Vegetarian",area:"Andheri",city:"Mumbai",rating:4.8,isOpen:true,isPureVeg:true,
+  description:"Modern Indian vegetarian dining with handcrafted favourites.",coverImage:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=85"},
+ {id:"demo-2",name:"Bella Napoli",cuisines:"Italian • Pizza",area:"Bandra",city:"Mumbai",rating:4.7,isOpen:true,isPureVeg:false,
+  description:"Wood-fired pizzas, pasta and Italian comfort food.",coverImage:"https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1100&q=85"},
+ {id:"demo-3",name:"Wok & Bowl",cuisines:"Chinese • Asian",area:"Powai",city:"Mumbai",rating:4.6,isOpen:false,isPureVeg:false,
+  description:"Fresh Asian bowls, noodles and wok-tossed classics.",coverImage:"https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1100&q=85"}
 ];
-
-const demoRestaurants=[
- {id:"demo-1",name:"The Green Table",cuisines:"Indian • Vegetarian",area:"Andheri",city:"Mumbai",rating:4.8,isOpen:true,isPureVeg:true,description:"Modern Indian vegetarian dining with handcrafted favourites.",coverImage:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=85"},
- {id:"demo-2",name:"Bella Napoli",cuisines:"Italian • Pizza",area:"Bandra",city:"Mumbai",rating:4.7,isOpen:true,isPureVeg:false,description:"Wood-fired pizzas, pasta and Italian comfort food.",coverImage:"https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1000&q=85"},
- {id:"demo-3",name:"Wok & Bowl",cuisines:"Chinese • Asian",area:"Powai",city:"Mumbai",rating:4.6,isOpen:false,isPureVeg:false,description:"Fresh Asian bowls, noodles and wok-tossed classics.",coverImage:"https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1000&q=85"}
-];
-
-const demoMenu={
+const FALLBACK_MENU={
  "demo-1":[
-  {id:"m11",restaurantId:"demo-1",name:"Paneer Tikka",description:"Smoky tandoori paneer with mint chutney.",price:299,isVeg:true,image:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=600&q=85"},
-  {id:"m12",restaurantId:"demo-1",name:"Dal Makhani",description:"Slow-cooked black lentils finished with butter.",price:249,isVeg:true,image:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=85"},
-  {id:"m13",restaurantId:"demo-1",name:"Veg Biryani",description:"Aromatic basmati rice, vegetables and herbs.",price:279,isVeg:true,image:"https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=600&q=85"}
- ],
+  {id:"m11",name:"Paneer Tikka",description:"Smoky tandoori paneer with mint chutney.",price:299,isVeg:true,image:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=600&q=85"},
+  {id:"m12",name:"Dal Makhani",description:"Slow-cooked black lentils finished with butter.",price:249,isVeg:true,image:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=85"},
+  {id:"m13",name:"Veg Biryani",description:"Aromatic basmati rice, vegetables and herbs.",price:279,isVeg:true,image:"https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=600&q=85"}],
  "demo-2":[
-  {id:"m21",restaurantId:"demo-2",name:"Margherita Pizza",description:"Tomato, mozzarella, basil and extra virgin olive oil.",price:349,isVeg:true,image:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=85"},
-  {id:"m22",restaurantId:"demo-2",name:"Penne Arrabbiata",description:"Penne tossed in a spicy tomato and garlic sauce.",price:299,isVeg:true,image:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=85"}
- ],
+  {id:"m21",name:"Margherita Pizza",description:"Tomato, mozzarella, basil and extra virgin olive oil.",price:349,isVeg:true,image:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=85"},
+  {id:"m22",name:"Penne Arrabbiata",description:"Penne tossed in spicy tomato and garlic sauce.",price:299,isVeg:true,image:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=85"}],
  "demo-3":[
-  {id:"m31",restaurantId:"demo-3",name:"Veg Hakka Noodles",description:"Wok-tossed noodles with crisp vegetables.",price:229,isVeg:true,image:"https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=85"},
-  {id:"m32",restaurantId:"demo-3",name:"Crispy Chilli Chicken",description:"Crispy chicken with peppers and chilli glaze.",price:329,isVeg:false,image:"https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=600&q=85"}
- ]
+  {id:"m31",name:"Veg Hakka Noodles",description:"Wok-tossed noodles with crisp vegetables.",price:229,isVeg:true,image:"https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=85"},
+  {id:"m32",name:"Crispy Chilli Chicken",description:"Crispy chicken with peppers and chilli glaze.",price:329,isVeg:false,image:"https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=600&q=85"}]
 };
 
-window.feasthubApp=function(){
- return {
-  ready:false,loading:true,guest:false,appError:"",
-  authUser:null,isOnline:navigator.onLine,isSubmitting:false,
-  currentTab:"home",searchQuery:"",selectedCategory:"ALL",filterVegOnly:false,filterOpenOnly:false,
-  categories:[],restaurants:[],filteredRestaurants:[],activeRestaurant:null,activeMenuItems:[],
-  cart:[],cartRestaurantId:null,cartRestaurantName:"",
-  favorites:[],userOrders:[],userReservations:[],
-  userProfile:{name:"Guest User",email:"",phone:"",photoURL:""},
-  userAddresses:{},addressForm:{label:"",address:""},
-  showCart:false,showReservation:false,showConflict:false,pendingItem:null,modalRestaurant:null,
-  resForm:{date:"",time:"",guests:2},toasts:[],
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function withTimeout(promise,ms=9000){
+  let timer;
+  try{return await Promise.race([promise,new Promise((_,rej)=>timer=setTimeout(()=>rej(new Error("TIMEOUT")),ms))])}
+  finally{clearTimeout(timer)}
+}
+function normalize(v){return v&&typeof v==="object"?v:{}}
+function arr(v){return Object.keys(normalize(v)).map(k=>({id:k,...normalize(v[k])}))}
+function localISO(d=new Date()){const x=new Date(d.getTime()-d.getTimezoneOffset()*60000);return x.toISOString().slice(0,16)}
+function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
 
-  async initApp(){
-   if(this.ready)return;
-   this.loading=true;this.appError="";
-   window.addEventListener("online",()=>this.isOnline=true);
-   window.addEventListener("offline",()=>this.isOnline=false);
-   await this.loadCatalog();
-   if(auth){
-    onAuthStateChanged(auth,async user=>{
-     this.authUser=user||null;
-     if(user){
-      await this.loadProfile(user);
-      this.listenUserData(user.uid);
-     }else{
-      this.guest=true;
-     }
-     this.loading=false;this.ready=true;
+async function initFirebase(state){
+  try{
+    app=getApps().length?getApp():initializeApp(firebaseConfig);
+    auth=getAuth(app);firestore=getFirestore(app);rtdb=getDatabase(app);
+    state.firebaseReady=true;return true;
+  }catch(e){
+    console.error("Firebase initialization:",e);
+    state.appError="Firebase could not initialize. You can still browse the restaurant catalog in safe fallback mode.";
+    state.firebaseReady=false;return false;
+  }
+}
+
+async function loadCatalog(state){
+  state.restaurants=FALLBACK_RESTAURANTS.slice();
+  state.categories=["all","indian","italian","chinese","burger","dessert"];
+  try{
+    if(!rtdb)return;
+    const snap=await withTimeout(get(ref(rtdb,"restaurants")),7000);
+    if(snap.exists()){
+      const remote=arr(snap.val());
+      if(remote.length)state.restaurants=remote;
+    }
+    const catSnap=await withTimeout(get(ref(rtdb,"categories")),5000).catch(()=>null);
+    if(catSnap?.exists())state.categories=["all",...arr(catSnap.val()).map(x=>String(x.name||x.id).toLowerCase()).filter(Boolean)];
+  }catch(e){console.warn("Catalog fallback:",e)}
+  state.filteredRestaurants=state.restaurants.slice();state.filterCatalog();
+}
+
+window.__feastLoadMenu=async function(r){
+  const state=document.querySelector("[x-data]")?Alpine.$data(document.querySelector("[x-data]")):null;
+  if(!state)return;
+  state.activeMenuItems=[];
+  try{
+    if(rtdb){
+      const s=await withTimeout(get(ref(rtdb,"menuItems")),7000);
+      if(s.exists()){
+        state.activeMenuItems=arr(s.val()).filter(x=>x.restaurantId===r.id&&x.isAvailable!==false);
+      }
+    }
+  }catch(e){console.warn("Menu fallback:",e)}
+  if(!state.activeMenuItems.length)state.activeMenuItems=(FALLBACK_MENU[r.id]||[]).map(x=>({...x,restaurantId:r.id}));
+};
+
+window.__feastLogin=async function(state){
+  if(!auth){state.toast("Authentication is unavailable. Please retry after Firebase reconnects.","error");return}
+  try{
+    await signInWithPopup(auth,new GoogleAuthProvider());
+    state.toast("Signed in successfully","success");
+  }catch(e){
+    console.error("Google sign-in:",e);
+    const msg=e.code==="auth/popup-blocked"?"Your browser blocked the sign-in popup. Allow popups and retry.":e.code==="auth/popup-closed-by-user"?"Sign-in was cancelled.":"Google sign-in failed. You can keep browsing as a guest.";
+    state.toast(msg,"error");
+  }
+};
+
+window.__feastLogout=async function(state){
+  try{if(auth)await signOut(auth);state.toast("Signed out","info")}catch(e){state.toast("Could not sign out","error")}
+};
+
+window.__feastSaveProfile=async function(state){
+  if(!state.authUser||!firestore){state.toast("Sign in to save your profile.","warn");return}
+  try{
+    /* Keep the existing booking.html user path: users/{uid}. */
+    await (await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js")).setDoc(
+      doc(firestore,"users",state.authUser.uid),
+      {fullName:state.profile.name||"",phone:state.profile.phone||"",email:state.profile.email||"",photoURL:state.profile.photoURL||"",updatedAt:new Date().toISOString()},
+      {merge:true}
+    );
+    state.toast("Profile saved","success");
+  }catch(e){console.error(e);state.toast("Could not save profile. Check Firebase rules.","error")}
+};
+
+window.__feastCheckAvailability=async function(state){
+  const r=state.selectedRestaurant,f=state.resForm;
+  if(!r||!f.date||!f.time){state.availability={state:"idle",available:true,remaining:null,message:"Select a date and time to check availability."};return}
+  state.availability={state:"checking",available:false,remaining:null,message:"Checking table availability…"};
+  try{
+    /*
+      Additive RTDB support:
+      restaurants/{restaurantId}/availability/{YYYY-MM-DD}/{HH:MM}
+      can optionally contain {available:true,remaining:12}.
+      If the node is absent, the UI stays available instead of blocking bookings.
+    */
+    let result=null;
+    if(rtdb){
+      const key=String(f.date)+"_"+String(f.time).replace(":","");
+      const paths=[
+        `restaurants/${r.id}/availability/${f.date}/${f.time}`,
+        `restaurantAvailability/${r.id}/${f.date}/${f.time}`,
+        `availability/${r.id}/${f.date}/${f.time}`
+      ];
+      for(const p of paths){
+        try{const s=await withTimeout(get(ref(rtdb,p)),2500);if(s.exists()){result=s.val();break}}catch(_){}
+      }
+    }
+    if(result){
+      const remaining=Number(result.remaining);
+      const requested=Number(f.guests||2);
+      const available=result.available!==false&&(Number.isNaN(remaining)||remaining>=requested);
+      state.availability={state:available?"available":"full",available,remaining:Number.isNaN(remaining)?null:remaining,
+        message:available?(Number.isNaN(remaining)?"Table availability is open for this slot.":`${remaining} guest capacity remaining for this slot.`):"This slot is currently full. Choose another time."};
+    }else{
+      state.availability={state:"available",available:true,remaining:null,message:"This slot is available to request. Final confirmation is saved with your booking."};
+    }
+  }catch(e){
+    state.availability={state:"available",available:true,remaining:null,message:"Availability service timed out. You can still submit a booking request."};
+  }
+};
+
+window.__feastSubmitBooking=async function(state){
+  if(state.isSubmitting)return;
+  if(!state.authUser){state.toast("Please sign in to confirm your booking.","warn");return}
+  const f=state.resForm,r=state.selectedRestaurant;
+  if(!r){state.toast("Please select a restaurant.","warn");return}
+  if(!f.date||!f.time||!f.name.trim()||!f.phone.trim()||!f.address.trim()){state.toast("Complete the required booking details.","warn");return}
+  if(!/^[0-9+\-\s()]{8,18}$/.test(f.phone.trim())){state.toast("Enter a valid phone number.","warn");return}
+  if(state.availability.state==="full"||state.availability.available===false){state.toast("Choose another available slot.","warn");return}
+  state.isSubmitting=true;state.bookingError="";
+  try{
+    if(!firestore)throw new Error("FIRESTORE_UNAVAILABLE");
+    /*
+      IMPORTANT: Existing booking.html source of truth is preserved:
+      collection: bookings
+      ownership field: userId
+      status values: Pending / Verified / Technician Sent / In-Transit / Completed / Cancelled
+      scheduledSlot, customerName, customerPhone, customerAddress, services,
+      subtotal, discount, promoCode, grandTotal, verificationPin, createdAt
+    */
+    const slot=new Date(`${f.date}T${f.time}`);
+    if(isNaN(slot.getTime()))throw new Error("INVALID_SLOT");
+    if(slot.getTime()<Date.now()-60000){throw new Error("PAST_SLOT")}
+    const service={
+      id:`restaurant-${r.id}`,
+      name:`Table reservation — ${r.name}`,
+      price:0,
+      restaurantId:r.id,
+      restaurantName:r.name,
+      guests:Number(f.guests)||2
+    };
+    const securePinToken=String(Math.floor(1000+Math.random()*9000));
+    const payloadPacket={
+      userId:state.authUser.uid,
+      customerName:f.name.trim(),
+      customerPhone:f.phone.trim(),
+      scheduledSlot:slot.toISOString(),
+      customerAddress:f.address.trim(),
+      services:[service],
+      subtotal:0,
+      discount:0,
+      promoCode:"",
+      grandTotal:0,
+      status:"Pending",
+      verificationPin:securePinToken,
+      restaurantId:r.id,
+      restaurantName:r.name,
+      restaurantArea:r.area||"",
+      guests:Number(f.guests)||2,
+      specialRequest:f.specialRequest.trim(),
+      bookingType:"TABLE",
+      createdAt:new Date().toISOString()
+    };
+    const collectionRef=collection(firestore,"bookings");
+    const added=await withTimeout(addDoc(collectionRef,payloadPacket),10000);
+    state.lastBooking={id:added.id,...payloadPacket};
+    state.bookingStep=4;
+    state.toast("Booking request saved successfully.","success");
+    if(window.__feastRefreshBookings)window.__feastRefreshBookings(state);
+  }catch(e){
+    console.error("Booking write error:",e);
+    state.bookingError=e.message==="PAST_SLOT"?"That date/time has already passed.":e.message==="INVALID_SLOT"?"Please select a valid date and time.":"Booking could not be saved. Check your Firebase rules and connection, then retry.";
+    state.toast(state.bookingError,"error");
+  }finally{state.isSubmitting=false}
+};
+
+window.__feastCancelBooking=async function(state,id){
+  if(!state.authUser||!firestore||!id)return;
+  const booking=state.userBookings.find(b=>b.id===id);
+  if(!booking||booking.userId!==state.authUser.uid){state.toast("Booking not found.","error");return}
+  if(["Cancelled","Completed"].includes(booking.status)){state.toast("This booking can no longer be cancelled.","warn");return}
+  if(!confirm("Cancel this booking?"))return;
+  try{
+    await withTimeout(updateDoc(doc(firestore,"bookings",id),{status:"Cancelled",updatedAt:new Date().toISOString()}),9000);
+    state.toast("Booking cancelled successfully.","success");
+  }catch(e){console.error(e);state.toast("Failed to cancel booking. Please retry.","error")}
+};
+
+window.__feastRefreshBookings=function(state){
+  if(!state.authUser||!firestore)return;
+  if(unsubscribeBookings)unsubscribeBookings();
+  try{
+    /*
+      Same path/query as existing booking.html:
+      collection(db,"bookings") + where("userId","==",user.uid)
+    */
+    const syncQuery=query(collection(firestore,"bookings"),where("userId","==",state.authUser.uid));
+    unsubscribeBookings=onSnapshot(syncQuery,snapshot=>{
+      state.userBookings=[];
+      snapshot.forEach(d=>state.userBookings.push({id:d.id,...d.data()}));
+      state.userBookings.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
     },err=>{
-     console.error(err);this.loading=false;this.ready=true;this.appError="Firebase authentication is unavailable. Guest mode is active.";
+      console.error("Booking realtime sync:",err);
+      state.toast("Live booking sync is unavailable. Showing the last loaded data.","error");
     });
-   }else{
-    this.guest=true;this.loading=false;this.ready=true;
-   }
-  },
-
-  async loadCatalog(){
-   this.categories=demoCategories;
-   this.restaurants=demoRestaurants;
-   this.filteredRestaurants=[...this.restaurants];
-   if(!db)return;
-   try{
-    const [c,r]=await Promise.all([get(ref(db,"categories")),get(ref(db,"restaurants"))]);
-    if(c.exists()){
-     const v=c.val();
-     const arr=Object.keys(v).map(k=>({id:k,...(v[k]||{})}));
-     if(arr.length)this.categories=[{id:"all",name:"All Cuisines",icon:"fa-solid fa-border-all"},...arr];
-    }
-    if(r.exists()){
-     const v=r.val();
-     const arr=Object.keys(v).map(k=>({id:k,...(v[k]||{})}));
-     if(arr.length){this.restaurants=arr;this.filteredRestaurants=[...arr]}
-    }
-   }catch(e){console.warn("Catalog fallback:",e)}
-  },
-
-  async loadProfile(user){
-   this.userProfile={name:user.displayName||"Customer",email:user.email||"",phone:user.phoneNumber||"",photoURL:user.photoURL||""};
-   if(!db)return;
-   try{
-    const s=await get(ref(db,`customers/${user.uid}`));
-    if(s.exists())this.userProfile={...this.userProfile,...s.val()};
-    else await set(ref(db,`customers/${user.uid}`),{...this.userProfile,createdAt:Date.now()});
-    const c=await get(ref(db,`carts/${user.uid}`));
-    if(c.exists()){const x=c.val();this.cart=x.items||[];this.cartRestaurantId=x.restaurantId||null;this.cartRestaurantName=x.restaurantName||""}
-    const a=await get(ref(db,`addresses/${user.uid}`));
-    if(a.exists())this.userAddresses=a.val()||{};
-   }catch(e){console.warn("Profile fallback:",e)}
-  },
-
-  listenUserData(uid){
-   if(!db)return;
-   onValue(ref(db,"orders"),s=>{
-    const v=s.val()||{};
-    this.userOrders=Object.keys(v).map(k=>({id:k,...v[k]})).filter(x=>x.customerId===uid).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-   });
-   onValue(ref(db,"reservations"),s=>{
-    const v=s.val()||{};
-    this.userReservations=Object.keys(v).map(k=>({id:k,...v[k]})).filter(x=>x.customerId===uid).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-   });
-  },
-
-  async login(){
-   if(!auth){this.toast("Firebase authentication is not available. Guest mode is active.","warning");return}
-   try{await signInWithPopup(auth,new GoogleAuthProvider());this.guest=false;this.toast("Signed in successfully","success")}
-   catch(e){console.error(e);this.toast(e.code==="auth/popup-blocked"?"Allow popups and try again.":"Google sign-in failed.","error")}
-  },
-
-  async logout(){
-   if(auth)try{await signOut(auth)}catch(e){}
-   this.authUser=null;this.guest=true;this.userProfile={name:"Guest User",email:"",phone:"",photoURL:""};this.toast("Signed out","info");
-  },
-
-  switchTab(t){this.currentTab=t;window.scrollTo({top:0,behavior:"smooth"})},
-
-  filterCatalog(){
-   const q=this.searchQuery.toLowerCase().trim(),cat=this.selectedCategory.toLowerCase();
-   this.filteredRestaurants=this.restaurants.filter(r=>{
-    const text=((r.name||"")+" "+(r.cuisines||"")+" "+(r.area||"")+" "+(r.city||"")).toLowerCase();
-    return (!q||text.includes(q)) &&
-     (cat==="all"||cat==="all cuisines"||(r.cuisines||"").toLowerCase().includes(cat)) &&
-     (!this.filterVegOnly||r.isPureVeg===true) &&
-     (!this.filterOpenOnly||r.isOpen!==false);
-   });
-  },
-
-  async openMenu(r){
-   this.activeRestaurant=r;this.activeMenuItems=[];this.switchTab("menu");
-   if(demoMenu[r.id]){this.activeMenuItems=demoMenu[r.id];return}
-   if(db)try{
-    const s=await get(ref(db,"menuItems"));const v=s.val()||{};
-    this.activeMenuItems=Object.keys(v).map(k=>({id:k,...v[k]})).filter(x=>x.restaurantId===r.id&&x.isAvailable!==false);
-   }catch(e){console.warn(e)}
-  },
-
-  addToCart(item){
-   if(!this.activeRestaurant)return;
-   if(this.cart.length&&this.cartRestaurantId!==this.activeRestaurant.id){
-    this.pendingItem=item;this.showConflict=true;return;
-   }
-   this.cartRestaurantId=this.activeRestaurant.id;this.cartRestaurantName=this.activeRestaurant.name;
-   const found=this.cart.find(x=>x.id===item.id);
-   if(found)found.quantity++;else this.cart.push({...item,quantity:1});
-   this.persistCart();this.toast(item.name+" added to cart","success");
-  },
-
-  clearAndAdd(){
-   this.cart=[];this.cartRestaurantId=null;this.cartRestaurantName="";this.showConflict=false;
-   const x=this.pendingItem;this.pendingItem=null;if(x)this.addToCart(x);
-  },
-
-  updateQty(id,d){
-   const x=this.cart.find(i=>i.id===id);if(!x)return;
-   x.quantity+=d;if(x.quantity<=0)this.cart=this.cart.filter(i=>i.id!==id);
-   if(!this.cart.length){this.cartRestaurantId=null;this.cartRestaurantName=""}
-   this.persistCart();
-  },
-
-  async persistCart(){
-   if(!db||!this.authUser)return;
-   try{await set(ref(db,`carts/${this.authUser.uid}`),{restaurantId:this.cartRestaurantId,restaurantName:this.cartRestaurantName,items:this.cart})}catch(e){}
-  },
-
-  get cartCount(){return this.cart.reduce((s,x)=>s+(Number(x.quantity)||0),0)},
-  get subtotal(){return this.cart.reduce((s,x)=>s+(Number(x.price)||0)*(Number(x.quantity)||0),0)},
-  get delivery(){return this.cart.length?40:0},
-  get total(){return this.subtotal+this.delivery},
-
-  async checkout(){
-   if(!this.authUser){this.showCart=false;this.login();return}
-   if(!this.cart.length)return;
-   this.isSubmitting=true;
-   try{
-    if(!db)throw new Error("Database unavailable");
-    const r=push(ref(db,"orders"));
-    await set(r,{customerId:this.authUser.uid,restaurantId:this.cartRestaurantId,restaurantName:this.cartRestaurantName,items:this.cart,subtotal:this.subtotal,deliveryFee:this.delivery,total:this.total,paymentMethod:"Cash on Delivery",paymentStatus:"PENDING",orderStatus:"PLACED",createdAt:Date.now(),updatedAt:Date.now()});
-    this.cart=[];this.cartRestaurantId=null;this.cartRestaurantName="";await this.persistCart();
-    this.showCart=false;this.switchTab("orders");this.toast("Order placed successfully!","success");
-   }catch(e){console.error(e);this.toast("Could not place order. Check Firebase rules/database.","error")}
-   finally{this.isSubmitting=false}
-  },
-
-  openReservation(r){this.modalRestaurant=r;this.showReservation=true},
-  async reserve(){
-   if(!this.authUser){this.showReservation=false;this.login();return}
-   if(!this.resForm.date||!this.resForm.time){this.toast("Select date and time","warning");return}
-   this.isSubmitting=true;
-   try{
-    if(!db)throw new Error("Database unavailable");
-    const r=push(ref(db,"reservations"));
-    await set(r,{customerId:this.authUser.uid,restaurantId:this.modalRestaurant.id,restaurantName:this.modalRestaurant.name,date:this.resForm.date,time:this.resForm.time,guests:Number(this.resForm.guests)||2,status:"CONFIRMED",confirmationCode:"FH-"+Math.floor(1000+Math.random()*9000),createdAt:Date.now()});
-    this.showReservation=false;this.switchTab("reservations");this.toast("Table booking confirmed!","success");
-   }catch(e){console.error(e);this.toast("Booking failed. Check Firebase rules.","error")}
-   finally{this.isSubmitting=false}
-  },
-
-  async saveProfile(){
-   if(!this.authUser){this.login();return}
-   try{if(db)await set(ref(db,`customers/${this.authUser.uid}`),{...this.userProfile,updatedAt:Date.now()});this.toast("Profile saved","success")}catch(e){this.toast("Could not save profile","error")}
-  },
-
-  async saveAddress(){
-   if(!this.authUser){this.login();return}
-   if(!this.addressForm.label||!this.addressForm.address){this.toast("Fill both address fields","warning");return}
-   try{
-    const r=push(ref(db,`addresses/${this.authUser.uid}`));await set(r,this.addressForm);
-    this.userAddresses[r.key]={...this.addressForm};this.addressForm={label:"",address:""};this.toast("Address added","success");
-   }catch(e){this.toast("Could not save address","error")}
-  },
-
-  async deleteAddress(id){
-   if(db&&this.authUser)try{await set(ref(db,`addresses/${this.authUser.uid}/${id}`),null)}catch(e){}
-   delete this.userAddresses[id];this.toast("Address removed","info");
-  },
-
-  toggleFavorite(id){this.favorites=this.favorites.includes(id)?this.favorites.filter(x=>x!==id):[...this.favorites,id];this.toast(this.favorites.includes(id)?"Added to favorites":"Removed from favorites",this.favorites.includes(id)?"success":"info")},
-  isFavorite(id){return this.favorites.includes(id)},
-  initials(n){return (n||"Guest User").split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()},
-  date(v){return v?new Date(v).toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}):"Recently"},
-  toast(message,type="info"){const id=Date.now()+Math.random();this.toasts.push({id,message,type});setTimeout(()=>this.toasts=this.toasts.filter(x=>x.id!==id),3200)}
- };
+  }catch(e){console.error(e)}
 };
 
-window.addEventListener("error",e=>console.error("Page error:",e.error||e.message));
+window.__feastInit=async function(state){
+  if(window.__feastBooted)return;
+  window.__feastBooted=true;
+  state.loading=true;
+  window.addEventListener("online",()=>{state.isOnline=true;state.toast("Connection restored","success")});
+  window.addEventListener("offline",()=>{state.isOnline=false;state.toast("You are offline. Browsing fallback data is still available.","warn")});
 
-/* Start Alpine only after the application factory exists. */
-const alpine=document.createElement("script");
-alpine.defer=true;
-alpine.src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js";
-alpine.onload=()=>console.log("FeastHub ready");
-document.head.appendChild(alpine);
+  const fb=await initFirebase(state);
+  await loadCatalog(state);
+
+  const today=new Date();today.setMinutes(today.getMinutes()-today.getTimezoneOffset());
+  state.resForm.date=today.toISOString().slice(0,10);
+  state.resForm.time="19:00";
+
+  if(fb&&auth){
+    let authResolved=false;
+    await new Promise(resolve=>{
+      let done=false;
+      const finish=()=>{if(!done){done=true;resolve()}};
+      const unsub=onAuthStateChanged(auth,async user=>{
+        authResolved=true;state.authUser=user||null;state.guest=!user;
+        if(user){
+          state.profile={name:user.displayName||"Customer",email:user.email||"",phone:user.phoneNumber||"",photoURL:user.photoURL||""};
+          try{
+            const s=await withTimeout(getDoc(doc(firestore,"users",user.uid)),6000);
+            if(s.exists()){const d=s.data();state.profile={...state.profile,name:d.fullName||state.profile.name,phone:d.phone||state.profile.phone}}
+          }catch(e){console.warn("Profile read fallback:",e)}
+          window.__feastRefreshBookings(state);
+        }else{state.userBookings=[]}
+        state.loading=false;state.ready=true;finish();unsub();
+      },err=>{
+        console.error("Auth listener:",err);state.guest=true;state.loading=false;state.ready=true;
+        state.appError="Authentication is unavailable. You can browse and sign in again later.";finish();unsub();
+      });
+      setTimeout(()=>{if(!authResolved){state.loading=false;state.ready=true;finish()}},8000);
+    });
+  }else{
+    state.guest=true;state.loading=false;state.ready=true;
+  }
+};
 </script>
 </head>
 
-<body x-data="feasthubApp()" x-init="initApp()" class="min-h-screen">
+<body x-data="feasthubApp()" x-init="initApp()">
 
-<div x-show="loading" class="fixed inset-0 z-[99999] bg-slate-950 flex items-center justify-center p-6">
- <div class="text-center">
-  <div class="w-20 h-20 mx-auto rounded-full border-2 border-emerald-500/20 border-t-emerald-500 spin"></div>
-  <div class="mt-6 text-2xl font-black tracking-widest">FEAST<span class="text-emerald-400">HUB</span></div>
-  <p class="text-xs text-slate-500 mt-2">Preparing your dining experience…</p>
- </div>
-</div>
-
-<div x-show="appError" x-cloak class="fixed top-3 left-1/2 -translate-x-1/2 z-[99998] w-[calc(100%-28px)] max-w-xl glass rounded-2xl p-3 text-xs text-amber-300">
- <i class="fa-solid fa-triangle-exclamation mr-2"></i><span x-text="appError"></span>
-</div>
-
-<div class="fixed top-4 right-4 z-[99990] space-y-2 w-[calc(100%-32px)] max-w-sm">
- <template x-for="t in toasts" :key="t.id">
-  <div class="glass rounded-xl px-4 py-3 text-xs flex gap-3 items-center shadow-2xl">
-   <i :class="t.type==='success'?'fa-solid fa-circle-check text-emerald-400':t.type==='error'?'fa-solid fa-circle-xmark text-rose-400':t.type==='warning'?'fa-solid fa-triangle-exclamation text-amber-400':'fa-solid fa-circle-info text-sky-400'"></i>
-   <span class="flex-1" x-text="t.message"></span>
+<div x-show="loading" class="loading" x-cloak>
+  <div class="loader-box">
+    <div class="loader"></div>
+    <b>FEASTHUB</b>
+    <p>Preparing your dining experience…</p>
   </div>
- </template>
 </div>
 
-<div x-show="ready" x-cloak class="min-h-screen pb-20 md:pb-0">
-
-<header class="sticky top-0 z-50 glass border-b border-slate-800/80">
- <div class="max-w-7xl mx-auto h-[72px] px-4 sm:px-6 flex items-center gap-4">
-  <button @click="switchTab('home')" class="flex items-center gap-3 shrink-0">
-   <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center glow"><i class="fa-solid fa-utensils text-slate-950"></i></span>
-   <span class="font-black tracking-wider text-white">FEAST<span class="text-emerald-400">HUB</span></span>
-  </button>
-
-  <div class="desktop-search flex-1 max-w-xl mx-auto relative">
-   <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-   <input x-model="searchQuery" @input="filterCatalog()" class="input w-full rounded-xl py-3 pl-10 pr-4 text-xs" placeholder="Search restaurants, cuisines or areas…">
-  </div>
-
-  <div class="flex items-center gap-2 ml-auto">
-   <span class="hidden sm:flex items-center gap-2 text-[10px] text-slate-400 px-3 py-2 rounded-full card">
-    <i :class="isOnline?'fa-solid fa-circle text-emerald-400':'fa-solid fa-circle text-rose-400'"></i>
-    <span x-text="isOnline?'Online':'Offline'"></span>
-   </span>
-   <button @click="showCart=true" class="btn bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl px-3 sm:px-4 py-2.5 text-xs glow">
-    <i class="fa-solid fa-bag-shopping"></i><span class="hidden sm:inline ml-2">Cart</span>
-    <b x-show="cartCount" x-text="cartCount" class="ml-1 bg-slate-950 text-emerald-400 rounded px-1.5"></b>
-   </button>
-   <div x-data="{open:false}" class="relative">
-    <button @click="open=!open" class="w-11 h-11 rounded-xl card flex items-center justify-center">
-     <template x-if="userProfile.photoURL"><img :src="userProfile.photoURL" class="w-8 h-8 rounded-lg object-cover"></template>
-     <template x-if="!userProfile.photoURL"><span class="text-xs font-black text-emerald-400" x-text="initials(userProfile.name)"></span></template>
-    </button>
-    <div x-show="open" @click.outside="open=false" x-transition x-cloak class="absolute right-0 top-14 w-60 glass rounded-2xl p-2 shadow-2xl">
-     <div class="px-3 py-3 border-b border-slate-800">
-      <b class="text-xs block truncate" x-text="userProfile.name"></b>
-      <span class="text-[10px] text-slate-500 block truncate" x-text="userProfile.email||'Guest mode'"></span>
-     </div>
-     <button @click="switchTab('profile');open=false" class="w-full text-left p-3 rounded-xl text-xs hover:bg-slate-800"><i class="fa-regular fa-user w-5"></i> Profile</button>
-     <button @click="switchTab('orders');open=false" class="w-full text-left p-3 rounded-xl text-xs hover:bg-slate-800"><i class="fa-solid fa-receipt w-5"></i> Orders</button>
-     <button @click="switchTab('reservations');open=false" class="w-full text-left p-3 rounded-xl text-xs hover:bg-slate-800"><i class="fa-regular fa-calendar-check w-5"></i> Bookings</button>
-     <button x-show="!authUser" @click="login();open=false" class="w-full text-left p-3 rounded-xl text-xs text-emerald-400 hover:bg-emerald-500/10"><i class="fa-brands fa-google w-5"></i> Sign in with Google</button>
-     <button x-show="authUser" @click="logout();open=false" class="w-full text-left p-3 rounded-xl text-xs text-rose-400 hover:bg-rose-500/10"><i class="fa-solid fa-arrow-right-from-bracket w-5"></i> Sign out</button>
+<div class="toast-wrap">
+  <template x-for="t in toasts" :key="t.id">
+    <div class="toast" :class="t.type">
+      <i :class="t.type==='success'?'fa-solid fa-circle-check':t.type==='error'?'fa-solid fa-circle-xmark':t.type==='warn'?'fa-solid fa-triangle-exclamation':'fa-solid fa-circle-info'"></i>
+      <span x-text="t.message"></span>
     </div>
-   </div>
+  </template>
+</div>
+
+<div x-show="ready" x-cloak class="app">
+<header class="header">
+  <div class="shell header-inner">
+    <button class="logo" @click="switchTab('home')">
+      <span class="logo-mark"><i class="fa-solid fa-utensils"></i></span>
+      <span class="logo-text">FEAST<span>HUB</span></span>
+    </button>
+
+    <div class="search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input x-model="searchQuery" @input="filterCatalog()" placeholder="Search restaurants, cuisine or area…">
+    </div>
+
+    <div style="display:flex;gap:8px;margin-left:auto">
+      <button class="icon-btn desktop-only" @click="switchTab('bookings')" title="My reservations"><i class="fa-regular fa-calendar-check"></i></button>
+      <button class="icon-btn" @click="switchTab('profile')" :title="authUser?'Account':'Sign in'">
+        <img x-show="profile.photoURL" :src="profile.photoURL" style="width:25px;height:25px;border-radius:8px;object-fit:cover">
+        <span x-show="!profile.photoURL" x-text="(profile.name||'G').split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase()" style="font-size:10px;font-weight:900;color:#bdb3ff"></span>
+      </button>
+    </div>
   </div>
- </div>
 </header>
 
-<main class="main-pad max-w-7xl mx-auto px-4 sm:px-6 py-6">
-
-<section x-show="currentTab==='home'" class="space-y-7 fade">
- <div class="hero rounded-3xl border border-emerald-500/10 p-7 sm:p-12 overflow-hidden relative">
-  <div class="max-w-2xl relative">
-   <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest"><i class="fa-solid fa-sparkles text-amber-400"></i> Premium Dining</span>
-   <h1 class="hero-title text-4xl sm:text-6xl font-black leading-tight mt-5">Discover food worth <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-amber-300">remembering.</span></h1>
-   <p class="text-slate-400 text-sm mt-4 max-w-xl">Explore restaurants, discover curated menus, order your favourites and reserve tables — all in one premium experience.</p>
-   <div class="md:hidden mt-5 relative">
-    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-    <input x-model="searchQuery" @input="filterCatalog()" class="input w-full rounded-xl py-3 pl-10 text-xs" placeholder="Search restaurants…">
-   </div>
-   <div class="flex flex-wrap gap-3 mt-6">
-    <button @click="document.getElementById('restaurants').scrollIntoView({behavior:'smooth'})" class="btn bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl px-5 py-3 text-xs font-black">Explore Restaurants <i class="fa-solid fa-arrow-right ml-2"></i></button>
-    <button @click="switchTab('reservations')" class="btn card rounded-xl px-5 py-3 text-xs font-bold">Book a Table</button>
-   </div>
-  </div>
- </div>
-
- <div class="space-y-3">
-  <div class="flex items-center justify-between"><h2 class="font-black">Explore cuisines</h2><button @click="selectedCategory='ALL';filterCatalog()" class="text-xs text-emerald-400">Reset</button></div>
-  <div class="flex gap-2 overflow-x-auto pb-2">
-   <template x-for="cat in categories" :key="cat.id">
-    <button @click="selectedCategory=cat.name==='All Cuisines'?'ALL':cat.name;filterCatalog()" class="shrink-0 px-4 py-2.5 rounded-xl card text-xs font-bold" :class="selectedCategory.toLowerCase()===(cat.name||'').toLowerCase()||(selectedCategory==='ALL'&&cat.name==='All Cuisines')?'bg-emerald-500 text-slate-950 border-emerald-400':''">
-     <i :class="cat.icon||'fa-solid fa-utensils'" class="mr-1"></i><span x-text="cat.name"></span>
-    </button>
-   </template>
-  </div>
- </div>
-
- <div class="flex flex-wrap gap-2">
-  <button @click="filterVegOnly=!filterVegOnly;filterCatalog()" class="card px-3 py-2 rounded-lg text-xs" :class="filterVegOnly?'text-emerald-400 border-emerald-500/40':''"><i class="fa-solid fa-leaf mr-1"></i> Pure Veg</button>
-  <button @click="filterOpenOnly=!filterOpenOnly;filterCatalog()" class="card px-3 py-2 rounded-lg text-xs" :class="filterOpenOnly?'text-emerald-400 border-emerald-500/40':''"><i class="fa-solid fa-door-open mr-1"></i> Open Now</button>
- </div>
-
- <div id="restaurants" class="space-y-4">
-  <div class="flex items-center justify-between"><h2 class="text-xl font-black">Featured Restaurants</h2><span class="text-[10px] text-slate-500" x-text="filteredRestaurants.length+' places'"></span></div>
-  <div x-show="!filteredRestaurants.length" class="card rounded-2xl p-12 text-center">
-   <i class="fa-solid fa-store-slash text-4xl text-slate-700"></i><p class="font-bold mt-4">No restaurants found</p><p class="text-xs text-slate-500 mt-1">Try changing your search or filters.</p>
-  </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-   <template x-for="r in filteredRestaurants" :key="r.id">
-    <article class="card rounded-2xl overflow-hidden group">
-     <div class="h-48 relative overflow-hidden bg-slate-900">
-      <img :src="r.coverImage||'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80'" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
-      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
-      <span class="absolute top-3 left-3 text-[9px] font-black px-2.5 py-1 rounded-full" :class="r.isOpen!==false?'bg-emerald-400 text-slate-950':'bg-rose-500 text-white'" x-text="r.isOpen!==false?'OPEN NOW':'CLOSED'"></span>
-      <button @click="toggleFavorite(r.id)" class="absolute top-3 right-3 w-9 h-9 rounded-full glass flex items-center justify-center"><i :class="isFavorite(r.id)?'fa-solid fa-heart text-rose-400':'fa-regular fa-heart text-white'"></i></button>
-     </div>
-     <div class="p-5">
-      <div class="flex justify-between gap-3">
-       <div><h3 class="font-black text-base" x-text="r.name"></h3><p class="text-xs text-slate-400 mt-1" x-text="r.cuisines||'Multi-cuisine'"></p></div>
-       <span class="shrink-0 h-fit px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-[10px] font-black"><i class="fa-solid fa-star text-amber-400"></i> <span x-text="r.rating||'4.5'"></span></span>
+<main class="shell">
+  <section x-show="currentTab==='home'" class="page">
+    <div class="hero">
+      <span class="eyebrow"><i class="fa-solid fa-sparkles"></i> Premium table booking</span>
+      <h1>Good food deserves a <span class="gradient">great table.</span></h1>
+      <p>Discover restaurants, choose your date and time, check table availability and manage every reservation from one polished dining app.</p>
+      <div class="stats">
+        <span class="stat"><b>Live</b> booking updates</span>
+        <span class="stat"><b>Secure</b> Firebase booking records</span>
+        <span class="stat"><b>24/7</b> guest browsing</span>
       </div>
-      <p class="text-[11px] text-slate-500 mt-2"><i class="fa-solid fa-location-dot mr-1"></i><span x-text="(r.area||'')+(r.city?', '+r.city:'')"></span></p>
-      <div class="grid grid-cols-[1fr_auto] gap-2 mt-5">
-       <button @click="openMenu(r)" class="btn bg-emerald-600 hover:bg-emerald-500 rounded-xl py-3 text-xs font-black">View Menu</button>
-       <button @click="openReservation(r)" class="btn card rounded-xl px-4"><i class="fa-regular fa-calendar-check"></i></button>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><div><h2>Explore cuisines</h2><p>Find the mood for your next meal.</p></div><button class="btn" @click="selectedCategory='all';filterCatalog()">Reset</button></div>
+      <div class="chips">
+        <template x-for="cat in categories" :key="cat">
+          <button class="chip" :class="selectedCategory===cat?'active':''" @click="selectedCategory=cat;filterCatalog()" x-text="cat==='all'?'All Cuisines':cat.charAt(0).toUpperCase()+cat.slice(1)"></button>
+        </template>
       </div>
-     </div>
-    </article>
-   </template>
-  </div>
- </div>
-</section>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="chip" :class="filterVegOnly?'active':''" @click="filterVegOnly=!filterVegOnly;filterCatalog()"><i class="fa-solid fa-leaf"></i> Pure Veg</button>
+        <button class="chip" :class="filterOpenOnly?'active':''" @click="filterOpenOnly=!filterOpenOnly;filterCatalog()"><i class="fa-solid fa-door-open"></i> Open Now</button>
+      </div>
+    </div>
 
-<section x-show="currentTab==='menu'" x-cloak class="space-y-6 fade">
- <button @click="switchTab('home')" class="text-xs text-slate-400 hover:text-emerald-400"><i class="fa-solid fa-arrow-left mr-2"></i>Back to restaurants</button>
- <div x-show="activeRestaurant" class="hero rounded-3xl p-7 border border-slate-800">
-  <p class="text-[10px] uppercase tracking-widest text-emerald-400 font-black" x-text="activeRestaurant?.cuisines"></p>
-  <div class="flex flex-wrap justify-between gap-4 items-end mt-2"><div><h1 class="text-3xl sm:text-4xl font-black" x-text="activeRestaurant?.name"></h1><p class="text-xs text-slate-400 mt-2" x-text="activeRestaurant?.description"></p></div><button @click="openReservation(activeRestaurant)" class="bg-amber-400 text-slate-950 rounded-xl px-4 py-3 text-xs font-black">Reserve Table</button></div>
- </div>
- <div x-show="!activeMenuItems.length" class="card rounded-2xl p-12 text-center"><i class="fa-solid fa-utensils text-4xl text-slate-700"></i><p class="font-bold mt-4">Menu coming soon</p></div>
- <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-  <template x-for="item in activeMenuItems" :key="item.id">
-   <article class="card rounded-2xl p-4 flex gap-4">
-    <img :src="item.image||'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80'" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover">
-    <div class="flex-1 min-w-0"><div class="flex items-start justify-between gap-2"><h3 class="font-black text-sm" x-text="item.name"></h3><span class="text-emerald-400 font-black text-sm whitespace-nowrap">₹<span x-text="item.price"></span></span></div><p class="text-xs text-slate-500 mt-2 line-clamp-2" x-text="item.description"></p><div class="flex items-center justify-between mt-4"><span class="text-[10px]" :class="item.isVeg?'text-emerald-400':'text-rose-400'"><i class="fa-solid fa-circle text-[7px] mr-1"></i><span x-text="item.isVeg?'VEG':'NON-VEG'"></span></span><button @click="addToCart(item)" class="bg-emerald-600 hover:bg-emerald-500 rounded-lg px-3 py-2 text-[10px] font-black">ADD <i class="fa-solid fa-plus ml-1"></i></button></div></div>
-   </article>
-  </template>
- </div>
-</section>
+    <div class="section" id="restaurants">
+      <div class="section-head"><div><h2>Featured restaurants</h2><p x-text="filteredRestaurants.length+' places available'"></p></div></div>
+      <div x-show="!filteredRestaurants.length" class="empty glass"><i class="fa-solid fa-store-slash"></i><b>No restaurants found</b><span>Try a different search or filter.</span></div>
+      <div class="grid">
+        <template x-for="r in filteredRestaurants" :key="r.id">
+          <article class="restaurant glass">
+            <div class="cover">
+              <img :src="r.coverImage||r.image||'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=85'" loading="lazy" @error="$event.target.style.display='none'">
+              <span class="badge" :class="r.isOpen!==false?'open':'closed'" x-text="r.isOpen!==false?'OPEN NOW':'CLOSED'"></span>
+              <button class="icon-btn favorite" @click="favorites.includes(r.id)?favorites=favorites.filter(x=>x!==r.id):favorites.push(r.id)">
+                <i :class="favorites.includes(r.id)?'fa-solid fa-heart':'fa-regular fa-heart'" :style="favorites.includes(r.id)?'color:#ff7181':''"></i>
+              </button>
+            </div>
+            <div class="restaurant-body">
+              <div class="restaurant-title">
+                <div><h3 x-text="r.name||'Restaurant'"></h3><p x-text="r.cuisines||'Multi-cuisine'"></p></div>
+                <span class="rating"><i class="fa-solid fa-star"></i> <span x-text="r.rating||'4.5'"></span></span>
+              </div>
+              <p><i class="fa-solid fa-location-dot"></i> <span x-text="[r.area,r.city].filter(Boolean).join(', ')"></span></p>
+              <div class="actions">
+                <button class="btn green" @click="openMenu(r)">View Menu</button>
+                <button class="btn primary" @click="openBookingFromCard(r)" title="Reserve table"><i class="fa-regular fa-calendar-check"></i></button>
+              </div>
+            </div>
+          </article>
+        </template>
+      </div>
+    </div>
+  </section>
 
-<section x-show="currentTab==='orders'" x-cloak class="space-y-5 fade">
- <div><h1 class="text-2xl font-black">Your Orders</h1><p class="text-xs text-slate-500 mt-1">Track your dining orders</p></div>
- <div x-show="!userOrders.length" class="card rounded-2xl p-14 text-center"><i class="fa-solid fa-receipt text-4xl text-slate-700"></i><p class="font-bold mt-4">No orders yet</p><p class="text-xs text-slate-500 mt-1">Your orders will appear here after checkout.</p><button @click="switchTab('home')" class="mt-5 bg-emerald-500 text-slate-950 rounded-xl px-5 py-2.5 text-xs font-black">Explore Restaurants</button></div>
- <div class="space-y-4"><template x-for="o in userOrders" :key="o.id"><article class="card rounded-2xl p-5"><div class="flex justify-between gap-3 border-b border-slate-800 pb-4"><div><span class="text-[9px] text-emerald-400 font-mono" x-text="o.id"></span><h3 class="font-black mt-1" x-text="o.restaurantName"></h3><p class="text-[10px] text-slate-500 mt-1" x-text="date(o.createdAt)"></p></div><span class="h-fit px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[9px] font-black" x-text="o.orderStatus||'PLACED'"></span></div><div class="py-4 space-y-2"><template x-for="i in (o.items||[])" :key="i.id"><div class="flex justify-between text-xs text-slate-400"><span x-text="i.quantity+'× '+i.name"></span><span>₹<span x-text="(Number(i.price)||0)*(Number(i.quantity)||0)"></span></span></div></template></div><div class="border-t border-slate-800 pt-3 flex justify-between font-black text-sm"><span>Total</span><span class="text-emerald-400">₹<span x-text="o.total"></span></span></div></article></template></div>
-</section>
+  <section x-show="currentTab==='menu'" x-cloak class="page">
+    <button class="back" @click="switchTab('home')"><i class="fa-solid fa-arrow-left"></i> Back to restaurants</button>
+    <div class="menu-hero glass">
+      <span class="eyebrow" x-text="activeRestaurant?.cuisines||'Restaurant'"></span>
+      <div style="display:flex;justify-content:space-between;gap:15px;align-items:end;margin-top:12px">
+        <div><h1 style="font-size:30px;margin:0" x-text="activeRestaurant?.name"></h1><p style="font-size:12px;color:var(--muted)" x-text="activeRestaurant?.description"></p></div>
+        <button class="btn green desktop-only" @click="openBookingFromCard(activeRestaurant)">Reserve</button>
+      </div>
+    </div>
+    <div class="menu-items">
+      <template x-for="item in activeMenuItems" :key="item.id">
+        <article class="menu-item">
+          <img :src="item.image||'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80'">
+          <div style="min-width:0;flex:1">
+            <div style="display:flex;justify-content:space-between;gap:8px"><h3 x-text="item.name"></h3><span class="price">₹<span x-text="item.price||0"></span></span></div>
+            <p x-text="item.description||'Chef-crafted selection.'"></p>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span class="mini" :style="item.isVeg?'color:#69e4b7':'color:#ff8c9a'" x-text="item.isVeg?'VEG':'NON-VEG'"></span><span class="mini">Available</span></div>
+          </div>
+        </article>
+      </template>
+    </div>
+    <div x-show="!activeMenuItems.length" class="empty glass" style="margin-top:14px"><i class="fa-solid fa-utensils"></i><b>Menu coming soon</b><span>Restaurant menu data was not found in Firebase.</span></div>
+  </section>
 
-<section x-show="currentTab==='reservations'" x-cloak class="space-y-5 fade">
- <div><h1 class="text-2xl font-black">Table Bookings</h1><p class="text-xs text-slate-500 mt-1">Your confirmed dining reservations</p></div>
- <div x-show="!userReservations.length" class="card rounded-2xl p-14 text-center"><i class="fa-regular fa-calendar-check text-4xl text-slate-700"></i><p class="font-bold mt-4">No bookings yet</p><button @click="switchTab('home')" class="mt-5 bg-emerald-500 text-slate-950 rounded-xl px-5 py-2.5 text-xs font-black">Find a Restaurant</button></div>
- <div class="grid md:grid-cols-2 gap-4"><template x-for="r in userReservations" :key="r.id"><article class="card rounded-2xl p-5"><div class="flex justify-between"><div><h3 class="font-black" x-text="r.restaurantName"></h3><span class="text-[9px] text-emerald-400 font-mono" x-text="r.confirmationCode"></span></div><span class="text-[9px] bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full font-black" x-text="r.status"></span></div><div class="mt-5 space-y-2 text-xs text-slate-400"><p><i class="fa-regular fa-calendar text-emerald-400 w-5"></i><span x-text="r.date"></span></p><p><i class="fa-regular fa-clock text-emerald-400 w-5"></i><span x-text="r.time"></span></p><p><i class="fa-solid fa-users text-emerald-400 w-5"></i><span x-text="r.guests+' guests'"></span></p></div></article></template></div>
-</section>
+  <section x-show="currentTab==='booking'" x-cloak class="page">
+    <button class="back" @click="switchTab('home')"><i class="fa-solid fa-arrow-left"></i> Back to restaurants</button>
+    <div class="booking-shell">
+      <div>
+        <div class="stepper">
+          <span class="step" :class="bookingStep>=1?'active':''">01 Restaurant</span>
+          <span class="step" :class="bookingStep>=2?'active':''">02 Schedule</span>
+          <span class="step" :class="bookingStep>=3?'active':''">03 Details</span>
+          <span class="step" :class="bookingStep>=4?'active':''">04 Confirmed</span>
+        </div>
 
-<section x-show="currentTab==='profile'" x-cloak class="space-y-5 fade">
- <div><h1 class="text-2xl font-black">Account</h1><p class="text-xs text-slate-500 mt-1">Profile and saved addresses</p></div>
- <div class="grid lg:grid-cols-2 gap-5">
-  <div class="card rounded-2xl p-6 space-y-4">
-   <h2 class="font-black text-sm border-b border-slate-800 pb-3">Personal information</h2>
-   <label class="block text-xs text-slate-500">Name<input x-model="userProfile.name" class="input rounded-xl w-full mt-1 p-3 text-xs"></label>
-   <label class="block text-xs text-slate-500">Email<input x-model="userProfile.email" disabled class="input rounded-xl w-full mt-1 p-3 text-xs opacity-50"></label>
-   <label class="block text-xs text-slate-500">Phone<input x-model="userProfile.phone" class="input rounded-xl w-full mt-1 p-3 text-xs" placeholder="+91"></label>
-   <button @click="saveProfile()" class="w-full bg-emerald-500 text-slate-950 rounded-xl py-3 text-xs font-black">Save Changes</button>
-  </div>
-  <div class="card rounded-2xl p-6 space-y-4">
-   <h2 class="font-black text-sm border-b border-slate-800 pb-3">Saved addresses</h2>
-   <input x-model="addressForm.label" class="input rounded-xl w-full p-3 text-xs" placeholder="Label — Home / Work">
-   <textarea x-model="addressForm.address" class="input rounded-xl w-full p-3 text-xs h-24" placeholder="Complete delivery address"></textarea>
-   <button @click="saveAddress()" class="w-full card rounded-xl py-3 text-xs font-black"><i class="fa-solid fa-plus mr-1"></i>Add Address</button>
-   <template x-for="(a,id) in userAddresses" :key="id"><div class="flex justify-between gap-3 p-3 rounded-xl bg-slate-950/50 border border-slate-800"><div><b class="text-xs text-emerald-400" x-text="a.label"></b><p class="text-[10px] text-slate-500 mt-1" x-text="a.address"></p></div><button @click="deleteAddress(id)" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button></div></template>
-  </div>
- </div>
-</section>
+        <div x-show="bookingStep<4" class="glass card">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px">
+            <div><span class="mini">Restaurant</span><h2 style="margin:3px 0 0;font-size:20px" x-text="selectedRestaurant?.name"></h2></div>
+            <button class="btn" @click="switchTab('home')">Change</button>
+          </div>
+
+          <div x-show="bookingStep===1">
+            <div class="form-grid">
+              <label>Date<input class="field" type="date" x-model="resForm.date" :min="new Date().toISOString().slice(0,10)" @change="checkAvailability()"></label>
+              <label>Time<input class="field" type="time" x-model="resForm.time" @change="checkAvailability()"></label>
+            </div>
+            <label>Guests
+              <div class="guest-control">
+                <button type="button" @click="changeGuests(-1)">−</button><span class="guest-num"><span x-text="resForm.guests"></span> guests</span><button type="button" @click="changeGuests(1)">+</button>
+              </div>
+            </label>
+            <div class="availability" :class="availability.state==='full'?'bad':availability.state==='checking'?'warn':''">
+              <i :class="availability.state==='checking'?'fa-solid fa-spinner fa-spin':availability.available?'fa-solid fa-circle-check':'fa-solid fa-circle-xmark'"></i>
+              <span x-text="availability.message"></span>
+            </div>
+            <button class="btn primary" style="width:100%;margin-top:10px" @click="bookingStep=2;checkAvailability()">Continue to details <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+
+          <div x-show="bookingStep===2">
+            <div class="form-grid">
+              <label>Full name<input class="field" x-model="resForm.name" placeholder="Your name"></label>
+              <label>Phone number<input class="field" x-model="resForm.phone" inputmode="tel" placeholder="+91 98765 43210"></label>
+            </div>
+            <label>Address / contact location<textarea class="field" x-model="resForm.address" placeholder="Optional location for reservation contact or special arrangements"></textarea></label>
+            <label>Special requests<textarea class="field" x-model="resForm.specialRequest" placeholder="Birthday, anniversary, accessibility request, seating preference…"></textarea></label>
+            <div style="display:flex;gap:8px"><button class="btn" @click="bookingStep=1">Back</button><button class="btn primary" style="flex:1" @click="bookingStep=3">Review booking <i class="fa-solid fa-arrow-right"></i></button></div>
+          </div>
+
+          <div x-show="bookingStep===3">
+            <div class="res glass" style="background:rgba(255,255,255,.025)">
+              <div class="res-top"><div><span class="mini">Restaurant</span><h3 x-text="selectedRestaurant?.name"></h3></div><span class="status s-verified">REQUEST</span></div>
+              <div class="res-meta">
+                <div><i class="fa-regular fa-calendar"></i> <span x-text="resForm.date"></span></div>
+                <div><i class="fa-regular fa-clock"></i> <span x-text="resForm.time"></span></div>
+                <div><i class="fa-solid fa-users"></i> <span x-text="resForm.guests+' guests'"></span></div>
+                <div><i class="fa-solid fa-user"></i> <span x-text="resForm.name"></span></div>
+                <div><i class="fa-solid fa-phone"></i> <span x-text="resForm.phone"></span></div>
+                <div x-show="resForm.specialRequest"><i class="fa-regular fa-note-sticky"></i> <span x-text="resForm.specialRequest"></span></div>
+              </div>
+            </div>
+            <div x-show="!authUser" class="availability warn" style="margin-top:12px"><i class="fa-brands fa-google"></i> Sign in with Google is required before the booking can be saved.</div>
+            <div x-show="bookingError" class="availability bad" x-text="bookingError"></div>
+            <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" @click="bookingStep=2">Edit</button><button class="btn primary" style="flex:1" @click="authUser?submitBooking():signIn()" :disabled="isSubmitting"><i :class="isSubmitting?'fa-solid fa-spinner fa-spin':'fa-solid fa-calendar-check'"></i> <span x-text="isSubmitting?'Saving booking…':authUser?'Confirm booking':'Sign in & continue'"></span></button></div>
+          </div>
+        </div>
+
+        <div x-show="bookingStep===4" class="glass card" x-cloak style="text-align:center">
+          <div style="width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 15px;background:rgba(24,200,139,.12);border:1px solid rgba(24,200,139,.4);color:#54e7b0;font-size:28px"><i class="fa-solid fa-check"></i></div>
+          <span class="eyebrow">Booking saved</span>
+          <h2 style="font-size:25px;margin:15px 0 8px">Table request confirmed</h2>
+          <p class="mini">Your booking is now in your reservation feed. Restaurant-side status updates will appear there in real time.</p>
+          <div class="res" style="text-align:left;margin:18px 0"><div class="res-top"><div><span class="mini">Booking ID</span><h3 x-text="lastBooking?.id"></h3></div><span class="status s-pending">Pending</span></div><div class="res-meta"><div><i class="fa-solid fa-store"></i> <span x-text="lastBooking?.restaurantName"></span></div><div><i class="fa-regular fa-calendar"></i> <span x-text="resForm.date+' • '+resForm.time"></span></div><div><i class="fa-solid fa-users"></i> <span x-text="resForm.guests+' guests'"></span></div></div></div>
+          <button class="btn green" style="width:100%" @click="switchTab('bookings')">View My Reservations</button>
+        </div>
+      </div>
+
+      <aside class="glass card res-card">
+        <span class="mini">Booking summary</span>
+        <h3 style="font-size:18px;margin:5px 0 15px" x-text="selectedRestaurant?.name"></h3>
+        <div class="res-meta">
+          <div><i class="fa-regular fa-calendar"></i> <span x-text="resForm.date||'Choose date'"></span></div>
+          <div><i class="fa-regular fa-clock"></i> <span x-text="resForm.time||'Choose time'"></span></div>
+          <div><i class="fa-solid fa-users"></i> <span x-text="resForm.guests+' guests'"></span></div>
+        </div>
+        <div class="availability" style="margin-top:15px"><i class="fa-solid fa-shield-halved"></i> Your booking remains under the existing <b>bookings</b> Firebase collection and user ownership logic.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section x-show="currentTab==='bookings'" x-cloak class="page">
+    <div class="section-head"><div><h2>My Reservations</h2><p>Live status, schedule and booking management.</p></div><button class="btn" @click="bookingFilter='all'">All</button></div>
+    <div class="search" style="max-width:none;margin:0 0 13px;display:block"><i class="fa-solid fa-magnifying-glass"></i><input x-model="bookingSearch" placeholder="Search booking, restaurant, address…"></div>
+    <div class="chips" style="margin-bottom:15px">
+      <template x-for="f in ['all','Pending','Verified','Technician Sent','Completed','Cancelled']" :key="f"><button class="chip" :class="bookingFilter===f?'active':''" @click="bookingFilter=f" x-text="f==='all'?'All':f"></button></template>
+    </div>
+    <div x-show="!filteredBookings.length" class="empty glass"><i class="fa-regular fa-calendar-xmark"></i><b>No reservations found</b><span>Your confirmed requests and future bookings will appear here.</span><button class="btn green" style="margin-top:14px" @click="switchTab('home')">Explore restaurants</button></div>
+    <div class="res-list">
+      <template x-for="b in filteredBookings" :key="b.id">
+        <article class="res glass">
+          <div class="res-top">
+            <div><span class="mini" x-text="'#'+shortId(b.id)"></span><h3 x-text="b.restaurantName||(b.services?.[0]?.restaurantName)||'Table reservation'"></h3></div>
+            <span class="status" :class="statusClass(b.status)" x-text="b.status||'Pending'"></span>
+          </div>
+          <p x-text="b.customerName||'Customer'"></p>
+          <div class="res-meta">
+            <div><i class="fa-regular fa-calendar"></i> <span x-text="formatDate(b.scheduledSlot)"></span></div>
+            <div><i class="fa-solid fa-users"></i> <span x-text="(b.guests||b.services?.[0]?.guests||1)+' guests'"></span></div>
+            <div x-show="b.customerAddress"><i class="fa-solid fa-location-dot"></i> <span x-text="b.customerAddress"></span></div>
+            <div x-show="b.specialRequest"><i class="fa-regular fa-note-sticky"></i> <span x-text="b.specialRequest"></span></div>
+          </div>
+          <div class="res-actions">
+            <button class="btn" @click="openSupport(b)"><i class="fa-regular fa-comment-dots"></i> Support</button>
+            <button class="btn" x-show="b.status!=='Cancelled'&&b.status!=='Completed'" @click="cancelBooking(b.id)"><i class="fa-solid fa-ban"></i> Cancel</button>
+          </div>
+        </article>
+      </template>
+    </div>
+  </section>
+
+  <section x-show="currentTab==='profile'" x-cloak class="page">
+    <div class="two">
+      <div class="glass card">
+        <div class="section-head"><div><h2>Account</h2><p>Customer details used by your existing booking flow.</p></div></div>
+        <div class="form-grid">
+          <label>Full name<input class="field" x-model="profile.name"></label>
+          <label>Phone<input class="field" x-model="profile.phone"></label>
+        </div>
+        <label>Email<input class="field" x-model="profile.email" disabled></label>
+        <button class="btn green" style="width:100%" @click="saveProfile()">Save profile</button>
+        <button x-show="authUser" class="btn" style="width:100%;margin-top:8px;color:#ff9eaa" @click="signOut()">Sign out</button>
+        <button x-show="!authUser" class="btn primary" style="width:100%;margin-top:8px" @click="signIn()"><i class="fa-brands fa-google"></i> Sign in with Google</button>
+      </div>
+      <div class="glass card">
+        <span class="mini">Authentication</span>
+        <h3 style="font-size:18px;margin:6px 0">Firebase customer session</h3>
+        <p class="mini">Browsing works as a guest. Booking creation and live personal booking history use the authenticated user's UID, matching the existing booking.html logic.</p>
+        <div class="availability" :class="authUser?'':'warn'"><i :class="authUser?'fa-solid fa-circle-check':'fa-solid fa-user-clock'"></i> <span x-text="authUser?'Signed in as '+(authUser.email||profile.name):'Guest mode — sign in before confirming a booking.'"></span></div>
+      </div>
+    </div>
+  </section>
 </main>
 
-<nav class="md:hidden fixed bottom-0 inset-x-0 z-50 glass border-t border-slate-800 flex justify-around p-2 pb-[max(8px,env(safe-area-inset-bottom))]">
- <button @click="switchTab('home')" class="flex flex-col items-center gap-1 px-4 py-2 text-[10px]" :class="currentTab==='home'?'text-emerald-400 font-black':'text-slate-500'"><i class="fa-solid fa-house"></i>Explore</button>
- <button @click="switchTab('orders')" class="flex flex-col items-center gap-1 px-4 py-2 text-[10px]" :class="currentTab==='orders'?'text-emerald-400 font-black':'text-slate-500'"><i class="fa-solid fa-receipt"></i>Orders</button>
- <button @click="switchTab('reservations')" class="flex flex-col items-center gap-1 px-4 py-2 text-[10px]" :class="currentTab==='reservations'?'text-emerald-400 font-black':'text-slate-500'"><i class="fa-regular fa-calendar-check"></i>Bookings</button>
- <button @click="switchTab('profile')" class="flex flex-col items-center gap-1 px-4 py-2 text-[10px]" :class="currentTab==='profile'?'text-emerald-400 font-black':'text-slate-500'"><i class="fa-regular fa-user"></i>Account</button>
+<nav class="bottom">
+  <div class="bottom-inner">
+    <button class="nav-btn" :class="currentTab==='home'?'active':''" @click="switchTab('home')"><i class="fa-solid fa-compass"></i>Explore</button>
+    <button class="nav-btn" :class="currentTab==='booking'?'active':''" @click="selectedRestaurant?switchTab('booking'):switchTab('home')"><i class="fa-regular fa-calendar-check"></i>Book</button>
+    <button class="nav-btn" :class="currentTab==='bookings'?'active':''" @click="switchTab('bookings')"><i class="fa-solid fa-clock-rotate-left"></i>Reservations</button>
+    <button class="nav-btn" :class="currentTab==='profile'?'active':''" @click="switchTab('profile')"><i class="fa-regular fa-user"></i>Account</button>
+  </div>
 </nav>
 </div>
 
-<!-- CART -->
-<div x-show="showCart" x-cloak class="fixed inset-0 z-[9990]">
- <div @click="showCart=false" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
- <aside class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-slate-900 border-l border-slate-800 p-5 flex flex-col">
-  <div class="flex justify-between items-center border-b border-slate-800 pb-4"><h2 class="font-black">Your Cart</h2><button @click="showCart=false" class="text-slate-400"><i class="fa-solid fa-xmark text-xl"></i></button></div>
-  <div class="flex-1 overflow-y-auto py-4 space-y-3">
-   <template x-for="i in cart" :key="i.id"><div class="card rounded-xl p-3 flex items-center justify-between gap-3"><div class="min-w-0"><b class="text-xs block truncate" x-text="i.name"></b><span class="text-xs text-emerald-400">₹<span x-text="i.price"></span></span></div><div class="flex items-center gap-2"><button @click="updateQty(i.id,-1)" class="w-7 h-7 rounded-lg bg-slate-800">−</button><span class="text-xs w-4 text-center" x-text="i.quantity"></span><button @click="updateQty(i.id,1)" class="w-7 h-7 rounded-lg bg-slate-800">+</button></div></div></template>
-   <div x-show="!cart.length" class="text-center text-xs text-slate-600 py-20">Your cart is empty.</div>
+<!-- Support sheet -->
+<div x-show="modal?.type==='support'" x-cloak class="overlay" @click.self="modal=null">
+  <div class="sheet">
+    <div class="sheet-head"><div><span class="mini">Booking support</span><h2 x-text="'#'+shortId(modal?.booking?.id)"></h2></div><button class="icon-btn" @click="modal=null"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="res">
+      <h3 x-text="modal?.booking?.restaurantName||'Table reservation'"></h3>
+      <p>Status: <b x-text="modal?.booking?.status||'Pending'"></b></p>
+      <p x-text="modal?.booking?.specialRequest||'No special request was added.'"></p>
+    </div>
+    <div class="availability" style="margin-top:12px">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>For this customer app, support uses the booking's live Firebase status. Existing status values such as Pending, Verified, Technician Sent, In-Transit, Completed and Cancelled are preserved.</span>
+    </div>
+    <button class="btn green" style="width:100%;margin-top:10px" @click="modal=null">Close</button>
   </div>
-  <div class="border-t border-slate-800 pt-4 space-y-3">
-   <div class="flex justify-between text-xs text-slate-400"><span>Subtotal</span><span>₹<span x-text="subtotal"></span></span></div>
-   <div class="flex justify-between text-xs text-slate-400"><span>Delivery</span><span>₹<span x-text="delivery"></span></span></div>
-   <div class="flex justify-between border-t border-slate-800 pt-3 font-black"><span>Total</span><span class="text-emerald-400">₹<span x-text="total"></span></span></div>
-   <button @click="checkout()" :disabled="!cart.length||isSubmitting" class="w-full bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-slate-950 rounded-xl py-3.5 text-xs font-black"><span x-text="isSubmitting?'Placing order…':authUser?'Place Order — COD':'Sign in to Checkout'"></span></button>
-  </div>
- </aside>
 </div>
 
-<!-- RESERVATION -->
-<div x-show="showReservation" x-cloak class="fixed inset-0 z-[9991] flex items-center justify-center p-4">
- <div @click="showReservation=false" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
- <div class="relative w-full max-w-md glass rounded-3xl p-6">
-  <div class="flex justify-between items-center"><h2 class="font-black">Reserve a Table</h2><button @click="showReservation=false"><i class="fa-solid fa-xmark"></i></button></div>
-  <p class="text-xs text-emerald-400 mt-1" x-text="modalRestaurant?.name"></p>
-  <div class="space-y-3 mt-6">
-   <label class="text-xs text-slate-500 block">Date<input type="date" x-model="resForm.date" class="input rounded-xl w-full mt-1 p-3"></label>
-   <label class="text-xs text-slate-500 block">Time<input type="time" x-model="resForm.time" class="input rounded-xl w-full mt-1 p-3"></label>
-   <label class="text-xs text-slate-500 block">Guests<input type="number" min="1" max="20" x-model="resForm.guests" class="input rounded-xl w-full mt-1 p-3"></label>
+<div x-show="appError" x-cloak class="overlay" style="align-items:center;padding:18px">
+  <div class="error-screen">
+    <i class="fa-solid fa-triangle-exclamation" style="font-size:34px;color:#ff7181"></i>
+    <h2 style="margin:12px 0 6px">FeastHub is running in fallback mode</h2>
+    <p style="font-size:11px;color:var(--muted)" x-text="appError"></p>
+    <button class="btn green" style="margin-top:12px" @click="appError='';location.reload()">Retry Firebase</button>
   </div>
-  <div class="flex gap-2 mt-6"><button @click="showReservation=false" class="flex-1 card rounded-xl py-3 text-xs font-bold">Cancel</button><button @click="reserve()" class="flex-1 bg-emerald-500 text-slate-950 rounded-xl py-3 text-xs font-black" :disabled="isSubmitting">Confirm Booking</button></div>
- </div>
-</div>
-
-<!-- CONFLICT -->
-<div x-show="showConflict" x-cloak class="fixed inset-0 z-[9992] flex items-center justify-center p-4">
- <div class="absolute inset-0 bg-black/80"></div>
- <div class="relative max-w-sm w-full glass rounded-3xl p-7 text-center">
-  <i class="fa-solid fa-triangle-exclamation text-3xl text-amber-400"></i>
-  <h2 class="font-black mt-4">Change restaurant?</h2>
-  <p class="text-xs text-slate-500 mt-2">Your cart contains items from another restaurant. Clear it and add this item?</p>
-  <div class="flex gap-2 mt-6"><button @click="showConflict=false" class="flex-1 card rounded-xl py-3 text-xs font-bold">Cancel</button><button @click="clearAndAdd()" class="flex-1 bg-rose-600 rounded-xl py-3 text-xs font-black">Clear & Add</button></div>
- </div>
 </div>
 
 </body>
