@@ -1,1352 +1,1590 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500 selection:text-slate-950">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Customer Portal | Premium Restaurant Marketplace</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>FeastHub — Premium Culinary Experience</title>
 
-    <style>
-        /* ==========================================================================
-           1. DESIGN SYSTEM & CSS VARIABLES
-           ========================================================================== */
-        :root {
-            --bg-base: #0B0F12;
-            --bg-surface: #12181F;
-            --bg-card: #182029;
-            --bg-elevated: #222C38;
-            --glass-bg: rgba(24, 32, 41, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.08);
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-            --accent-primary: #10B981; /* Emerald */
-            --accent-primary-hover: #059669;
-            --accent-primary-glow: rgba(16, 185, 129, 0.25);
-            
-            --accent-gold: #F59E0B; /* Champagne / Gold */
-            --accent-gold-glow: rgba(245, 158, 11, 0.2);
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            amber: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            },
+            slate: {
+              850: '#131c2e',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          },
+          boxShadow: {
+            'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.3)',
+            'glow-amber': '0 0 25px -5px rgba(245, 158, 11, 0.3)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+          }
+        }
+      }
+    }
+  </script>
 
-            --text-main: #F9FAFB;
-            --text-muted: #9CA3AF;
-            --text-dark: #111827;
+  <!-- Custom Styles & Glassmorphism Utilities -->
+  <style>
+    [x-cloak] { display: none !important; }
 
-            --status-open: #10B981;
-            --status-closed: #EF4444;
-            --status-busy: #F59E0B;
-            --status-paused: #6B7280;
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
-            --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-full: 9999px;
+    /* Glass Effects */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .glass-input {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-input:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
 
-            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 25px var(--accent-primary-glow);
-            
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --font-heading: 'Playfair Display', serif;
+    /* Skeleton Loading Animation */
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
 
-            --sidebar-width: 280px;
-            --header-height: 72px;
-            --bottom-nav-height: 68px;
-        }
+    /* Safe Area Padding for Mobile Notch / Bottom Bar */
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
+    .pt-safe { padding-top: env(safe-area-inset-top, 1rem); }
+  </style>
 
-        /* Reset & Base Styles */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: var(--font-main);
-            font-size: 15px;
-            line-height: 1.5;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        a { color: inherit; text-decoration: none; }
-        button { cursor: pointer; border: none; outline: none; background: none; font-family: inherit; color: inherit; }
-        input, select, textarea { font-family: inherit; color: inherit; border: none; outline: none; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: var(--radius-full); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-        /* App Layout Shell */
-        #appShell {
-            display: flex;
-            min-height: 100vh;
-            width: 100vw;
-            position: relative;
-        }
-
-        /* Guard Overlay (Auth Loading) */
-        #guardOverlay {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-base);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--bg-elevated);
-            border-top-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 0.8s cubic-bezier(0.6, 0.2, 0.1, 1) infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Desktop Sidebar */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--bg-surface);
-            border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-        }
-
-        .sidebar-brand {
-            height: var(--header-height);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 24px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-md);
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-gold));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-dark);
-            font-size: 20px;
-            font-weight: 800;
-        }
-        .brand-title {
-            font-family: var(--font-heading);
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: var(--text-main);
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 20px 16px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            color: var(--text-muted);
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .nav-item:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.04);
-        }
-        .nav-item.active {
-            color: var(--accent-primary);
-            background: var(--accent-primary-glow);
-            font-weight: 600;
-        }
-        .nav-item i { font-size: 18px; width: 22px; text-align: center; }
-
-        .sidebar-user {
-            padding: 16px;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-elevated);
-            object-fit: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--accent-gold);
-            border: 1px solid var(--glass-border);
-        }
-
-        /* Main Content Wrapper */
-        .main-wrapper {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        /* Desktop Top Header */
-        .top-header {
-            height: var(--header-height);
-            background: rgba(18, 24, 31, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            z-index: 90;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-        }
-        .page-title {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        .header-actions { display: flex; align-items: center; gap: 16px; }
-        .action-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transition: all 0.2s;
-        }
-        .action-btn:hover { background: var(--bg-elevated); border-color: var(--accent-primary); }
-        .badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: var(--accent-primary);
-            color: var(--text-dark);
-            font-size: 11px;
-            font-weight: 800;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Views Container */
-        .view-container {
-            padding: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            flex: 1;
-        }
-        .view-section { display: none; animation: fadeIn 0.25s ease-in-out; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Mobile Header & Navigation */
-        .mobile-header {
-            display: none;
-            height: 60px;
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 0 16px;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 90;
-        }
-        .bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: var(--bottom-nav-height);
-            background: var(--bg-surface);
-            border-top: 1px solid var(--glass-border);
-            z-index: 95;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .bottom-nav-items { display: flex; height: 100%; align-items: center; justify-content: space-around; }
-        .bottom-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-muted);
-            font-size: 11px;
-            font-weight: 500;
-        }
-        .bottom-item.active { color: var(--accent-primary); font-weight: 700; }
-        .bottom-item i { font-size: 20px; }
-
-        /* Floating Cart Pill */
-        .floating-cart-pill {
-            position: fixed;
-            bottom: 84px;
-            right: 24px;
-            background: var(--accent-primary);
-            color: var(--text-dark);
-            padding: 14px 24px;
-            border-radius: var(--radius-full);
-            font-weight: 700;
-            box-shadow: var(--shadow-glow);
-            display: none;
-            align-items: center;
-            gap: 12px;
-            z-index: 85;
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .floating-cart-pill:hover { transform: scale(1.04); }
-
-        /* UI Cards & Elements */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-subtle);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .card-title { font-size: 18px; font-weight: 700; }
-
-        /* Status Pills */
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .status-pill.OPEN { background: rgba(16, 185, 129, 0.15); color: var(--status-open); }
-        .status-pill.CLOSED { background: rgba(239, 68, 68, 0.15); color: var(--status-closed); }
-        .status-pill.BUSY { background: rgba(245, 158, 11, 0.15); color: var(--status-busy); }
-        .status-pill.PAUSED { background: rgba(107, 114, 128, 0.15); color: var(--status-paused); }
-
-        /* Quick Action Grid */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .action-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .action-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-2px);
-            background: var(--bg-elevated);
-        }
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-md);
-            background: var(--accent-primary-glow);
-            color: var(--accent-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        /* Order Progress Tracker */
-        .tracker-steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin: 24px 0 12px 0;
-        }
-        .tracker-steps::before {
-            content: '';
-            position: absolute;
-            top: 14px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--bg-elevated);
-            z-index: 1;
-        }
-        .tracker-progress-bar {
-            position: absolute;
-            top: 14px;
-            left: 0;
-            height: 3px;
-            background: var(--accent-primary);
-            z-index: 2;
-            transition: width 0.3s ease;
-        }
-        .step-item {
-            position: relative;
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .step-dot {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 3px solid var(--bg-elevated);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .step-item.completed .step-dot {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-            color: var(--text-dark);
-        }
-        .step-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-align: center; }
-        .step-item.completed .step-label { color: var(--text-main); }
-
-        /* Menu Grid & Filter Tabs */
-        .category-tabs {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            margin-bottom: 24px;
-            scrollbar-width: none;
-        }
-        .category-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn {
-            padding: 10px 20px;
-            border-radius: var(--radius-full);
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            white-space: nowrap;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .tab-btn.active {
-            background: var(--accent-primary);
-            color: var(--text-dark);
-            border-color: var(--accent-primary);
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .food-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, border-color 0.2s;
-            position: relative;
-        }
-        .food-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.15); }
-        .food-thumb {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: var(--bg-elevated);
-        }
-        .food-details { padding: 16px; flex: 1; display: flex; flex-direction: column; }
-        .food-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-        .food-title { font-weight: 700; font-size: 16px; }
-        .food-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; flex: 1; line-clamp: 2; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
-        .food-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-        .food-price { font-weight: 800; font-size: 16px; color: var(--accent-gold); }
-
-        /* Buttons & Controls */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-            min-height: 44px;
-        }
-        .btn-primary { background: var(--accent-primary); color: var(--text-dark); }
-        .btn-primary:hover { background: var(--accent-primary-hover); }
-        .btn-secondary { background: var(--bg-elevated); color: var(--text-main); border: 1px solid var(--glass-border); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
-        .btn-outline { border: 1px solid var(--accent-primary); color: var(--accent-primary); }
-        .btn-outline:hover { background: var(--accent-primary-glow); }
-        .btn-sm { padding: 6px 12px; min-height: 32px; font-size: 12px; border-radius: var(--radius-sm); }
-        .btn-block { width: 100%; }
-
-        /* Modals & Drawers */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            animation: fadeIn 0.2s ease;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 520px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-subtle);
-            position: relative;
-            animation: slideUp 0.25s ease;
-        }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            background: var(--bg-surface);
-            z-index: 10;
-        }
-        .modal-body { padding: 20px; }
-        .modal-footer {
-            padding: 16px 20px;
-            border-top: 1px solid var(--glass-border);
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            background: var(--bg-surface);
-        }
-
-        /* Form Controls */
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            color: var(--text-main);
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-        .form-control:focus { border-color: var(--accent-primary); }
-
-        /* Toast Notifications */
-        #toastContainer {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-        .toast {
-            pointer-events: auto;
-            min-width: 280px;
-            padding: 14px 18px;
-            border-radius: var(--radius-md);
-            background: var(--bg-card);
-            border-left: 4px solid var(--accent-primary);
-            box-shadow: var(--shadow-subtle);
-            color: var(--text-main);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: slideInRight 0.3s ease;
-        }
-        .toast.error { border-left-color: var(--status-closed); }
-        .toast.warning { border-left-color: var(--accent-gold); }
-        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 992px) {
-            .sidebar { display: none; }
-            .main-wrapper { margin-left: 0; padding-bottom: calc(var(--bottom-nav-height) + 20px); }
-            .top-header { display: none; }
-            .mobile-header { display: flex; }
-            .bottom-nav { display: block; }
-            .view-container { padding: 16px; }
-            .modal-card { max-width: 100%; margin: 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0; align-self: flex-end; }
-            .modal-overlay { align-items: flex-end; padding: 0; }
-        }
-    </style>
+  <!-- Alpine.js Plugin & Core -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body>
 
-    <!-- Security Auth Guard Loading Overlay -->
-    <div id="guardOverlay">
-        <div class="spinner"></div>
-        <div style="font-weight: 600; color: var(--text-muted);">Authenticating Secure Portal...</div>
+<body class="h-full text-slate-100 bg-slate-950 font-sans flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950" x-data="feasthubApp()" x-init="initApp()">
+
+  <!-- ==================== TOP GLOBAL TOAST SYSTEM ==================== -->
+  <div class="fixed top-5 right-5 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4">
+    <template x-for="toast in toasts" :key="toast.id">
+      <div class="pointer-events-auto flex items-center gap-3 p-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-0"
+           :class="{
+             'bg-slate-900 border border-emerald-500/40 text-emerald-400': toast.type === 'success',
+             'bg-slate-900 border border-rose-500/40 text-rose-400': toast.type === 'error',
+             'bg-slate-900 border border-amber-500/40 text-amber-400': toast.type === 'warning',
+             'bg-slate-900 border border-slate-700 text-slate-200': toast.type === 'info'
+           }">
+        <i :class="{
+             'fa-solid fa-circle-check text-xl': toast.type === 'success',
+             'fa-solid fa-circle-xmark text-xl': toast.type === 'error',
+             'fa-solid fa-triangle-exclamation text-xl': toast.type === 'warning',
+             'fa-solid fa-circle-info text-xl': toast.type === 'info'
+           }"></i>
+        <div class="flex-1 text-sm font-medium" x-text="toast.message"></div>
+        <button @click="removeToast(toast.id)" class="text-slate-400 hover:text-slate-100">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </template>
+  </div>
+
+  <!-- ==================== AUTH / INITIAL LOADING SCREEN ==================== -->
+  <div x-show="authLoading" x-transition.opacity.duration.300ms class="fixed inset-0 z-[9000] bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
+    <div class="relative flex items-center justify-center mb-8">
+      <div class="w-24 h-24 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <i class="fa-solid fa-utensils text-3xl text-emerald-500 animate-bounce"></i>
+      </div>
     </div>
+    <h1 class="text-2xl font-bold tracking-tight text-white mb-2">FEASTHUB</h1>
+    <p class="text-slate-400 text-sm max-w-xs mb-6" x-text="authLoadingMessage">Authenticating Secure Customer Portal...</p>
+    
+    <!-- Safety Reset / Retry Button (Shown if auth takes unusually long) -->
+    <div x-show="showAuthRetry" class="mt-4 flex flex-col gap-3">
+      <p class="text-xs text-amber-400/80">Connection taking longer than expected.</p>
+      <div class="flex gap-2">
+        <button @click="retryAuth()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition">
+          <i class="fa-solid fa-rotate-right mr-1.5"></i> Retry Connection
+        </button>
+        <button @click="redirectToLogin()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition">
+          Go to Sign In
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <!-- Application Shell -->
-    <div id="appShell">
-        <!-- Desktop Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-logo"><i class="fa-solid fa-utensils"></i></div>
-                <div class="brand-title" id="restaurantBrandName">Aura Dining</div>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="#home" class="nav-item active" data-view="home"><i class="fa-solid fa-house"></i> Home</a>
-                <a href="#menu" class="nav-item" data-view="menu"><i class="fa-solid fa-utensils"></i> Discover / Menu</a>
-                <a href="#orders" class="nav-item" data-view="orders"><i class="fa-solid fa-receipt"></i> Orders</a>
-                <a href="#reservations" class="nav-item" data-view="reservations"><i class="fa-solid fa-calendar-check"></i> Reservations</a>
-                <a href="#favorites" class="nav-item" data-view="favorites"><i class="fa-solid fa-heart"></i> Favorites</a>
-                <a href="#addresses" class="nav-item" data-view="addresses"><i class="fa-solid fa-location-dot"></i> Addresses</a>
-                <a href="#invoices" class="nav-item" data-view="invoices"><i class="fa-solid fa-file-invoice-dollar"></i> Invoices</a>
-                <a href="#notifications" class="nav-item" data-view="notifications"><i class="fa-solid fa-bell"></i> Notifications</a>
-                <a href="#profile" class="nav-item" data-view="profile"><i class="fa-solid fa-user"></i> Profile</a>
-                <a href="#support" class="nav-item" data-view="support"><i class="fa-solid fa-headset"></i> Help & Support</a>
-            </nav>
-            <div class="sidebar-user">
-                <div class="user-info">
-                    <div class="avatar" id="sidebarAvatar">U</div>
-                    <div style="overflow: hidden;">
-                        <div id="sidebarUserName" style="font-weight: 700; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">User</div>
-                        <div style="font-size: 11px; color: var(--text-muted);">Customer</div>
-                    </div>
-                </div>
-                <button id="logoutBtnBtn" title="Sign Out" style="color: var(--text-muted); font-size: 16px;"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </div>
-        </aside>
+  <!-- ==================== MAIN APPLICATION CONTAINER ==================== -->
+  <div x-show="!authLoading" x-cloak class="min-h-screen flex flex-col pb-20 md:pb-0">
 
-        <!-- Main Content Area -->
-        <div class="main-wrapper">
-            <!-- Desktop Top Header -->
-            <header class="top-header">
-                <h1 class="page-title" id="desktopPageTitle">Good Evening</h1>
-                <div class="header-actions">
-                    <button class="action-btn" onclick="app.router.navigate('notifications')">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="badge" id="unreadNotifBadge" style="display:none;">0</span>
-                    </button>
-                    <button class="action-btn" onclick="app.cart.openDrawer()">
-                        <i class="fa-solid fa-basket-shopping"></i>
-                        <span class="badge" id="cartCountBadge" style="display:none;">0</span>
-                    </button>
-                </div>
-            </header>
-
-            <!-- Mobile Top Header -->
-            <header class="mobile-header">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="brand-logo" style="width:32px; height:32px; font-size:14px;"><i class="fa-solid fa-utensils"></i></div>
-                    <span style="font-family: var(--font-heading); font-weight: 700;" id="mobileBrandName">Aura</span>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <button class="action-btn" style="width:36px; height:36px;" onclick="app.router.navigate('notifications')">
-                        <i class="fa-solid fa-bell" style="font-size:14px;"></i>
-                    </button>
-                    <button class="action-btn" style="width:36px; height:36px;" onclick="app.cart.openDrawer()">
-                        <i class="fa-solid fa-basket-shopping" style="font-size:14px;"></i>
-                    </button>
-                </div>
-            </header>
-
-            <!-- Dynamic View Container -->
-            <main class="view-container">
-                
-                <!-- VIEW 1: HOME -->
-                <section id="view-home" class="view-section active">
-                    <div class="card" style="background: linear-gradient(135deg, rgba(24, 32, 41, 0.9), rgba(16, 185, 129, 0.1)); border-color: rgba(16, 185, 129, 0.2);">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
-                            <div>
-                                <h2 id="homeGreeting" style="font-family: var(--font-heading); font-size: 26px; font-weight: 700; margin-bottom: 4px;">Welcome Back</h2>
-                                <p style="color: var(--text-muted);">Discover fine dining and exquisite culinary creations today.</p>
-                            </div>
-                            <div id="restaurantStatusPill" class="status-pill OPEN"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Open Now</div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Action Cards -->
-                    <div class="quick-actions">
-                        <div class="action-card" onclick="app.router.navigate('menu')">
-                            <div class="action-icon"><i class="fa-solid fa-utensils"></i></div>
-                            <div>
-                                <div style="font-weight:700;">Order Food</div>
-                                <div style="font-size:12px; color:var(--text-muted);">Explore live menu</div>
-                            </div>
-                        </div>
-                        <div class="action-card" onclick="app.router.navigate('reservations')">
-                            <div class="action-icon" style="background:var(--accent-gold-glow); color:var(--accent-gold);"><i class="fa-solid fa-calendar-days"></i></div>
-                            <div>
-                                <div style="font-weight:700;">Reserve Table</div>
-                                <div style="font-size:12px; color:var(--text-muted);">Book fine seating</div>
-                            </div>
-                        </div>
-                        <div class="action-card" onclick="app.router.navigate('orders')">
-                            <div class="action-icon"><i class="fa-solid fa-truck-fast"></i></div>
-                            <div>
-                                <div style="font-weight:700;">Track Order</div>
-                                <div style="font-size:12px; color:var(--text-muted);">Live order status</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Active Order Card -->
-                    <div id="activeOrderContainer">
-                        <div class="card" style="text-align: center; padding: 40px 20px;">
-                            <i class="fa-solid fa-bowl-food" style="font-size: 36px; color: var(--text-muted); margin-bottom: 12px;"></i>
-                            <h3 style="font-size: 16px; margin-bottom: 6px;">Your next delicious order starts here</h3>
-                            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">No active orders currently in progress.</p>
-                            <button class="btn btn-primary btn-sm" onclick="app.router.navigate('menu')">Browse Menu</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- VIEW 2: MENU -->
-                <section id="view-menu" class="view-section">
-                    <div style="display:flex; gap:12px; margin-bottom: 20px;">
-                        <div class="form-group" style="flex:1; margin:0;">
-                            <input type="text" id="menuSearchInput" class="form-control" placeholder="Search dishes, ingredients, tags...">
-                        </div>
-                    </div>
-                    <div class="category-tabs" id="categoryTabs">
-                        <button class="tab-btn active" data-cat="ALL">All Items</button>
-                    </div>
-                    <div class="menu-grid" id="menuGrid">
-                        <!-- Dynamically Populated -->
-                    </div>
-                </section>
-
-                <!-- VIEW 3: ORDERS -->
-                <section id="view-orders" class="view-section">
-                    <div id="ordersList"></div>
-                </section>
-
-                <!-- VIEW 4: RESERVATIONS -->
-                <section id="view-reservations" class="view-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h2 style="font-size: 18px; font-weight: 700;">Table Bookings</h2>
-                        <button class="btn btn-primary btn-sm" onclick="app.reservations.openModal()"><i class="fa-solid fa-plus"></i> New Reservation</button>
-                    </div>
-                    <div id="reservationsList"></div>
-                </section>
-
-                <!-- VIEW 5: FAVORITES -->
-                <section id="view-favorites" class="view-section">
-                    <div class="menu-grid" id="favoritesGrid"></div>
-                </section>
-
-                <!-- VIEW 6: ADDRESSES -->
-                <section id="view-addresses" class="view-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h2 style="font-size: 18px; font-weight: 700;">Saved Locations</h2>
-                        <button class="btn btn-primary btn-sm" onclick="app.addresses.openModal()"><i class="fa-solid fa-plus"></i> Add Address</button>
-                    </div>
-                    <div id="addressesList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:16px;"></div>
-                </section>
-
-                <!-- VIEW 7: INVOICES -->
-                <section id="view-invoices" class="view-section">
-                    <div id="invoicesList"></div>
-                </section>
-
-                <!-- VIEW 8: NOTIFICATIONS -->
-                <section id="view-notifications" class="view-section">
-                    <div id="notificationsList"></div>
-                </section>
-
-                <!-- VIEW 9: PROFILE -->
-                <section id="view-profile" class="view-section">
-                    <div class="card" style="max-width: 600px; margin: 0 auto;">
-                        <div class="card-header"><h3 class="card-title">Personal Profile</h3></div>
-                        <form id="profileForm" onsubmit="app.profile.save(event)">
-                            <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" id="profileName" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Phone Number</label>
-                                <input type="tel" id="profilePhone" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Email Address (Read-only)</label>
-                                <input type="email" id="profileEmail" class="form-control" disabled style="opacity:0.6;">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
-                        </form>
-                    </div>
-                </section>
-
-                <!-- VIEW 10: SUPPORT -->
-                <section id="view-support" class="view-section">
-                    <div class="card" style="max-width: 600px; margin: 0 auto;">
-                        <div class="card-header"><h3 class="card-title">Customer Support</h3></div>
-                        <form id="supportForm" onsubmit="app.support.submit(event)">
-                            <div class="form-group">
-                                <label class="form-label">Category</label>
-                                <select id="supportCategory" class="form-control" required>
-                                    <option value="Order Issue">Order Issue</option>
-                                    <option value="Payment Issue">Payment Issue</option>
-                                    <option value="Reservation Issue">Reservation Issue</option>
-                                    <option value="Other">Other Query</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Message</label>
-                                <textarea id="supportMessage" class="form-control" rows="4" required placeholder="Describe your issue..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block">Submit Support Ticket</button>
-                        </form>
-                    </div>
-                </section>
-
-            </main>
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80 transition-all">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        
+        <!-- Logo & Branding -->
+        <div class="flex items-center gap-3 cursor-pointer" @click="switchTab('home')">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center shadow-glow-emerald">
+            <i class="fa-solid fa-utensils text-slate-950 font-black text-lg"></i>
+          </div>
+          <div>
+            <span class="text-xl font-black tracking-wider text-white">FEAST<span class="text-emerald-400">HUB</span></span>
+            <span class="hidden sm:inline-block ml-2 text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">Portal</span>
+          </div>
         </div>
 
-        <!-- Mobile Bottom Navigation -->
-        <nav class="bottom-nav">
-            <div class="bottom-nav-items">
-                <a href="#home" class="bottom-item active" data-view="home"><i class="fa-solid fa-house"></i>Home</a>
-                <a href="#menu" class="bottom-item" data-view="menu"><i class="fa-solid fa-utensils"></i>Menu</a>
-                <a href="#orders" class="bottom-item" data-view="orders"><i class="fa-solid fa-receipt"></i>Orders</a>
-                <a href="#reservations" class="bottom-item" data-view="reservations"><i class="fa-solid fa-calendar-check"></i>Bookings</a>
-                <a href="#profile" class="bottom-item" data-view="profile"><i class="fa-solid fa-user"></i>Profile</a>
-            </div>
-        </nav>
-
-        <!-- Floating Cart Pill Button -->
-        <div class="floating-cart-pill" id="floatingCartPill" onclick="app.cart.openDrawer()">
-            <i class="fa-solid fa-basket-shopping"></i>
-            <span id="pillCartItems">0 Items</span>
-            <span>•</span>
-            <span id="pillCartTotal">₹0</span>
+        <!-- Location Selector Badge -->
+        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full glass-card text-xs text-slate-300 border border-slate-700/50">
+          <i class="fa-solid fa-location-dot text-emerald-400"></i>
+          <span class="font-medium truncate max-w-[150px]" x-text="userProfile.city || 'Mumbai, MH'"></span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i>
         </div>
-    </div>
 
-    <!-- CART DRAWER / MODAL -->
-    <div class="modal-overlay" id="cartModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 style="font-weight:700;">Your Cart</h3>
-                <button onclick="app.ui.closeModal('cartModal')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body" id="cartDrawerBody">
-                <!-- Cart items list dynamically injected -->
-            </div>
-            <div class="modal-footer" style="flex-direction: column;">
-                <div style="display:flex; justify-content:space-between; width:100%; font-weight:700; font-size:16px; margin-bottom:12px;">
-                    <span>Grand Total:</span>
-                    <span id="cartGrandTotal">₹0</span>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="app.cart.checkout()">Proceed to Checkout</button>
-            </div>
+        <!-- Search Bar (Desktop) -->
+        <div class="hidden lg:flex flex-1 max-w-md mx-4 relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input type="text" x-model="searchQuery" @input="filterCatalog()" placeholder="Search restaurants, cuisines, or dishes..." 
+                 class="w-full pl-10 pr-4 py-2 rounded-xl glass-input text-xs text-slate-100 placeholder-slate-500 focus:outline-none transition">
         </div>
-    </div>
 
-    <!-- ADDRESS ADD/EDIT MODAL -->
-    <div class="modal-overlay" id="addressModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 style="font-weight:700;">Add New Delivery Address</h3>
-                <button onclick="app.ui.closeModal('addressModal')"><i class="fa-solid fa-xmark"></i></button>
+        <!-- Action Items (Cart, Profile, Notifications) -->
+        <div class="flex items-center gap-3">
+          <!-- Notification Bell -->
+          <button @click="showNotificationsModal = true" class="relative p-2.5 rounded-xl glass-card text-slate-300 hover:text-white hover:border-slate-600 transition">
+            <i class="fa-regular fa-bell text-lg"></i>
+            <span x-show="unreadNotifications" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400"></span>
+          </button>
+
+          <!-- Cart Drawer Toggle -->
+          <button @click="toggleCartDrawer()" class="relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition shadow-glow-emerald">
+            <i class="fa-solid fa-bag-shopping text-base"></i>
+            <span class="hidden sm:inline text-xs font-extrabold uppercase tracking-wider">Cart</span>
+            <span x-show="cartItemsCount > 0" class="px-1.5 py-0.5 text-[11px] font-black rounded-md bg-slate-950 text-emerald-400" x-text="cartItemsCount"></span>
+          </button>
+
+          <!-- User Avatar Profile Menu -->
+          <div class="relative" x-data="{ open: false }">
+            <button @click="open = !open" class="flex items-center gap-2 p-1 rounded-xl glass-card hover:border-slate-600 transition">
+              <template x-if="userProfile.photoURL">
+                <img :src="userProfile.photoURL" @error="handleImgError($event)" class="w-8 h-8 rounded-lg object-cover" />
+              </template>
+              <template x-if="!userProfile.photoURL">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 text-emerald-400 font-bold flex items-center justify-center text-xs" x-text="getInitials(userProfile.name)"></div>
+              </template>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div x-show="open" @click.outside="open = false" x-transition.opacity.scale.95
+                 class="absolute right-0 mt-3 w-56 rounded-2xl glass-panel border border-slate-700/80 shadow-2xl py-2 z-50">
+              <div class="px-4 py-3 border-b border-slate-800">
+                <p class="text-sm font-bold text-white truncate" x-text="userProfile.name || 'Customer'"></p>
+                <p class="text-xs text-slate-400 truncate" x-text="userProfile.email"></p>
+              </div>
+              <a @click="switchTab('profile'); open = false" class="flex items-center gap-3 px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
+                <i class="fa-regular fa-user w-4"></i> Profile Settings
+              </a>
+              <a @click="switchTab('orders'); open = false" class="flex items-center gap-3 px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
+                <i class="fa-solid fa-clock-rotate-left w-4"></i> My Orders
+              </a>
+              <a @click="switchTab('reservations'); open = false" class="flex items-center gap-3 px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
+                <i class="fa-regular fa-calendar-check w-4"></i> Table Bookings
+              </a>
+              <div class="my-1 border-t border-slate-800"></div>
+              <button @click="logoutUser()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 cursor-pointer transition">
+                <i class="fa-solid fa-right-from-bracket w-4"></i> Sign Out
+              </button>
             </div>
-            <div class="modal-body">
-                <form id="addressForm" onsubmit="app.addresses.save(event)">
-                    <div class="form-group">
-                        <label class="form-label">Address Title (e.g. Home, Work)</label>
-                        <input type="text" id="addrTitle" class="form-control" required placeholder="Home">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">House / Flat / Floor</label>
-                        <input type="text" id="addrFlat" class="form-control" required placeholder="Flat 402, Building A">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Street / Area</label>
-                        <input type="text" id="addrStreet" class="form-control" required placeholder="Main Street">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Pincode / Zip Code</label>
-                        <input type="text" id="addrPincode" class="form-control" required placeholder="400001">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Save Address</button>
-                </form>
-            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- RESERVATION MODAL -->
-    <div class="modal-overlay" id="reservationModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 style="font-weight:700;">Table Reservation</h3>
-                <button onclick="app.ui.closeModal('reservationModal')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <form id="reservationForm" onsubmit="app.reservations.submit(event)">
-                    <div class="form-group">
-                        <label class="form-label">Date</label>
-                        <input type="date" id="resDate" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Time Slot</label>
-                        <input type="time" id="resTime" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Number of Guests</label>
-                        <input type="number" id="resGuests" class="form-control" min="1" max="20" value="2" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Special Request</label>
-                        <textarea id="resRequest" class="form-control" rows="2" placeholder="Window table, anniversary, etc."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Confirm Booking Request</button>
-                </form>
-            </div>
-        </div>
-    </div>
+      </div>
+    </header>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer"></div>
+    <!-- MAIN DYNAMIC CONTENT AREA -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-    <!-- FIREBASE MODULE INTEGRATION -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-        import { getDatabase, ref, get, child, set, push, update, onValue, off } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-functions.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
-            authDomain: "yukti-247.firebaseapp.com",
-            databaseURL: "https://yukti-247-default-rtdb.firebaseio.com",
-            projectId: "yukti-247",
-            storageBucket: "yukti-247.firebasestorage.app",
-            messagingSenderId: "244123454826",
-            appId: "1:244123454826:web:56b4d88c3628bb06cfa913",
-            measurementId: "G-6BGFCBKTD7"
-        };
-
-        const firebaseApp = initializeApp(firebaseConfig);
-        const auth = getAuth(firebaseApp);
-        const db = getDatabase(firebaseApp);
-        const functions = getFunctions(firebaseApp);
-
-        // Core App Context
-        window.app = {
-            user: null,
-            userData: null,
-            cartItems: [],
-            activeListeners: [],
+      <!-- ================= TAB 1: HOME / EXPLORE ================= -->
+      <section x-show="currentTab === 'home'" x-transition.opacity.duration.200ms class="space-y-8">
+        
+        <!-- HERO BANNER -->
+        <div class="relative rounded-3xl overflow-hidden glass-card p-8 sm:p-12 border border-slate-800/80 bg-gradient-to-r from-slate-900 via-slate-900/90 to-emerald-950/40">
+          <div class="relative z-10 max-w-2xl space-y-4">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold tracking-wider uppercase">
+              <i class="fa-solid fa-sparkles text-amber-400"></i> Culinary Excellence
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+              Craving Something <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-300">Extraordinary?</span>
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base">
+              Discover artisanal menus, reserve private tables, and experience fine dining delivered directly to your door.
+            </p>
             
-            // Toast Notification System
-            toast: function(msg, type = 'info') {
-                const container = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `<i class="fa-solid fa-${type === 'error' ? 'circle-exclamation' : 'circle-check'}"></i> <span>${msg}</span>`;
-                container.appendChild(toast);
-                setTimeout(() => toast.remove(), 4000);
-            },
+            <!-- Mobile Search Bar -->
+            <div class="lg:hidden mt-4 relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+              <input type="text" x-model="searchQuery" @input="filterCatalog()" placeholder="Search dishes, restaurants..." 
+                     class="w-full pl-10 pr-4 py-3 rounded-xl glass-input text-xs text-slate-100 placeholder-slate-500 focus:outline-none">
+            </div>
+          </div>
+          <div class="absolute right-0 bottom-0 top-0 w-1/3 opacity-20 lg:opacity-30 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500 via-slate-900 to-transparent"></div>
+        </div>
 
-            // UI Utility Helpers
-            ui: {
-                openModal: (id) => document.getElementById(id).classList.add('active'),
-                closeModal: (id) => document.getElementById(id).classList.remove('active'),
-            },
+        <!-- CATEGORIES SCROLLER -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-white tracking-wide">Popular Categories</h2>
+            <button @click="selectedCategory = 'ALL'; filterCatalog()" class="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">Reset Filter</button>
+          </div>
+          
+          <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+            <button @click="selectedCategory = 'ALL'; filterCatalog()" 
+                    class="flex-shrink-0 px-5 py-2.5 rounded-xl border text-xs font-bold transition flex items-center gap-2"
+                    :class="selectedCategory === 'ALL' ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-glow-emerald' : 'glass-card border-slate-800 text-slate-300 hover:border-slate-700'">
+              <i class="fa-solid fa-border-all"></i> All
+            </button>
+            <template x-for="cat in categories" :key="cat.id">
+              <button @click="selectedCategory = cat.name; filterCatalog()" 
+                      class="flex-shrink-0 px-5 py-2.5 rounded-xl border text-xs font-bold transition flex items-center gap-2"
+                      :class="selectedCategory === cat.name ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-glow-emerald' : 'glass-card border-slate-800 text-slate-300 hover:border-slate-700'">
+                <i :class="cat.icon || 'fa-solid fa-utensils'" class="text-emerald-400"></i>
+                <span x-text="cat.name"></span>
+              </button>
+            </template>
+          </div>
+        </div>
 
-            // Hash Router System
-            router: {
-                init: function() {
-                    window.addEventListener('hashchange', () => this.handleRoute());
-                    this.handleRoute();
-                },
-                navigate: function(viewId) {
-                    window.location.hash = viewId;
-                },
-                handleRoute: function() {
-                    const hash = window.location.hash.replace('#', '') || 'home';
-                    const views = document.querySelectorAll('.view-section');
-                    views.forEach(v => v.classList.remove('active'));
+        <!-- FEATURED RESTAURANTS SECTION -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-white tracking-wide">Featured Restaurants</h2>
+              <p class="text-xs text-slate-400">Handpicked luxury dining locations</p>
+            </div>
+          </div>
+
+          <!-- Loading Skeletons -->
+          <div x-show="dataLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="i in 3">
+              <div class="glass-card rounded-2xl p-4 border border-slate-800/80 animate-pulse-slow space-y-4">
+                <div class="h-44 bg-slate-800 rounded-xl"></div>
+                <div class="h-5 bg-slate-800 rounded w-3/4"></div>
+                <div class="h-4 bg-slate-800 rounded w-1/2"></div>
+              </div>
+            </template>
+          </div>
+
+          <!-- Empty State -->
+          <div x-show="!dataLoading && filteredRestaurants.length === 0" class="text-center py-12 glass-card rounded-2xl border border-slate-800">
+            <i class="fa-solid fa-store-slash text-4xl text-slate-600 mb-3"></i>
+            <p class="text-slate-300 font-bold">No restaurants found</p>
+            <p class="text-xs text-slate-500 mt-1">Try adjusting your search or category filter.</p>
+          </div>
+
+          <!-- Restaurant Cards Grid -->
+          <div x-show="!dataLoading && filteredRestaurants.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="rest in filteredRestaurants" :key="rest.id">
+              <div class="group glass-card rounded-2xl overflow-hidden border border-slate-800/80 hover:border-emerald-500/40 transition duration-300 flex flex-col">
+                <!-- Image & Badges Banner -->
+                <div class="relative h-48 overflow-hidden bg-slate-900">
+                  <img :src="rest.coverImage || fallbackCover" @error="handleImgError($event)" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                  
+                  <!-- Open/Closed Tag -->
+                  <div class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md"
+                       :class="rest.isOpen !== false ? 'bg-emerald-500/80 text-slate-950' : 'bg-rose-500/80 text-white'">
+                    <span x-text="rest.isOpen !== false ? 'Open Now' : 'Closed'"></span>
+                  </div>
+
+                  <!-- Favorite Button -->
+                  <button @click.stop="toggleFavorite(rest.id)" class="absolute top-3 right-3 w-9 h-9 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-rose-400 transition">
+                    <i :class="isFavorite(rest.id) ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart'"></i>
+                  </button>
+
+                  <!-- Offer Tag if Available -->
+                  <div x-show="rest.offer" class="absolute bottom-3 left-3 px-2 py-0.5 rounded bg-amber-500/90 text-slate-950 text-[10px] font-extrabold">
+                    <i class="fa-solid fa-tag mr-1"></i><span x-text="rest.offer"></span>
+                  </div>
+                </div>
+
+                <!-- Info Details -->
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                  <div>
+                    <div class="flex items-start justify-between gap-2">
+                      <h3 class="text-lg font-bold text-white group-hover:text-emerald-400 transition" x-text="rest.name || 'Unnamed Restaurant'"></h3>
+                      <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold">
+                        <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
+                        <span x-text="rest.rating || '4.8'"></span>
+                      </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1 truncate" x-text="rest.cuisines || 'Multi-Cuisine'"></p>
+                  </div>
+
+                  <div class="grid grid-cols-3 gap-2 py-2 border-y border-slate-800/80 text-[11px] text-slate-400">
+                    <div>
+                      <span class="block text-[10px] text-slate-500">TIME</span>
+                      <span class="font-semibold text-slate-200" x-text="(rest.deliveryTime || '30-40') + ' mins'"></span>
+                    </div>
+                    <div>
+                      <span class="block text-[10px] text-slate-500">MIN ORDER</span>
+                      <span class="font-semibold text-slate-200" x-text="'₹' + (rest.minOrder || 200)"></span>
+                    </div>
+                    <div>
+                      <span class="block text-[10px] text-slate-500">FEE</span>
+                      <span class="font-semibold text-slate-200" x-text="rest.deliveryFee ? '₹' + rest.deliveryFee : 'Free'"></span>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex gap-2 pt-1">
+                    <button @click="openRestaurantMenu(rest)" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-glow-emerald">
+                      View Menu
+                    </button>
+                    <button @click="openReservationModal(rest)" class="px-3 py-2.5 rounded-xl glass-card border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition text-xs font-semibold">
+                      <i class="fa-regular fa-calendar-check"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- SPECIAL OFFERS BANNER -->
+        <div x-show="offers.length > 0" class="space-y-4 pt-4">
+          <h2 class="text-xl font-bold text-white tracking-wide">Special Promotional Offers</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <template x-for="offer in offers" :key="offer.id">
+              <div class="glass-card p-4 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-slate-900 to-amber-950/20 flex items-center justify-between">
+                <div>
+                  <span class="px-2 py-0.5 text-[10px] font-bold rounded bg-amber-500/20 text-amber-400 border border-amber-500/30" x-text="offer.code"></span>
+                  <h4 class="text-sm font-bold text-white mt-1" x-text="offer.title"></h4>
+                  <p class="text-xs text-slate-400" x-text="offer.description"></p>
+                </div>
+                <button @click="applyCouponCode(offer.code)" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition">
+                  Apply
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 2: RESTAURANT MENU VIEW ================= -->
+      <section x-show="currentTab === 'menu'" x-transition.opacity.duration.200ms class="space-y-6">
+        
+        <!-- Back Button -->
+        <button @click="switchTab('home')" class="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-emerald-400 transition">
+          <i class="fa-solid fa-arrow-left"></i> Back to Restaurants
+        </button>
+
+        <!-- Restaurant Header Info -->
+        <template x-if="activeRestaurant">
+          <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800">
+            <div class="relative h-48 sm:h-64 bg-slate-900">
+              <img :src="activeRestaurant.coverImage || fallbackCover" @error="handleImgError($event)" class="w-full h-full object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+            </div>
+            
+            <div class="p-6 sm:p-8 -mt-16 relative z-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+              <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                  <h1 class="text-2xl sm:text-4xl font-black text-white" x-text="activeRestaurant.name"></h1>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold"
+                        :class="activeRestaurant.isOpen !== false ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'"
+                        x-text="activeRestaurant.isOpen !== false ? 'Open' : 'Closed'"></span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-300" x-text="activeRestaurant.cuisines || 'Gourmet Cuisine'"></p>
+                <p class="text-xs text-slate-400 flex items-center gap-2">
+                  <i class="fa-solid fa-location-dot text-emerald-400"></i>
+                  <span x-text="activeRestaurant.address || 'Location on map'"></span>
+                </p>
+              </div>
+
+              <button @click="openReservationModal(activeRestaurant)" class="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-glow-amber">
+                <i class="fa-regular fa-calendar-check mr-2"></i> Book a Table
+              </button>
+            </div>
+          </div>
+        </template>
+
+        <!-- Menu Filter Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between glass-card p-4 rounded-2xl border border-slate-800">
+          <!-- Dietary Filters -->
+          <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+            <button @click="menuFilter = 'ALL'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition"
+                    :class="menuFilter === 'ALL' ? 'bg-slate-800 text-white border border-slate-600' : 'text-slate-400 hover:text-white'">All Items</button>
+            <button @click="menuFilter = 'VEG'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5"
+                    :class="menuFilter === 'VEG' ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/40' : 'text-slate-400 hover:text-white'">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Pure Veg
+            </button>
+            <button @click="menuFilter = 'NONVEG'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5"
+                    :class="menuFilter === 'NONVEG' ? 'bg-rose-950 text-rose-400 border border-rose-500/40' : 'text-slate-400 hover:text-white'">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span> Non-Veg
+            </button>
+            <button @click="menuFilter = 'BESTSELLER'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5"
+                    :class="menuFilter === 'BESTSELLER' ? 'bg-amber-950 text-amber-400 border border-amber-500/40' : 'text-slate-400 hover:text-white'">
+              <i class="fa-solid fa-fire text-amber-400"></i> Bestsellers
+            </button>
+          </div>
+
+          <!-- Menu Search -->
+          <div class="relative w-full sm:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input type="text" x-model="menuSearchQuery" placeholder="Search menu items..." class="w-full pl-9 pr-3 py-1.5 rounded-lg glass-input text-xs text-white">
+          </div>
+        </div>
+
+        <!-- Menu Items Grid -->
+        <div class="space-y-4">
+          <div x-show="filteredMenuItems.length === 0" class="text-center py-12 glass-card rounded-2xl border border-slate-800">
+            <p class="text-slate-400 text-sm">No dishes match your selected filters.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <template x-for="item in filteredMenuItems" :key="item.id">
+              <div class="glass-card p-4 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition flex gap-4">
+                <img :src="item.image || fallbackFood" @error="handleImgError($event)" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover bg-slate-900 flex-shrink-0" />
+                <div class="flex-1 flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <!-- Veg / Non-Veg Indicator Icon -->
+                      <span class="w-3 h-3 rounded-sm border flex items-center justify-center p-0.5"
+                            :class="item.isVeg ? 'border-emerald-500' : 'border-rose-500'">
+                        <span class="w-1.5 h-1.5 rounded-full" :class="item.isVeg ? 'bg-emerald-500' : 'bg-rose-500'"></span>
+                      </span>
+                      <h4 class="text-sm font-bold text-white truncate" x-text="item.name"></h4>
+                      <span x-show="item.isBestseller" class="px-1.5 py-0.5 text-[9px] font-black rounded bg-amber-500/20 text-amber-400 uppercase">Bestseller</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1 line-clamp-2" x-text="item.description || 'Prepared fresh with luxury ingredients.'"></p>
+                  </div>
+
+                  <div class="flex items-center justify-between mt-3">
+                    <span class="text-base font-extrabold text-emerald-400" x-text="'₹' + item.price"></span>
                     
-                    const targetView = document.getElementById(`view-${hash}`) || document.getElementById('view-home');
-                    targetView.classList.add('active');
+                    <button x-show="item.isAvailable !== false" @click="addToCart(item)" 
+                            class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-glow-emerald">
+                      <i class="fa-solid fa-plus"></i> ADD
+                    </button>
+                    <span x-show="item.isAvailable === false" class="text-xs text-rose-400 font-semibold">Sold Out</span>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
 
-                    // Sync Navigation Highlight State
-                    document.querySelectorAll('.nav-item, .bottom-item').forEach(el => {
-                        if (el.dataset.view === hash) el.classList.add('active');
-                        else el.classList.remove('active');
-                    });
+      </section>
 
-                    // Update Title
-                    const titles = {
-                        home: 'Good Evening',
-                        menu: 'Exquisite Menu',
-                        orders: 'Your Orders',
-                        reservations: 'Table Reservations',
-                        favorites: 'Saved Favorites',
-                        addresses: 'Delivery Addresses',
-                        invoices: 'Tax Invoices',
-                        notifications: 'Notifications',
-                        profile: 'Account Profile',
-                        support: 'Customer Support'
-                    };
-                    document.getElementById('desktopPageTitle').innerText = titles[hash] || 'Dashboard';
-                }
-            },
+      <!-- ================= TAB 3: ORDERS HISTORY & TRACKING ================= -->
+      <section x-show="currentTab === 'orders'" x-transition.opacity.duration.200ms class="space-y-6">
+        <div>
+          <h1 class="text-2xl font-black text-white">Your Culinary Orders</h1>
+          <p class="text-xs text-slate-400">Track active orders and review order history</p>
+        </div>
 
-            // Cart Logic System
-            cart: {
-                addItem: function(item) {
-                    window.app.cartItems.push(item);
-                    this.updateUI();
-                    window.app.toast(`Added ${item.name} to cart`, 'success');
-                },
-                updateUI: function() {
-                    const count = window.app.cartItems.length;
-                    const total = window.app.cartItems.reduce((acc, curr) => acc + (curr.price || 0), 0);
+        <div x-show="userOrders.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800">
+          <i class="fa-solid fa-receipt text-4xl text-slate-600 mb-3"></i>
+          <p class="text-slate-300 font-bold">No orders placed yet</p>
+          <p class="text-xs text-slate-500 mt-1">Explore our restaurants and place your first order!</p>
+          <button @click="switchTab('home')" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs">Explore Menu</button>
+        </div>
 
-                    document.getElementById('cartCountBadge').innerText = count;
-                    document.getElementById('cartCountBadge').style.display = count > 0 ? 'flex' : 'none';
+        <div class="space-y-4">
+          <template x-for="order in userOrders" :key="order.id">
+            <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+              <!-- Order Header -->
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-4 border-b border-slate-800">
+                <div>
+                  <div class="flex items-center gap-3">
+                    <h3 class="text-base font-bold text-white" x-text="order.restaurantName || 'FeastHub Restaurant'"></h3>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider"
+                          :class="{
+                            'bg-amber-500/20 text-amber-400 border border-amber-500/30': order.orderStatus === 'PLACED',
+                            'bg-blue-500/20 text-blue-400 border border-blue-500/30': order.orderStatus === 'CONFIRMED' || order.orderStatus === 'PREPARING',
+                            'bg-purple-500/20 text-purple-400 border border-purple-500/30': order.orderStatus === 'OUT_FOR_DELIVERY',
+                            'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30': order.orderStatus === 'DELIVERED',
+                            'bg-rose-500/20 text-rose-400 border border-rose-500/30': order.orderStatus === 'CANCELLED'
+                          }" x-text="order.orderStatus"></span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Order #<span x-text="order.id.substring(0,8)"></span> • <span x-text="formatDate(order.createdAt)"></span></p>
+                </div>
+                <div class="text-left sm:text-right">
+                  <span class="text-xs text-slate-400 block">Total Amount</span>
+                  <span class="text-base font-black text-emerald-400" x-text="'₹' + order.total"></span>
+                </div>
+              </div>
 
-                    const pill = document.getElementById('floatingCartPill');
-                    if (count > 0) {
-                        pill.style.display = 'flex';
-                        document.getElementById('pillCartItems').innerText = `${count} ${count === 1 ? 'Item' : 'Items'}`;
-                        document.getElementById('pillCartTotal').innerText = `₹${total}`;
-                    } else {
-                        pill.style.display = 'none';
-                    }
-                    document.getElementById('cartGrandTotal').innerText = `₹${total}`;
-                },
-                openDrawer: function() {
-                    const body = document.getElementById('cartDrawerBody');
-                    if (window.app.cartItems.length === 0) {
-                        body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">Your cart is empty</div>`;
-                    } else {
-                        body.innerHTML = window.app.cartItems.map((item, idx) => `
-                            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--glass-border);">
-                                <div>
-                                    <div style="font-weight:600;">${item.name}</div>
-                                    <div style="font-size:12px; color:var(--text-muted);">₹${item.price}</div>
-                                </div>
-                                <button onclick="app.cart.removeItem(${idx})" style="color:var(--status-closed);"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        `).join('');
-                    }
-                    window.app.ui.openModal('cartModal');
-                },
-                removeItem: function(idx) {
-                    window.app.cartItems.splice(idx, 1);
-                    this.updateUI();
-                    this.openDrawer();
-                },
-                checkout: async function() {
-                    if (window.app.cartItems.length === 0) return;
-                    try {
-                        const createOrderFn = httpsCallable(functions, 'createOrder');
-                        const res = await createOrderFn({ items: window.app.cartItems });
-                        window.app.toast('Order placed successfully!', 'success');
-                        window.app.cartItems = [];
-                        this.updateUI();
-                        window.app.ui.closeModal('cartModal');
-                        window.app.router.navigate('orders');
-                    } catch(e) {
-                        window.app.toast('Server Function unavailable. Local Simulation: Order placed.', 'warning');
-                        window.app.cartItems = [];
-                        this.updateUI();
-                        window.app.ui.closeModal('cartModal');
-                    }
-                }
-            },
+              <!-- Order Timeline Indicator -->
+              <div class="py-2">
+                <div class="flex items-center justify-between relative">
+                  <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-slate-800 z-0"></div>
+                  
+                  <template x-for="(step, idx) in ['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED']" :key="idx">
+                    <div class="relative z-10 flex flex-col items-center">
+                      <div class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition"
+                           :class="isStatusReached(order.orderStatus, step) ? 'bg-emerald-500 text-slate-950 font-black shadow-glow-emerald' : 'bg-slate-800 text-slate-500'">
+                        <i :class="getStatusIcon(step)"></i>
+                      </div>
+                      <span class="text-[9px] text-slate-400 mt-1 hidden sm:block" x-text="step.replace('_',' ')"></span>
+                    </div>
+                  </template>
+                </div>
+              </div>
 
-            // Address Sub-Module
-            addresses: {
-                openModal: () => window.app.ui.openModal('addressModal'),
-                save: async function(e) {
-                    e.preventDefault();
-                    const addr = {
-                        title: document.getElementById('addrTitle').value,
-                        flat: document.getElementById('addrFlat').value,
-                        street: document.getElementById('addrStreet').value,
-                        pincode: document.getElementById('addrPincode').value
-                    };
-                    const uid = window.app.user.uid;
-                    await push(ref(db, `addresses/${uid}`), addr);
-                    window.app.toast('Address saved', 'success');
-                    window.app.ui.closeModal('addressModal');
-                }
-            },
+              <!-- Item List Accordion -->
+              <div class="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60 text-xs space-y-1">
+                <template x-for="item in order.items" :key="item.id">
+                  <div class="flex justify-between text-slate-300">
+                    <span><span class="text-emerald-400 font-bold" x-text="item.quantity + 'x'"></span> <span x-text="item.name"></span></span>
+                    <span x-text="'₹' + (item.price * item.quantity)"></span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </section>
 
-            // Reservation Sub-Module
-            reservations: {
-                openModal: () => window.app.ui.openModal('reservationModal'),
-                submit: async function(e) {
-                    e.preventDefault();
-                    try {
-                        const createResFn = httpsCallable(functions, 'createReservation');
-                        await createResFn({
-                            date: document.getElementById('resDate').value,
-                            time: document.getElementById('resTime').value,
-                            guests: document.getElementById('resGuests').value,
-                            request: document.getElementById('resRequest').value
-                        });
-                        window.app.toast('Reservation request sent!', 'success');
-                    } catch(err) {
-                        window.app.toast('Backend Function unavailable for Reservations.', 'error');
-                    }
-                    window.app.ui.closeModal('reservationModal');
-                }
-            },
+      <!-- ================= TAB 4: TABLE RESERVATIONS ================= -->
+      <section x-show="currentTab === 'reservations'" x-transition.opacity.duration.200ms class="space-y-6">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-2xl font-black text-white">Table Reservations</h1>
+            <p class="text-xs text-slate-400">Manage your VIP dining bookings</p>
+          </div>
+          <button @click="openReservationModal()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
+            <i class="fa-solid fa-plus mr-1"></i> New Reservation
+          </button>
+        </div>
 
-            // Profile Sub-Module
-            profile: {
-                save: async function(e) {
-                    e.preventDefault();
-                    const uid = window.app.user.uid;
-                    const name = document.getElementById('profileName').value;
-                    const phone = document.getElementById('profilePhone').value;
-                    await update(ref(db, `users/${uid}`), { name, phone });
-                    window.app.toast('Profile updated successfully', 'success');
-                }
-            },
+        <div x-show="userReservations.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800">
+          <i class="fa-regular fa-calendar-xmark text-4xl text-slate-600 mb-3"></i>
+          <p class="text-slate-300 font-bold">No reservations found</p>
+          <p class="text-xs text-slate-500 mt-1">Book a table in advance for guaranteed luxury dining.</p>
+        </div>
 
-            // Support Sub-Module
-            support: {
-                submit: async function(e) {
-                    e.preventDefault();
-                    const ticket = {
-                        uid: window.app.user.uid,
-                        category: document.getElementById('supportCategory').value,
-                        message: document.getElementById('supportMessage').value,
-                        status: 'OPEN',
-                        createdAt: Date.now()
-                    };
-                    await push(ref(db, 'supportTickets'), ticket);
-                    window.app.toast('Support ticket submitted', 'success');
-                    document.getElementById('supportForm').reset();
-                }
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <template x-for="res in userReservations" :key="res.id">
+            <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-base font-bold text-white" x-text="res.restaurantName"></h3>
+                  <span class="text-xs text-amber-400 font-mono font-bold" x-text="'Booking Code: ' + (res.bookingCode || 'FH-RES')"></span>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase"
+                      :class="res.status === 'CONFIRMED' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'"
+                      x-text="res.status"></span>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2 py-2 border-y border-slate-800 text-xs text-slate-300">
+                <div><i class="fa-regular fa-calendar text-emerald-400 mr-1"></i> <span x-text="res.date"></span></div>
+                <div><i class="fa-regular fa-clock text-emerald-400 mr-1"></i> <span x-text="res.time"></span></div>
+                <div><i class="fa-solid fa-user-group text-emerald-400 mr-1"></i> <span x-text="res.guests + ' Guests'"></span></div>
+              </div>
+
+              <div x-show="res.requests" class="text-xs text-slate-400 italic">
+                "<span x-text="res.requests"></span>"
+              </div>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: PROFILE & ADDRESSES ================= -->
+      <section x-show="currentTab === 'profile'" x-transition.opacity.duration.200ms class="space-y-6 max-w-3xl mx-auto">
+        <div>
+          <h1 class="text-2xl font-black text-white">Account Profile</h1>
+          <p class="text-xs text-slate-400">Manage personal details and delivery addresses</p>
+        </div>
+
+        <!-- Personal Info Card -->
+        <div class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-6">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl bg-slate-800 text-emerald-400 font-black flex items-center justify-center text-xl border border-slate-700">
+              <span x-text="getInitials(userProfile.name)"></span>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-white" x-text="userProfile.name || 'Valued Customer'"></h2>
+              <p class="text-xs text-slate-400" x-text="userProfile.email"></p>
+              <span class="inline-block mt-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">Customer Account</span>
+            </div>
+          </div>
+
+          <form @submit.prevent="updateUserProfile()" class="space-y-4 pt-4 border-t border-slate-800">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Full Name</label>
+                <input type="text" x-model="profileForm.name" class="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Phone Number</label>
+                <input type="tel" x-model="profileForm.phone" placeholder="+91 XXXXX XXXXX" class="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">City</label>
+                <input type="text" x-model="profileForm.city" class="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs text-white">
+              </div>
+            </div>
+
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-glow-emerald">
+              Save Profile Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- Saved Addresses Section -->
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-bold text-white">Saved Delivery Addresses</h3>
+            <button @click="openAddressModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 text-xs font-bold transition">
+              <i class="fa-solid fa-plus mr-1"></i> Add Address
+            </button>
+          </div>
+
+          <div x-show="addresses.length === 0" class="text-center py-8 glass-card rounded-2xl border border-slate-800">
+            <p class="text-xs text-slate-500">No saved addresses yet.</p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-3">
+            <template x-for="addr in addresses" :key="addr.id">
+              <div class="glass-card p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 text-[9px] font-bold uppercase rounded bg-slate-800 text-emerald-400" x-text="addr.label || 'Home'"></span>
+                    <span class="text-xs font-bold text-white" x-text="addr.name"></span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1" x-text="addr.address + ', ' + addr.city + ' - ' + addr.pincode"></p>
+                </div>
+                <button @click="deleteAddress(addr.id)" class="p-2 text-slate-500 hover:text-rose-400 text-xs">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ================= MODAL / DRAWER 1: SLIDE-OVER CART ================= -->
+    <div x-show="cartDrawerOpen" x-transition.opacity.duration.300ms class="fixed inset-0 z-50 overflow-hidden bg-slate-950/80 backdrop-blur-sm flex justify-end">
+      <div @click.outside="cartDrawerOpen = false" class="w-full max-w-md bg-slate-900 h-full border-l border-slate-800 flex flex-col justify-between shadow-2xl">
+        
+        <!-- Cart Header -->
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bag-shopping text-emerald-400"></i>
+            <h3 class="font-bold text-white text-base">Your Gourmet Order</h3>
+          </div>
+          <button @click="cartDrawerOpen = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-4">
+          <div x-show="cart.length === 0" class="text-center py-16 text-slate-500">
+            <i class="fa-solid fa-basket-shopping text-4xl mb-3 block"></i>
+            <p class="text-sm">Your cart is currently empty.</p>
+          </div>
+
+          <template x-for="item in cart" :key="item.id">
+            <div class="glass-card p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+              <div class="flex-1 pr-2">
+                <h4 class="text-xs font-bold text-white truncate" x-text="item.name"></h4>
+                <span class="text-xs text-emerald-400 font-semibold" x-text="'₹' + item.price"></span>
+              </div>
+              
+              <div class="flex items-center gap-2 bg-slate-950 rounded-lg border border-slate-800 px-2 py-1">
+                <button @click="updateCartQty(item.id, -1)" class="text-slate-400 hover:text-emerald-400 text-xs px-1">-</button>
+                <span class="text-xs font-bold text-white px-1" x-text="item.quantity"></span>
+                <button @click="updateCartQty(item.id, 1)" class="text-slate-400 hover:text-emerald-400 text-xs px-1">+</button>
+              </div>
+            </div>
+          </template>
+
+          <!-- Coupon Input -->
+          <div x-show="cart.length > 0" class="pt-4 border-t border-slate-800 space-y-2">
+            <label class="text-xs text-slate-400 font-semibold">Apply Coupon</label>
+            <div class="flex gap-2">
+              <input type="text" x-model="appliedCouponCode" placeholder="Enter Code" class="flex-1 px-3 py-1.5 rounded-lg glass-input text-xs text-white uppercase">
+              <button @click="applyCouponCode(appliedCouponCode)" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs">Apply</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart Footer & Price Summary -->
+        <div x-show="cart.length > 0" class="p-5 border-t border-slate-800 glass-panel space-y-3">
+          <div class="text-xs space-y-1.5 text-slate-300">
+            <div class="flex justify-between"><span>Subtotal</span><span x-text="'₹' + cartTotals.subtotal"></span></div>
+            <div class="flex justify-between"><span>Packaging Fee</span><span x-text="'₹' + cartTotals.packaging"></span></div>
+            <div class="flex justify-between"><span>Estimated Delivery</span><span x-text="'₹' + cartTotals.delivery"></span></div>
+            <div x-show="cartTotals.discount > 0" class="flex justify-between text-amber-400 font-bold">
+              <span>Coupon Discount</span><span x-text="'-₹' + cartTotals.discount"></span>
+            </div>
+            <div class="flex justify-between text-sm font-black text-white pt-2 border-t border-slate-800">
+              <span>Grand Total</span><span class="text-emerald-400" x-text="'₹' + cartTotals.grandTotal"></span>
+            </div>
+          </div>
+
+          <button @click="proceedToCheckout()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-glow-emerald">
+            Proceed to Checkout
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= MODAL 2: CHECKOUT SCREEN ================= -->
+    <div x-show="showCheckoutModal" x-transition.opacity.duration.200ms class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div @click.outside="showCheckoutModal = false" class="glass-panel w-full max-w-xl rounded-3xl border border-slate-800 p-6 sm:p-8 space-y-6">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+          <h2 class="text-xl font-bold text-white">Checkout & Order Review</h2>
+          <button @click="showCheckoutModal = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+
+        <!-- Address Selection -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-300">Select Delivery Address</label>
+          <select x-model="selectedAddressId" class="w-full p-3 rounded-xl glass-input text-xs text-white bg-slate-900">
+            <option value="">-- Choose an Address --</option>
+            <template x-for="addr in addresses" :key="addr.id">
+              <option :value="addr.id" x-text="addr.label + ': ' + addr.address + ', ' + addr.city"></option>
+            </template>
+          </select>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-300">Payment Option</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button @click="checkoutPaymentMethod = 'COD'" class="p-3 rounded-xl border text-xs font-bold text-center transition"
+                    :class="checkoutPaymentMethod === 'COD' ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'glass-card border-slate-800 text-slate-400'">
+              Cash on Delivery
+            </button>
+            <button @click="checkoutPaymentMethod = 'ONLINE'" class="p-3 rounded-xl border text-xs font-bold text-center transition"
+                    :class="checkoutPaymentMethod === 'ONLINE' ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'glass-card border-slate-800 text-slate-400'">
+              Online Gateway
+            </button>
+          </div>
+          <p x-show="checkoutPaymentMethod === 'ONLINE'" class="text-[10px] text-amber-400 mt-1">
+            * Note: Payment integration required. Defaulting to verified order reservation state.
+          </p>
+        </div>
+
+        <button @click="placeOrder()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider transition shadow-glow-emerald">
+          Confirm & Place Order
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= MODAL 3: TABLE RESERVATION MODAL ================= -->
+    <div x-show="showReservationModal" x-transition.opacity.duration.200ms class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div @click.outside="showReservationModal = false" class="glass-panel w-full max-w-md rounded-3xl border border-slate-800 p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <h3 class="text-lg font-bold text-white">Reserve a VIP Table</h3>
+          <button @click="showReservationModal = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form @submit.prevent="submitReservation()" class="space-y-3 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">Restaurant</label>
+            <input type="text" :value="reservationForm.restaurantName" disabled class="w-full p-2.5 rounded-xl glass-input text-slate-400 bg-slate-900/50">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-400 mb-1">Date</label>
+              <input type="date" x-model="reservationForm.date" required class="w-full p-2.5 rounded-xl glass-input text-white">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Time</label>
+              <input type="time" x-model="reservationForm.time" required class="w-full p-2.5 rounded-xl glass-input text-white">
+            </div>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Number of Guests</label>
+            <input type="number" min="1" max="20" x-model="reservationForm.guests" required class="w-full p-2.5 rounded-xl glass-input text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Special Requests</label>
+            <textarea x-model="reservationForm.requests" rows="2" placeholder="Seating preference, birthday, allergy..." class="w-full p-2.5 rounded-xl glass-input text-white"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
+            Confirm Reservation
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= MODAL 4: ADD ADDRESS MODAL ================= -->
+    <div x-show="showAddressModal" x-transition.opacity.duration.200ms class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div @click.outside="showAddressModal = false" class="glass-panel w-full max-w-md rounded-3xl border border-slate-800 p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <h3 class="text-lg font-bold text-white">Add Delivery Address</h3>
+          <button @click="showAddressModal = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form @submit.prevent="saveAddress()" class="space-y-3 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1">Address Label (e.g. Home, Office)</label>
+            <input type="text" x-model="addressForm.label" required placeholder="Home" class="w-full p-2.5 rounded-xl glass-input text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Full Name</label>
+            <input type="text" x-model="addressForm.name" required class="w-full p-2.5 rounded-xl glass-input text-white">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Full Address / Flat / Street</label>
+            <textarea x-model="addressForm.address" required rows="2" class="w-full p-2.5 rounded-xl glass-input text-white"></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-400 mb-1">City</label>
+              <input type="text" x-model="addressForm.city" required class="w-full p-2.5 rounded-xl glass-input text-white">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Pincode (6-digit)</label>
+              <input type="text" x-model="addressForm.pincode" required pattern="^[1-9][0-9]{5}$" placeholder="400001" class="w-full p-2.5 rounded-xl glass-input text-white">
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+            Save Address
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-panel border-t border-slate-800 px-2 py-2 pb-safe">
+      <div class="grid grid-cols-4 gap-1 text-center">
+        <button @click="switchTab('home')" class="py-1.5 flex flex-col items-center gap-1 transition"
+                :class="currentTab === 'home' || currentTab === 'menu' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
+          <i class="fa-solid fa-compass text-lg"></i>
+          <span class="text-[10px]">Explore</span>
+        </button>
+
+        <button @click="switchTab('orders')" class="py-1.5 flex flex-col items-center gap-1 transition relative"
+                :class="currentTab === 'orders' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
+          <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+          <span class="text-[10px]">Orders</span>
+        </button>
+
+        <button @click="switchTab('reservations')" class="py-1.5 flex flex-col items-center gap-1 transition"
+                :class="currentTab === 'reservations' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
+          <i class="fa-regular fa-calendar-check text-lg"></i>
+          <span class="text-[10px]">Bookings</span>
+        </button>
+
+        <button @click="switchTab('profile')" class="py-1.5 flex flex-col items-center gap-1 transition"
+                :class="currentTab === 'profile' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
+          <i class="fa-regular fa-user text-lg"></i>
+          <span class="text-[10px]">Profile</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ================= FIREBASE MODULE INITIALIZATION & APPLICATION STATE ================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getDatabase, 
+      ref, 
+      get, 
+      set, 
+      push, 
+      update, 
+      remove, 
+      onValue, 
+      query, 
+      orderByChild, 
+      equalTo 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Production Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
+      authDomain: "yukti-247.firebaseapp.com",
+      databaseURL: "https://yukti-247-default-rtdb.firebaseio.com",
+      projectId: "yukti-247",
+      storageBucket: "yukti-247.firebasestorage.app",
+      messagingSenderId: "244123454826",
+      appId: "1:244123454826:web:56b4d88c3628bb06cfa913",
+      measurementId: "G-6BGFCBKTD7"
+    };
+
+    // Initialize Firebase Services Safely
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // Primary Reactive Alpine Application
+    window.feasthubApp = function() {
+      return {
+        // Auth & App States
+        authLoading: true,
+        authLoadingMessage: "Authenticating Secure Portal...",
+        showAuthRetry: false,
+        currentUser: null,
+        userProfile: {},
+        currentTab: 'home',
+        dataLoading: false,
+
+        // Fallback Media Assets
+        fallbackCover: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
+        fallbackFood: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80',
+
+        // Data Storage
+        restaurants: [],
+        filteredRestaurants: [],
+        menuItems: [],
+        filteredMenuItems: [],
+        categories: [],
+        offers: [],
+        favorites: [],
+        userOrders: [],
+        userReservations: [],
+        addresses: [],
+        cart: [],
+
+        // UI Filters & Selections
+        searchQuery: '',
+        selectedCategory: 'ALL',
+        activeRestaurant: null,
+        menuFilter: 'ALL',
+        menuSearchQuery: '',
+        
+        // Modals & Drawers
+        cartDrawerOpen: false,
+        showCheckoutModal: false,
+        showReservationModal: false,
+        showAddressModal: false,
+        showNotificationsModal: false,
+
+        // Form Binds
+        appliedCouponCode: '',
+        appliedCoupon: null,
+        selectedAddressId: '',
+        checkoutPaymentMethod: 'COD',
+        
+        profileForm: { name: '', phone: '', city: '' },
+        reservationForm: { restaurantId: '', restaurantName: '', date: '', time: '', guests: 2, requests: '' },
+        addressForm: { label: 'Home', name: '', address: '', city: '', pincode: '' },
+
+        // Toast Messages Queue
+        toasts: [],
+
+        // --- 1. INITIALIZATION & AUTH GUARD ---
+        initApp() {
+          this.loadLocalCart();
+
+          // Auth connection safety timer
+          const safetyTimer = setTimeout(() => {
+            if (this.authLoading) {
+              this.showAuthRetry = true;
+              console.warn("[Firebase Auth] Auth verification taking longer than expected.");
             }
-        };
+          }, 6000);
 
-        /* ==========================================================================
-           SECURITY / ROLE GUARD INTEGRATION
-           ========================================================================== */
-        let guardFinished = false;
-        const finishGuard = () => {
-            if (guardFinished) return;
-            guardFinished = true;
-            const overlay = document.getElementById("guardOverlay");
-            if (overlay) overlay.style.display = "none";
-        };
-
-        const safeRedirect = (url) => {
-            window.location.replace(url);
-        };
-
-        const guardTimeout = setTimeout(() => {
-            if (!guardFinished) {
-                const overlay = document.getElementById("guardOverlay");
-                if (overlay) {
-                    overlay.innerHTML = `
-                        <div style="max-width:420px;padding:28px;text-align:center">
-                            <div style="font-size:42px;color:var(--accent-gold);margin-bottom:14px">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
-                            <h2 style="font-size:20px;margin-bottom:8px">Unable to verify your session</h2>
-                            <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">
-                                Firebase did not respond in time. Check your internet connection and try again.
-                            </p>
-                            <button class="btn btn-primary" onclick="location.reload()">
-                                <i class="fa-solid fa-rotate-right"></i> Try Again
-                            </button>
-                            <button class="btn btn-secondary" style="margin-left:8px" onclick="location.replace('index.html')">
-                                Back to Restaurant
-                            </button>
-                        </div>`;
-                }
+          // Primary Authentication Listener
+          onAuthStateChanged(auth, async (user) => {
+            clearTimeout(safetyTimer);
+            if (user) {
+              this.currentUser = user;
+              await this.verifyAndLoadUserRole(user);
+            } else {
+              console.info("[Firebase Auth] No authenticated user found. Redirecting to sign in.");
+              this.redirectToLogin();
             }
-        }, 12000);
+          }, (error) => {
+            clearTimeout(safetyTimer);
+            console.error("[Firebase Auth Error]", error);
+            this.addToast("Authentication error occurred. Please sign in again.", "error");
+            this.redirectToLogin();
+          });
+        },
 
-        onAuthStateChanged(auth, async (user) => {
-            try {
-                if (!user) {
-                    clearTimeout(guardTimeout);
-                    safeRedirect("index.html?returnTo=customer.html");
-                    return;
-                }
+        retryAuth() {
+          window.location.reload();
+        },
 
-                const uid = user.uid;
-                const userSnap = await get(ref(db, `users/${uid}`));
-                if (!userSnap.exists()) {
-                    clearTimeout(guardTimeout);
-                    safeRedirect("index.html?profileMissing=1");
-                    return;
-                }
+        redirectToLogin() {
+          window.location.href = "index.html";
+        },
 
-                const profile = userSnap.val() || {};
-                const role = String(profile.role || "").trim().toUpperCase();
-                if (role === "PARTNER") { clearTimeout(guardTimeout); safeRedirect("partner.html"); return; }
-                if (role === "ADMIN" || role === "STAFF") { clearTimeout(guardTimeout); safeRedirect("admin.html"); return; }
-                if (role !== "CUSTOMER") { clearTimeout(guardTimeout); safeRedirect("index.html?unauthorized=1"); return; }
+        async verifyAndLoadUserRole(user) {
+          try {
+            const userRef = ref(db, `users/${user.uid}`);
+            const snapshot = await get(userRef);
 
-                window.app.user = user;
-                window.app.userData = profile;
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              
+              // Enforce CUSTOMER Role Access Only
+              if (data.role && data.role !== 'CUSTOMER') {
+                this.addToast("Access Denied: Customer Portal is for customer accounts only.", "error");
+                setTimeout(() => this.signOutUser(), 2000);
+                return;
+              }
 
-                const displayName = profile.name || (user.email ? user.email.split('@')[0] : 'Guest');
-                const setText = (id, value) => { const el = document.getElementById(id); if (el) el.innerText = value; };
-                const setValue = (id, value) => { const el = document.getElementById(id); if (el) el.value = value; };
-                setText('sidebarUserName', displayName);
-                setText('sidebarAvatar', displayName.charAt(0).toUpperCase());
-                setText('homeGreeting', `Good Evening, ${displayName}`);
-                setValue('profileEmail', user.email || '');
-                setValue('profileName', profile.name || '');
-                setValue('profilePhone', profile.phone || '');
-
-                if (typeof initDataListeners === 'function') initDataListeners();
-                if (window.app.router && typeof window.app.router.init === 'function') window.app.router.init();
-
-                clearTimeout(guardTimeout);
-                finishGuard();
-            } catch (error) {
-                console.error('Customer authentication failed:', error);
-                clearTimeout(guardTimeout);
-                const overlay = document.getElementById('guardOverlay');
-                if (overlay) {
-                    overlay.innerHTML = `<div style="max-width:420px;padding:28px;text-align:center"><div style="font-size:42px;color:var(--status-closed);margin-bottom:14px"><i class="fa-solid fa-triangle-exclamation"></i></div><h2 style="font-size:20px;margin-bottom:8px">We couldn't open your account</h2><p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">${error?.message || 'Please try again.'}</p><button class="btn btn-primary" onclick="location.reload()">Try Again</button><button class="btn btn-secondary" style="margin-left:8px" onclick="location.replace('index.html')">Back</button></div>`;
-                }
+              this.userProfile = { ...data, email: user.email };
+            } else {
+              // Create minimal safe profile if non-existent
+              const newProfile = {
+                name: user.displayName || "Valued Customer",
+                email: user.email,
+                role: "CUSTOMER",
+                createdAt: Date.now()
+              };
+              await set(userRef, newProfile);
+              this.userProfile = newProfile;
             }
-        });
 
-        /* Sign Out Handler */
-        document.getElementById('logoutBtnBtn').addEventListener('click', () => {
-            if (confirm("Are you sure you want to sign out?")) {
-                signOut(auth).then(() => window.location.href = "index.html");
+            this.profileForm.name = this.userProfile.name || '';
+            this.profileForm.phone = this.userProfile.phone || '';
+            this.profileForm.city = this.userProfile.city || 'Mumbai';
+
+            // Load Primary Core Application Data
+            await Promise.all([
+              this.loadRestaurants(),
+              this.loadCategories(),
+              this.loadOffers(),
+              this.loadUserDataListeners()
+            ]);
+
+            this.authLoading = false;
+          } catch (err) {
+            console.error("[Customer Profile Error]", err);
+            this.addToast("Failed to load user profile.", "error");
+            this.authLoading = false;
+          }
+        },
+
+        // --- 2. REALTIME DATABASE DATA LOADERS ---
+        async loadRestaurants() {
+          this.dataLoading = true;
+          try {
+            const restRef = ref(db, 'restaurant');
+            const snap = await get(restRef);
+            if (snap.exists()) {
+              const val = snap.val();
+              this.restaurants = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+              this.filteredRestaurants = [...this.restaurants];
+            } else {
+              this.restaurants = [];
+              this.filteredRestaurants = [];
             }
-        });
+          } catch (err) {
+            console.error("[Restaurant Data Error]", err);
+          } finally {
+            this.dataLoading = false;
+          }
+        },
 
-        /* Realtime Data Handlers */
-        function initDataListeners() {
-            // Restaurant Settings Listener
-            onValue(ref(db, 'restaurant/settings'), (snap) => {
-                const data = snap.val();
-                if (data && data.name) {
-                    document.getElementById('restaurantBrandName').innerText = data.name;
-                    document.getElementById('mobileBrandName').innerText = data.name;
-                }
+        async loadCategories() {
+          try {
+            const snap = await get(ref(db, 'categories'));
+            if (snap.exists()) {
+              const val = snap.val();
+              this.categories = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+            }
+          } catch (err) {
+            console.error("[Category Data Error]", err);
+          }
+        },
+
+        async loadOffers() {
+          try {
+            const snap = await get(ref(db, 'offers'));
+            if (snap.exists()) {
+              const val = snap.val();
+              this.offers = Object.keys(val)
+                .map(key => ({ id: key, ...val[key] }))
+                .filter(o => o.active !== false);
+            }
+          } catch (err) {
+            console.error("[Offers Load Error]", err);
+          }
+        },
+
+        async loadUserDataListeners() {
+          if (!this.currentUser) return;
+          const uid = this.currentUser.uid;
+
+          // Realtime Orders Listener
+          const ordersQuery = query(ref(db, 'orders'), orderByChild('userId'), equalTo(uid));
+          onValue(ordersQuery, (snap) => {
+            if (snap.exists()) {
+              const val = snap.val();
+              this.userOrders = Object.keys(val)
+                .map(k => ({ id: k, ...val[k] }))
+                .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+            } else {
+              this.userOrders = [];
+            }
+          }, (err) => console.error("[Orders Listener Error]", err));
+
+          // Realtime Reservations Listener
+          const resQuery = query(ref(db, 'reservations'), orderByChild('userId'), equalTo(uid));
+          onValue(resQuery, (snap) => {
+            if (snap.exists()) {
+              const val = snap.val();
+              this.userReservations = Object.keys(val)
+                .map(k => ({ id: k, ...val[k] }))
+                .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+            } else {
+              this.userReservations = [];
+            }
+          });
+
+          // Realtime Addresses Listener
+          onValue(ref(db, `addresses/${uid}`), (snap) => {
+            if (snap.exists()) {
+              const val = snap.val();
+              this.addresses = Object.keys(val).map(k => ({ id: k, ...val[k] }));
+              if (this.addresses.length > 0 && !this.selectedAddressId) {
+                this.selectedAddressId = this.addresses[0].id;
+              }
+            } else {
+              this.addresses = [];
+            }
+          });
+
+          // Favorites Listener
+          onValue(ref(db, `users/${uid}/favorites`), (snap) => {
+            this.favorites = snap.exists() ? Object.keys(snap.val()) : [];
+          });
+        },
+
+        // --- 3. UI INTERACTIONS & NAVIGATION ---
+        switchTab(tab) {
+          this.currentTab = tab;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        filterCatalog() {
+          let list = [...this.restaurants];
+
+          if (this.searchQuery.trim() !== '') {
+            const q = this.searchQuery.toLowerCase();
+            list = list.filter(r => 
+              (r.name && r.name.toLowerCase().includes(q)) || 
+              (r.cuisines && r.cuisines.toLowerCase().includes(q))
+            );
+          }
+
+          if (this.selectedCategory !== 'ALL') {
+            const cat = this.selectedCategory.toLowerCase();
+            list = list.filter(r => r.cuisines && r.cuisines.toLowerCase().includes(cat));
+          }
+
+          this.filteredRestaurants = list;
+        },
+
+        async openRestaurantMenu(restaurant) {
+          this.activeRestaurant = restaurant;
+          this.switchTab('menu');
+
+          try {
+            const snap = await get(ref(db, 'menuItems'));
+            if (snap.exists()) {
+              const val = snap.val();
+              this.menuItems = Object.keys(val)
+                .map(k => ({ id: k, ...val[k] }))
+                .filter(item => item.restaurantId === restaurant.id || !item.restaurantId);
+              this.applyMenuFilters();
+            } else {
+              this.menuItems = [];
+              this.filteredMenuItems = [];
+            }
+          } catch (err) {
+            console.error("[Menu Data Error]", err);
+            this.addToast("Failed to load restaurant menu.", "error");
+          }
+        },
+
+        applyMenuFilters() {
+          let list = [...this.menuItems];
+
+          if (this.menuFilter === 'VEG') list = list.filter(i => i.isVeg === true);
+          if (this.menuFilter === 'NONVEG') list = list.filter(i => i.isVeg === false);
+          if (this.menuFilter === 'BESTSELLER') list = list.filter(i => i.isBestseller === true);
+
+          if (this.menuSearchQuery.trim() !== '') {
+            const q = this.menuSearchQuery.toLowerCase();
+            list = list.filter(i => i.name && i.name.toLowerCase().includes(q));
+          }
+
+          this.filteredMenuItems = list;
+        },
+
+        // --- 4. CART & ORDER LOGIC ---
+        loadLocalCart() {
+          try {
+            const saved = localStorage.getItem('feasthub_cart');
+            if (saved) this.cart = JSON.parse(saved);
+          } catch (e) {
+            this.cart = [];
+          }
+        },
+
+        saveLocalCart() {
+          try {
+            localStorage.setItem('feasthub_cart', JSON.stringify(this.cart));
+          } catch (e) {}
+        },
+
+        toggleCartDrawer() {
+          this.cartDrawerOpen = !this.cartDrawerOpen;
+        },
+
+        addToCart(item) {
+          // Check Restaurant Conflict
+          if (this.cart.length > 0 && this.cart[0].restaurantId && item.restaurantId) {
+            if (this.cart[0].restaurantId !== item.restaurantId) {
+              if (confirm("Your cart contains items from another restaurant. Clear cart and add this item?")) {
+                this.cart = [];
+              } else {
+                return;
+              }
+            }
+          }
+
+          const existing = this.cart.find(i => i.id === item.id);
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            this.cart.push({
+              id: item.id,
+              restaurantId: item.restaurantId || (this.activeRestaurant ? this.activeRestaurant.id : ''),
+              name: item.name,
+              price: Number(item.price),
+              quantity: 1
+            });
+          }
+
+          this.saveLocalCart();
+          this.addToast(`Added ${item.name} to cart`, "success");
+        },
+
+        updateCartQty(itemId, delta) {
+          const idx = this.cart.findIndex(i => i.id === itemId);
+          if (idx !== -1) {
+            this.cart[idx].quantity += delta;
+            if (this.cart[idx].quantity <= 0) {
+              this.cart.splice(idx, 1);
+            }
+            this.saveLocalCart();
+          }
+        },
+
+        get cartItemsCount() {
+          return this.cart.reduce((acc, item) => acc + item.quantity, 0);
+        },
+
+        get cartTotals() {
+          const subtotal = this.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+          const packaging = subtotal > 0 ? 30 : 0;
+          const delivery = subtotal > 0 ? 45 : 0;
+          let discount = 0;
+
+          if (this.appliedCoupon) {
+            if (this.appliedCoupon.type === 'PERCENTAGE') {
+              discount = (subtotal * this.appliedCoupon.value) / 100;
+              if (this.appliedCoupon.maximumDiscount) {
+                discount = Math.min(discount, this.appliedCoupon.maximumDiscount);
+              }
+            } else if (this.appliedCoupon.type === 'FIXED') {
+              discount = this.appliedCoupon.value;
+            }
+          }
+
+          const grandTotal = Math.max(0, subtotal + packaging + delivery - discount);
+
+          return { subtotal, packaging, delivery, discount, grandTotal };
+        },
+
+        applyCouponCode(code) {
+          if (!code) return;
+          const cleanCode = code.trim().toUpperCase();
+          const match = this.offers.find(o => o.code === cleanCode);
+
+          if (!match) {
+            this.addToast("Invalid coupon code.", "error");
+            return;
+          }
+
+          if (match.minimumOrder && this.cartTotals.subtotal < match.minimumOrder) {
+            this.addToast(`Minimum order of ₹${match.minimumOrder} required for this coupon.`, "warning");
+            return;
+          }
+
+          this.appliedCoupon = match;
+          this.appliedCouponCode = cleanCode;
+          this.addToast(`Coupon ${cleanCode} applied!`, "success");
+        },
+
+        proceedToCheckout() {
+          if (this.cart.length === 0) return;
+          this.cartDrawerOpen = false;
+          this.showCheckoutModal = true;
+        },
+
+        async placeOrder() {
+          if (!this.selectedAddressId) {
+            this.addToast("Please select a delivery address.", "warning");
+            return;
+          }
+
+          const selectedAddr = this.addresses.find(a => a.id === this.selectedAddressId);
+          if (!selectedAddr) return;
+
+          try {
+            const totals = this.cartTotals;
+            const newOrder = {
+              userId: this.currentUser.uid,
+              restaurantId: this.cart[0].restaurantId || 'default',
+              restaurantName: this.activeRestaurant ? this.activeRestaurant.name : 'FeastHub Dining',
+              items: this.cart,
+              subtotal: totals.subtotal,
+              packagingFee: totals.packaging,
+              deliveryFee: totals.delivery,
+              discount: totals.discount,
+              total: totals.grandTotal,
+              paymentMethod: this.checkoutPaymentMethod,
+              paymentStatus: this.checkoutPaymentMethod === 'COD' ? 'PENDING' : 'HELD_IN_ESCROW',
+              orderStatus: 'PLACED',
+              deliveryAddress: selectedAddr,
+              customerName: this.userProfile.name || 'Customer',
+              customerPhone: selectedAddr.phone || this.userProfile.phone || '',
+              createdAt: Date.now(),
+              updatedAt: Date.now()
+            };
+
+            const ordersRef = ref(db, 'orders');
+            await push(ordersRef, newOrder);
+
+            this.cart = [];
+            this.saveLocalCart();
+            this.showCheckoutModal = false;
+            this.addToast("Order placed successfully!", "success");
+            this.switchTab('orders');
+          } catch (err) {
+            console.error("[Place Order Error]", err);
+            this.addToast("Failed to place order. Check network connection.", "error");
+          }
+        },
+
+        // --- 5. RESERVATIONS & ADDRESSES ---
+        openReservationModal(restaurant = null) {
+          const target = restaurant || this.restaurants[0];
+          if (!target) {
+            this.addToast("No restaurant available for reservation.", "warning");
+            return;
+          }
+
+          this.reservationForm = {
+            restaurantId: target.id,
+            restaurantName: target.name,
+            date: new Date().toISOString().split('T')[0],
+            time: "19:00",
+            guests: 2,
+            requests: ''
+          };
+          this.showReservationModal = true;
+        },
+
+        async submitReservation() {
+          try {
+            const bookingCode = 'FH-' + Math.floor(100000 + Math.random() * 900000);
+            const newRes = {
+              userId: this.currentUser.uid,
+              ...this.reservationForm,
+              status: 'CONFIRMED',
+              bookingCode: bookingCode,
+              createdAt: Date.now()
+            };
+
+            await push(ref(db, 'reservations'), newRes);
+            this.showReservationModal = false;
+            this.addToast(`Table Reserved! Booking Code: ${bookingCode}`, "success");
+            this.switchTab('reservations');
+          } catch (err) {
+            console.error("[Reservation Error]", err);
+            this.addToast("Failed to complete reservation.", "error");
+          }
+        },
+
+        openAddressModal() {
+          this.addressForm = { label: 'Home', name: this.userProfile.name || '', address: '', city: this.userProfile.city || 'Mumbai', pincode: '' };
+          this.showAddressModal = true;
+        },
+
+        async saveAddress() {
+          try {
+            const userAddrRef = ref(db, `addresses/${this.currentUser.uid}`);
+            await push(userAddrRef, {
+              ...this.addressForm,
+              createdAt: Date.now()
             });
 
-            // Menu Items Realtime Fetch
-            onValue(ref(db, 'menuItems'), (snap) => {
-                const items = snap.val() || {};
-                const grid = document.getElementById('menuGrid');
-                grid.innerHTML = '';
-                
-                Object.keys(items).forEach(id => {
-                    const item = items[id];
-                    const card = document.createElement('div');
-                    card.className = 'food-card';
-                    card.innerHTML = `
-                        <img src="${item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'}" class="food-thumb" alt="${item.name}">
-                        <div class="food-details">
-                            <div class="food-header">
-                                <span class="food-title">${item.name}</span>
-                                <span class="food-price">₹${item.price}</span>
-                            </div>
-                            <p class="food-desc">${item.description || 'Prepared with select ingredients and premium care.'}</p>
-                            <div class="food-footer">
-                                <button class="btn btn-primary btn-sm btn-block" onclick='app.cart.addItem(${JSON.stringify({id, name: item.name, price: item.price})})'>ADD TO CART</button>
-                            </div>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
+            this.showAddressModal = false;
+            this.addToast("Address saved successfully.", "success");
+          } catch (err) {
+            console.error("[Save Address Error]", err);
+            this.addToast("Failed to save address.", "error");
+          }
+        },
+
+        async deleteAddress(id) {
+          try {
+            await remove(ref(db, `addresses/${this.currentUser.uid}/${id}`));
+            this.addToast("Address removed.", "info");
+          } catch (err) {
+            console.error("[Delete Address Error]", err);
+          }
+        },
+
+        // --- 6. USER PROFILE UPDATES & FAVORITES ---
+        async updateUserProfile() {
+          try {
+            const userRef = ref(db, `users/${this.currentUser.uid}`);
+            await update(userRef, {
+              name: this.profileForm.name,
+              phone: this.profileForm.phone,
+              city: this.profileForm.city,
+              updatedAt: Date.now()
             });
 
-            // Address Realtime Fetch
-            onValue(ref(db, `addresses/${window.app.user.uid}`), (snap) => {
-                const addrs = snap.val() || {};
-                const list = document.getElementById('addressesList');
-                list.innerHTML = '';
-                Object.keys(addrs).forEach(id => {
-                    const a = addrs[id];
-                    list.innerHTML += `
-                        <div class="card" style="margin:0;">
-                            <div style="font-weight:700; margin-bottom:4px;"><i class="fa-solid fa-location-dot" style="color:var(--accent-primary);"></i> ${a.title}</div>
-                            <div style="font-size:13px; color:var(--text-muted);">${a.flat}, ${a.street} - ${a.pincode}</div>
-                        </div>
-                    `;
-                });
-            });
+            this.userProfile.name = this.profileForm.name;
+            this.userProfile.phone = this.profileForm.phone;
+            this.userProfile.city = this.profileForm.city;
+
+            this.addToast("Profile updated successfully.", "success");
+          } catch (err) {
+            console.error("[Profile Update Error]", err);
+            this.addToast("Failed to update profile.", "error");
+          }
+        },
+
+        async toggleFavorite(restaurantId) {
+          const uid = this.currentUser.uid;
+          const favRef = ref(db, `users/${uid}/favorites/${restaurantId}`);
+
+          try {
+            if (this.isFavorite(restaurantId)) {
+              await remove(favRef);
+              this.addToast("Removed from favorites", "info");
+            } else {
+              await set(favRef, true);
+              this.addToast("Added to favorites!", "success");
+            }
+          } catch (err) {
+            console.error("[Favorite Toggle Error]", err);
+          }
+        },
+
+        isFavorite(restaurantId) {
+          return this.favorites.includes(restaurantId);
+        },
+
+        async logoutUser() {
+          try {
+            await signOut(auth);
+            this.redirectToLogin();
+          } catch (err) {
+            console.error("[SignOut Error]", err);
+          }
+        },
+
+        // --- 7. UTILITY HELPERS ---
+        getInitials(name) {
+          if (!name) return "CU";
+          const parts = name.trim().split(' ');
+          return parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0][0].toUpperCase();
+        },
+
+        formatDate(ts) {
+          if (!ts) return '';
+          return new Date(ts).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        },
+
+        handleImgError(event) {
+          event.target.src = this.fallbackFood;
+        },
+
+        isStatusReached(currentStatus, targetStep) {
+          const orderSteps = ['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED'];
+          return orderSteps.indexOf(currentStatus) >= orderSteps.indexOf(targetStep);
+        },
+
+        getStatusIcon(step) {
+          switch (step) {
+            case 'PLACED': return 'fa-solid fa-receipt';
+            case 'CONFIRMED': return 'fa-solid fa-circle-check';
+            case 'PREPARING': return 'fa-solid fa-fire-burner';
+            case 'OUT_FOR_DELIVERY': return 'fa-solid fa-motorcycle';
+            case 'DELIVERED': return 'fa-solid fa-house-chimney-check';
+            default: return 'fa-solid fa-circle';
+          }
+        },
+
+        addToast(message, type = 'info') {
+          const id = Date.now() + Math.random();
+          this.toasts.push({ id, message, type });
+          setTimeout(() => this.removeToast(id), 4000);
+        },
+
+        removeToast(id) {
+          this.toasts = this.toasts.filter(t => t.id !== id);
         }
-    </script>
+      }
+    };
+  </script>
 </body>
 </html>
