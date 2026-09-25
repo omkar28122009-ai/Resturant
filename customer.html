@@ -167,7 +167,7 @@ window.feasthubApp = function(){
 import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import {getFirestore,collection,addDoc,onSnapshot,query,where,doc,updateDoc,getDoc} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import {getDatabase,ref,get} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import {getDatabase,ref,get,push,onValue,update} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
@@ -332,89 +332,84 @@ window.__feastSubmitBooking=async function(state){
   if(state.availability.state==="full"||state.availability.available===false){state.toast("Choose another available slot.","warn");return}
   state.isSubmitting=true;state.bookingError="";
   try{
-    if(!firestore)throw new Error("FIRESTORE_UNAVAILABLE");
-    /*
-      IMPORTANT: Existing booking.html source of truth is preserved:
-      collection: bookings
-      ownership field: userId
-      status values: Pending / Verified / Technician Sent / In-Transit / Completed / Cancelled
-      scheduledSlot, customerName, customerPhone, customerAddress, services,
-      subtotal, discount, promoCode, grandTotal, verificationPin, createdAt
-    */
+    if(!rtdb)throw new Error("DATABASE_UNAVAILABLE");
     const slot=new Date(`${f.date}T${f.time}`);
     if(isNaN(slot.getTime()))throw new Error("INVALID_SLOT");
-    if(slot.getTime()<Date.now()-60000){throw new Error("PAST_SLOT")}
-    const service={
-      id:`restaurant-${r.id}`,
-      name:`Table reservation — ${r.name}`,
-      price:0,
-      restaurantId:r.id,
-      restaurantName:r.name,
-      guests:Number(f.guests)||2
-    };
-    const securePinToken=String(Math.floor(1000+Math.random()*9000));
+    if(slot.getTime()<Date.now()-60000)throw new Error("PAST_SLOT");
+
+    /* The original FeastHub app stores table reservations in Realtime Database
+       under the existing `reservations` path. Keep that path unchanged. */
     const payloadPacket={
       userId:state.authUser.uid,
       customerName:f.name.trim(),
       customerPhone:f.phone.trim(),
+      customerEmail:state.authUser.email||"",
       scheduledSlot:slot.toISOString(),
+      date:f.date,
+      time:f.time,
       customerAddress:f.address.trim(),
-      services:[service],
-      subtotal:0,
-      discount:0,
-      promoCode:"",
-      grandTotal:0,
-      status:"Pending",
-      verificationPin:securePinToken,
       restaurantId:r.id,
       restaurantName:r.name,
       restaurantArea:r.area||"",
       guests:Number(f.guests)||2,
       specialRequest:f.specialRequest.trim(),
       bookingType:"TABLE",
-      createdAt:new Date().toISOString()
+      status:"Pending",
+      verificationPin:String(Math.floor(1000+Math.random()*9000)),
+      createdAt:new Date().toISOString(),
+      updatedAt:new Date().toISOString()
     };
-    const collectionRef=collection(firestore,"bookings");
-    const added=await withTimeout(addDoc(collectionRef,payloadPacket),10000);
-    state.lastBooking={id:added.id,...payloadPacket};
+    /* Use Firebase's native push(ref, value) write. This creates the child and
+       writes its complete payload in one operation, which is also the simplest
+       form for Realtime Database security rules. */
+    const reservationRef=await withTimeout(push(ref(rtdb,"reservations"),payloadPacket),10000);
+    if(!reservationRef?.key)throw new Error("BOOKING_KEY_MISSING");
+    state.lastBooking={id:reservationRef.key,...payloadPacket};
     state.bookingStep=4;
     state.toast("Booking request saved successfully.","success");
     if(window.__feastRefreshBookings)window.__feastRefreshBookings(state);
   }catch(e){
     console.error("Booking write error:",e);
-    state.bookingError=e.message==="PAST_SLOT"?"That date/time has already passed.":e.message==="INVALID_SLOT"?"Please select a valid date and time.":"Booking could not be saved. Check your Firebase rules and connection, then retry.";
-    state.toast(state.bookingError,"error");
+    let msg="Booking could not be saved. Please retry.";
+    if(e.message==="PAST_SLOT")msg="That date/time has already passed.";
+    else if(e.message==="INVALID_SLOT")msg="Please select a valid date and time.";
+    else if(e.message==="DATABASE_UNAVAILABLE")msg="Firebase Realtime Database is not connected.";
+    else if(e.code==="PERMISSION_DENIED"||e.code==="PERMISSION_DENIED: Permission denied")msg="Firebase denied this booking write. Check the reservations write rule for signed-in users.";
+    else if(e.message==="TIMEOUT")msg="Firebase took too long to save the booking. Check your connection and retry.";
+    else if(e.code==="auth/network-request-failed")msg="Your sign-in session lost its network connection. Sign in again and retry.";
+    else if(e.message==="BOOKING_KEY_MISSING")msg="Firebase accepted the request but did not return a booking ID. Retry once.";
+    else msg=`Booking save failed (${e.code||e.message||"unknown Firebase error"}). Open the browser console for the exact Firebase error.`;
+    state.bookingError=msg;
+    state.toast(msg,"error");
   }finally{state.isSubmitting=false}
 };
 
 window.__feastCancelBooking=async function(state,id){
-  if(!state.authUser||!firestore||!id)return;
+  if(!state.authUser||!rtdb||!id)return;
   const booking=state.userBookings.find(b=>b.id===id);
   if(!booking||booking.userId!==state.authUser.uid){state.toast("Booking not found.","error");return}
   if(["Cancelled","Completed"].includes(booking.status)){state.toast("This booking can no longer be cancelled.","warn");return}
   if(!confirm("Cancel this booking?"))return;
   try{
-    await withTimeout(updateDoc(doc(firestore,"bookings",id),{status:"Cancelled",updatedAt:new Date().toISOString()}),9000);
+    await withTimeout(update(ref(rtdb,`reservations/${id}`),{status:"Cancelled",updatedAt:new Date().toISOString()}),9000);
     state.toast("Booking cancelled successfully.","success");
-  }catch(e){console.error(e);state.toast("Failed to cancel booking. Please retry.","error")}
+  }catch(e){console.error(e);state.toast(e.code==="PERMISSION_DENIED"?"Firebase denied cancellation. Check the reservations update rule.":"Failed to cancel booking. Please retry.","error")}
 };
 
 window.__feastRefreshBookings=function(state){
-  if(!state.authUser||!firestore)return;
+  if(!state.authUser||!rtdb)return;
   if(unsubscribeBookings)unsubscribeBookings();
   try{
-    /*
-      Same path/query as existing booking.html:
-      collection(db,"bookings") + where("userId","==",user.uid)
-    */
-    const syncQuery=query(collection(firestore,"bookings"),where("userId","==",state.authUser.uid));
-    unsubscribeBookings=onSnapshot(syncQuery,snapshot=>{
-      state.userBookings=[];
-      snapshot.forEach(d=>state.userBookings.push({id:d.id,...d.data()}));
-      state.userBookings.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+    /* Read the existing RTDB reservations path and filter by the signed-in owner. */
+    const reservationsRef=ref(rtdb,"reservations");
+    unsubscribeBookings=onValue(reservationsRef,snapshot=>{
+      const raw=snapshot.val()||{};
+      state.userBookings=Object.keys(raw).map(id=>({id,...(raw[id]||{})}))
+        .filter(b=>b.userId===state.authUser.uid)
+        .sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
     },err=>{
-      console.error("Booking realtime sync:",err);
-      state.toast("Live booking sync is unavailable. Showing the last loaded data.","error");
+      console.error("Reservation realtime sync:",err);
+      state.toast(err?.code==="PERMISSION_DENIED"?"Firebase denied reservation reads. Check the reservations read rule.":"Live reservation sync is unavailable.","error");
     });
   }catch(e){console.error(e)}
 };
