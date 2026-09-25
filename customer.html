@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>FeastHub — Premium Culinary Experience</title>
+  <title>FeastHub — Premium Culinary Platform</title>
 
-  <!-- Google Fonts & Icons -->
+  <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -18,27 +18,11 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
           colors: {
-            emerald: {
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              900: '#064e3b',
-              950: '#022c22',
-            },
-            amber: {
-              400: '#fbbf24',
-              500: '#f59e0b',
-              600: '#d97706',
-            },
-            slate: {
-              850: '#131c2e',
-              900: '#0f172a',
-              950: '#020617',
-            }
+            emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669', 900: '#064e3b', 950: '#022c22' },
+            amber: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+            slate: { 850: '#131c2e', 900: '#0f172a', 950: '#020617' }
           },
           boxShadow: {
             'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.3)',
@@ -47,22 +31,19 @@
           }
         }
       }
-    }
+    };
   </script>
 
-  <!-- Custom Styles & Glassmorphism Utilities -->
+  <!-- Glassmorphism Styles -->
   <style>
     [x-cloak] { display: none !important; }
-
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #020617; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
-    /* Glass Effects */
     .glass-panel {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -81,32 +62,18 @@
       border-color: #10b981;
       box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
     }
-
-    /* Skeleton Loading Animation */
-    @keyframes pulse-slow {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .animate-pulse-slow {
-      animation: pulse-slow 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    /* Safe Area Padding for Mobile Notch / Bottom Bar */
-    .pb-safe { padding-bottom: env(safe-area-inset-bottom, 1rem); }
-    .pt-safe { padding-top: env(safe-area-inset-top, 1rem); }
   </style>
 
-  <!-- Alpine.js Plugin & Core -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+  <!-- Alpine.js Core -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="h-full text-slate-100 bg-slate-950 font-sans flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950" x-data="feasthubApp()" x-init="initApp()">
+<body class="h-full text-slate-100 bg-slate-950 font-sans flex flex-col antialiased" x-data="feasthubApp()" x-init="initApp()">
 
-  <!-- ==================== TOP GLOBAL TOAST SYSTEM ==================== -->
+  <!-- GLOBAL TOAST NOTIFICATIONS -->
   <div class="fixed top-5 right-5 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4">
     <template x-for="toast in toasts" :key="toast.id">
-      <div class="pointer-events-auto flex items-center gap-3 p-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-0"
+      <div class="pointer-events-auto flex items-center gap-3 p-4 rounded-xl shadow-2xl transition-all duration-300"
            :class="{
              'bg-slate-900 border border-emerald-500/40 text-emerald-400': toast.type === 'success',
              'bg-slate-900 border border-rose-500/40 text-rose-400': toast.type === 'error',
@@ -119,169 +86,206 @@
              'fa-solid fa-triangle-exclamation text-xl': toast.type === 'warning',
              'fa-solid fa-circle-info text-xl': toast.type === 'info'
            }"></i>
-        <div class="flex-1 text-sm font-medium" x-text="toast.message"></div>
-        <button @click="removeToast(toast.id)" class="text-slate-400 hover:text-slate-100">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div class="flex-1 text-xs font-medium" x-text="toast.message"></div>
+        <button @click="removeToast(toast.id)" class="text-slate-400 hover:text-slate-100"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </template>
   </div>
 
-  <!-- ==================== AUTH / INITIAL LOADING SCREEN ==================== -->
-  <div x-show="authLoading" x-transition.opacity.duration.300ms class="fixed inset-0 z-[9000] bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
-    <div class="relative flex items-center justify-center mb-8">
-      <div class="w-24 h-24 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
-      <div class="absolute inset-0 flex items-center justify-center">
-        <i class="fa-solid fa-utensils text-3xl text-emerald-500 animate-bounce"></i>
-      </div>
-    </div>
-    <h1 class="text-2xl font-bold tracking-tight text-white mb-2">FEASTHUB</h1>
-    <p class="text-slate-400 text-sm max-w-xs mb-6" x-text="authLoadingMessage">Authenticating Secure Customer Portal...</p>
+  <!-- INITIAL STARTUP / LOADING / ERROR OVERLAY -->
+  <div x-show="appState !== 'READY'" class="fixed inset-0 z-[9000] bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
     
-    <!-- Safety Reset / Retry Button (Shown if auth takes unusually long) -->
-    <div x-show="showAuthRetry" class="mt-4 flex flex-col gap-3">
-      <p class="text-xs text-amber-400/80">Connection taking longer than expected.</p>
-      <div class="flex gap-2">
-        <button @click="retryAuth()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition">
-          <i class="fa-solid fa-rotate-right mr-1.5"></i> Retry Connection
-        </button>
-        <button @click="redirectToLogin()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition">
-          Go to Sign In
-        </button>
+    <!-- Spinner for Loading States -->
+    <template x-if="appState === 'INITIALIZING' || appState === 'AUTHENTICATING' || appState === 'LOADING_DATA'">
+      <div class="flex flex-col items-center">
+        <div class="relative flex items-center justify-center mb-8">
+          <div class="w-24 h-24 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i class="fa-solid fa-utensils text-3xl text-emerald-500 animate-bounce"></i>
+          </div>
+        </div>
+        <h1 class="text-2xl font-black tracking-wider text-white mb-2">FEAST<span class="text-emerald-400">HUB</span></h1>
+        <p class="text-slate-400 text-xs tracking-wide max-w-xs" x-text="statusMessage"></p>
       </div>
-    </div>
+    </template>
+
+    <!-- Auth Error / Unauthenticated Modal -->
+    <template x-if="appState === 'AUTH_REQUIRED'">
+      <div class="max-w-md w-full glass-panel p-8 rounded-3xl border border-slate-800 space-y-6">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400 text-2xl">
+          <i class="fa-solid fa-user-lock"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-extrabold text-white">Authentication Required</h2>
+          <p class="text-xs text-slate-400 mt-2">Sign in to your account or continue exploring in guest mode.</p>
+        </div>
+        
+        <div class="space-y-3">
+          <button @click="loginWithGoogle()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-glow-emerald flex items-center justify-center gap-2">
+            <i class="fa-brands fa-google"></i> Sign In with Google
+          </button>
+          <button @click="continueAsGuest()" class="w-full py-3 rounded-xl glass-card border border-slate-700 text-slate-300 font-bold text-xs hover:bg-slate-800 transition">
+            Continue as Guest
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Error Fallback Card -->
+    <template x-if="appState === 'ERROR'">
+      <div class="max-w-md w-full glass-panel p-8 rounded-3xl border border-rose-500/20 space-y-6">
+        <div class="w-16 h-16 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto text-rose-400 text-2xl">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-white">Connection Issue</h2>
+          <p class="text-xs text-slate-400 mt-2" x-text="statusMessage"></p>
+        </div>
+        <div class="flex gap-3">
+          <button @click="initApp()" class="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+            <i class="fa-solid fa-rotate-right mr-1.5"></i> Retry
+          </button>
+          <button @click="continueAsGuest()" class="flex-1 py-3 rounded-xl glass-card text-slate-300 font-bold text-xs hover:bg-slate-800 transition">
+            Browse Offline
+          </button>
+        </div>
+      </div>
+    </template>
+
   </div>
 
-  <!-- ==================== MAIN APPLICATION CONTAINER ==================== -->
-  <div x-show="!authLoading" x-cloak class="min-h-screen flex flex-col pb-20 md:pb-0">
+  <!-- MAIN APP CONTAINER -->
+  <div x-show="appState === 'READY'" x-cloak class="min-h-screen flex flex-col pb-24 md:pb-0">
 
-    <!-- TOP NAVIGATION HEADER -->
-    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80 transition-all">
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
         
-        <!-- Logo & Branding -->
         <div class="flex items-center gap-3 cursor-pointer" @click="switchTab('home')">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center shadow-glow-emerald">
             <i class="fa-solid fa-utensils text-slate-950 font-black text-lg"></i>
           </div>
           <div>
             <span class="text-xl font-black tracking-wider text-white">FEAST<span class="text-emerald-400">HUB</span></span>
-            <span class="hidden sm:inline-block ml-2 text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">Portal</span>
+            <span class="hidden sm:inline-block ml-2 text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">Customer</span>
           </div>
         </div>
 
-        <!-- Location Selector Badge -->
-        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full glass-card text-xs text-slate-300 border border-slate-700/50">
-          <i class="fa-solid fa-location-dot text-emerald-400"></i>
-          <span class="font-medium truncate max-w-[150px]" x-text="userProfile.city || 'Mumbai, MH'"></span>
-          <i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i>
-        </div>
-
-        <!-- Search Bar (Desktop) -->
-        <div class="hidden lg:flex flex-1 max-w-md mx-4 relative">
+        <!-- Search Bar -->
+        <div class="hidden md:flex flex-1 max-w-md mx-4 relative">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-          <input type="text" x-model="searchQuery" @input="filterCatalog()" placeholder="Search restaurants, cuisines, or dishes..." 
-                 class="w-full pl-10 pr-4 py-2 rounded-xl glass-input text-xs text-slate-100 placeholder-slate-500 focus:outline-none transition">
+          <input type="text" x-model="searchQuery" @input.debounce.300ms="filterCatalog()" placeholder="Search restaurants, cuisines, or dishes..." 
+                 class="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-xs text-slate-100 placeholder-slate-500 focus:outline-none transition">
+          <button x-show="searchQuery" @click="searchQuery = ''; filterCatalog()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
         </div>
 
-        <!-- Action Items (Cart, Profile, Notifications) -->
+        <!-- Right Side Actions -->
         <div class="flex items-center gap-3">
-          <!-- Notification Bell -->
-          <button @click="showNotificationsModal = true" class="relative p-2.5 rounded-xl glass-card text-slate-300 hover:text-white hover:border-slate-600 transition">
-            <i class="fa-regular fa-bell text-lg"></i>
-            <span x-show="unreadNotifications" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400"></span>
+          
+          <!-- Connection Status Indicator -->
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full glass-card text-[11px] font-medium border border-slate-800">
+            <span class="w-2 h-2 rounded-full" :class="isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'"></span>
+            <span x-text="isOnline ? 'Online' : 'Offline'" class="text-slate-300"></span>
+          </div>
+
+          <!-- Cart Drawer Button -->
+          <button @click="showCartDrawer = true" class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold transition shadow-glow-emerald">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="hidden sm:inline text-xs uppercase tracking-wider">Cart</span>
+            <span x-show="cartItemsCount > 0" class="px-1.5 py-0.5 text-[10px] font-black rounded-md bg-slate-950 text-emerald-400" x-text="cartItemsCount"></span>
           </button>
 
-          <!-- Cart Drawer Toggle -->
-          <button @click="toggleCartDrawer()" class="relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition shadow-glow-emerald">
-            <i class="fa-solid fa-bag-shopping text-base"></i>
-            <span class="hidden sm:inline text-xs font-extrabold uppercase tracking-wider">Cart</span>
-            <span x-show="cartItemsCount > 0" class="px-1.5 py-0.5 text-[11px] font-black rounded-md bg-slate-950 text-emerald-400" x-text="cartItemsCount"></span>
-          </button>
-
-          <!-- User Avatar Profile Menu -->
+          <!-- User Profile Dropdown -->
           <div class="relative" x-data="{ open: false }">
-            <button @click="open = !open" class="flex items-center gap-2 p-1 rounded-xl glass-card hover:border-slate-600 transition">
+            <button @click="open = !open" class="flex items-center gap-2 p-1 rounded-xl glass-card border border-slate-800 hover:border-slate-700 transition">
               <template x-if="userProfile.photoURL">
-                <img :src="userProfile.photoURL" @error="handleImgError($event)" class="w-8 h-8 rounded-lg object-cover" />
+                <img :src="userProfile.photoURL" class="w-8 h-8 rounded-lg object-cover" />
               </template>
               <template x-if="!userProfile.photoURL">
-                <div class="w-8 h-8 rounded-lg bg-slate-800 text-emerald-400 font-bold flex items-center justify-center text-xs" x-text="getInitials(userProfile.name)"></div>
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-xs" x-text="getInitials(userProfile.name)"></div>
               </template>
             </button>
 
-            <!-- Dropdown Menu -->
             <div x-show="open" @click.outside="open = false" x-transition.opacity.scale.95
-                 class="absolute right-0 mt-3 w-56 rounded-2xl glass-panel border border-slate-700/80 shadow-2xl py-2 z-50">
-              <div class="px-4 py-3 border-b border-slate-800">
-                <p class="text-sm font-bold text-white truncate" x-text="userProfile.name || 'Customer'"></p>
-                <p class="text-xs text-slate-400 truncate" x-text="userProfile.email"></p>
+                 class="absolute right-0 mt-3 w-56 rounded-2xl glass-panel border border-slate-800 shadow-2xl py-2 z-50 space-y-1">
+              <div class="px-4 py-2.5 border-b border-slate-800/80">
+                <p class="text-xs font-bold text-white truncate" x-text="userProfile.name || 'Guest User'"></p>
+                <p class="text-[10px] text-slate-400 truncate" x-text="userProfile.email || 'Not logged in'"></p>
               </div>
-              <a @click="switchTab('profile'); open = false" class="flex items-center gap-3 px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
-                <i class="fa-regular fa-user w-4"></i> Profile Settings
+              <a @click="switchTab('profile'); open = false" class="flex items-center gap-3 px-4 py-2 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
+                <i class="fa-regular fa-user w-4"></i> Profile & Addresses
               </a>
-              <a @click="switchTab('orders'); open = false" class="flex items-center gap-3 px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
+              <a @click="switchTab('orders'); open = false" class="flex items-center gap-3 px-4 py-2 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
                 <i class="fa-solid fa-clock-rotate-left w-4"></i> My Orders
               </a>
-              <a @click="switchTab('reservations'); open = false" class="flex items-center gap-3 px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
+              <a @click="switchTab('reservations'); open = false" class="flex items-center gap-3 px-4 py-2 text-xs text-slate-300 hover:bg-slate-800/60 hover:text-emerald-400 cursor-pointer transition">
                 <i class="fa-regular fa-calendar-check w-4"></i> Table Bookings
               </a>
-              <div class="my-1 border-t border-slate-800"></div>
-              <button @click="logoutUser()" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 cursor-pointer transition">
-                <i class="fa-solid fa-right-from-bracket w-4"></i> Sign Out
-              </button>
+              <div class="border-t border-slate-800 pt-1">
+                <template x-if="authUser">
+                  <button @click="logout(); open = false" class="w-full flex items-center gap-3 px-4 py-2 text-xs text-rose-400 hover:bg-rose-500/10 cursor-pointer transition">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-4"></i> Sign Out
+                  </button>
+                </template>
+                <template x-if="!authUser">
+                  <button @click="loginWithGoogle(); open = false" class="w-full flex items-center gap-3 px-4 py-2 text-xs text-emerald-400 hover:bg-emerald-500/10 cursor-pointer transition">
+                    <i class="fa-brands fa-google w-4"></i> Sign In
+                  </button>
+                </template>
+              </div>
             </div>
           </div>
+
         </div>
 
       </div>
     </header>
 
-    <!-- MAIN DYNAMIC CONTENT AREA -->
+    <!-- MAIN BODY DISPLAY -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-      <!-- ================= TAB 1: HOME / EXPLORE ================= -->
+      <!-- ================= TAB 1: EXPLORE / HOME ================= -->
       <section x-show="currentTab === 'home'" x-transition.opacity.duration.200ms class="space-y-8">
         
-        <!-- HERO BANNER -->
-        <div class="relative rounded-3xl overflow-hidden glass-card p-8 sm:p-12 border border-slate-800/80 bg-gradient-to-r from-slate-900 via-slate-900/90 to-emerald-950/40">
+        <!-- Hero Section -->
+        <div class="relative rounded-3xl overflow-hidden glass-card p-8 sm:p-12 border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900/90 to-emerald-950/40">
           <div class="relative z-10 max-w-2xl space-y-4">
             <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold tracking-wider uppercase">
-              <i class="fa-solid fa-sparkles text-amber-400"></i> Culinary Excellence
+              <i class="fa-solid fa-sparkles text-amber-400"></i> Premium Dining Platform
             </span>
             <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-              Craving Something <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-300">Extraordinary?</span>
+              Culinary Delights <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-amber-300">Delivered Fast.</span>
             </h1>
-            <p class="text-slate-400 text-sm sm:text-base">
-              Discover artisanal menus, reserve private tables, and experience fine dining delivered directly to your door.
+            <p class="text-slate-400 text-xs sm:text-sm max-w-lg">
+              Explore artisanal menus, reserve tables in advance, and track orders in real-time.
             </p>
             
-            <!-- Mobile Search Bar -->
-            <div class="lg:hidden mt-4 relative">
-              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-              <input type="text" x-model="searchQuery" @input="filterCatalog()" placeholder="Search dishes, restaurants..." 
-                     class="w-full pl-10 pr-4 py-3 rounded-xl glass-input text-xs text-slate-100 placeholder-slate-500 focus:outline-none">
+            <div class="md:hidden mt-4 relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input type="text" x-model="searchQuery" @input.debounce.300ms="filterCatalog()" placeholder="Search dishes, restaurants..." 
+                     class="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-xs text-slate-100 placeholder-slate-500 focus:outline-none">
             </div>
           </div>
-          <div class="absolute right-0 bottom-0 top-0 w-1/3 opacity-20 lg:opacity-30 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500 via-slate-900 to-transparent"></div>
         </div>
 
-        <!-- CATEGORIES SCROLLER -->
+        <!-- Categories Scroller -->
         <div class="space-y-4">
           <div class="flex items-center justify-between">
-            <h2 class="text-lg font-bold text-white tracking-wide">Popular Categories</h2>
-            <button @click="selectedCategory = 'ALL'; filterCatalog()" class="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">Reset Filter</button>
+            <h2 class="text-base font-bold text-white tracking-wide">Categories</h2>
+            <button @click="selectedCategory = 'ALL'; filterCatalog()" class="text-xs text-emerald-400 hover:text-emerald-300 font-semibold">Reset Filters</button>
           </div>
           
           <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
             <button @click="selectedCategory = 'ALL'; filterCatalog()" 
-                    class="flex-shrink-0 px-5 py-2.5 rounded-xl border text-xs font-bold transition flex items-center gap-2"
+                    class="flex-shrink-0 px-4 py-2 rounded-xl border text-xs font-bold transition flex items-center gap-2"
                     :class="selectedCategory === 'ALL' ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-glow-emerald' : 'glass-card border-slate-800 text-slate-300 hover:border-slate-700'">
-              <i class="fa-solid fa-border-all"></i> All
+              <i class="fa-solid fa-border-all"></i> All Cuisines
             </button>
-            <template x-for="cat in categories" :key="cat.id">
+            <template x-for="cat in categories" :key="cat.id || cat.name">
               <button @click="selectedCategory = cat.name; filterCatalog()" 
-                      class="flex-shrink-0 px-5 py-2.5 rounded-xl border text-xs font-bold transition flex items-center gap-2"
+                      class="flex-shrink-0 px-4 py-2 rounded-xl border text-xs font-bold transition flex items-center gap-2"
                       :class="selectedCategory === cat.name ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-glow-emerald' : 'glass-card border-slate-800 text-slate-300 hover:border-slate-700'">
                 <i :class="cat.icon || 'fa-solid fa-utensils'" class="text-emerald-400"></i>
                 <span x-text="cat.name"></span>
@@ -290,93 +294,67 @@
           </div>
         </div>
 
-        <!-- FEATURED RESTAURANTS SECTION -->
+        <!-- Filter Pills Bar -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <button @click="filterVegOnly = !filterVegOnly; filterCatalog()" 
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5"
+                  :class="filterVegOnly ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'glass-card border-slate-800 text-slate-400'">
+            <i class="fa-solid fa-leaf text-emerald-400"></i> Pure Veg
+          </button>
+          <button @click="filterOpenOnly = !filterOpenOnly; filterCatalog()" 
+                  class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition flex items-center gap-1.5"
+                  :class="filterOpenOnly ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'glass-card border-slate-800 text-slate-400'">
+            <i class="fa-solid fa-door-open text-emerald-400"></i> Open Now
+          </button>
+        </div>
+
+        <!-- Restaurants Grid -->
         <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-xl font-bold text-white tracking-wide">Featured Restaurants</h2>
-              <p class="text-xs text-slate-400">Handpicked luxury dining locations</p>
-            </div>
+          <h2 class="text-lg font-bold text-white tracking-wide">Featured Restaurants</h2>
+
+          <!-- Empty Database / Query State -->
+          <div x-show="filteredRestaurants.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800 space-y-3">
+            <i class="fa-solid fa-store-slash text-4xl text-slate-600"></i>
+            <p class="text-sm font-bold text-slate-300">No restaurants available</p>
+            <p class="text-xs text-slate-500">There are no restaurants matching your criteria in the database.</p>
           </div>
 
-          <!-- Loading Skeletons -->
-          <div x-show="dataLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <template x-for="i in 3">
-              <div class="glass-card rounded-2xl p-4 border border-slate-800/80 animate-pulse-slow space-y-4">
-                <div class="h-44 bg-slate-800 rounded-xl"></div>
-                <div class="h-5 bg-slate-800 rounded w-3/4"></div>
-                <div class="h-4 bg-slate-800 rounded w-1/2"></div>
-              </div>
-            </template>
-          </div>
-
-          <!-- Empty State -->
-          <div x-show="!dataLoading && filteredRestaurants.length === 0" class="text-center py-12 glass-card rounded-2xl border border-slate-800">
-            <i class="fa-solid fa-store-slash text-4xl text-slate-600 mb-3"></i>
-            <p class="text-slate-300 font-bold">No restaurants found</p>
-            <p class="text-xs text-slate-500 mt-1">Try adjusting your search or category filter.</p>
-          </div>
-
-          <!-- Restaurant Cards Grid -->
-          <div x-show="!dataLoading && filteredRestaurants.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Restaurant Cards -->
+          <div x-show="filteredRestaurants.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <template x-for="rest in filteredRestaurants" :key="rest.id">
               <div class="group glass-card rounded-2xl overflow-hidden border border-slate-800/80 hover:border-emerald-500/40 transition duration-300 flex flex-col">
-                <!-- Image & Badges Banner -->
                 <div class="relative h-48 overflow-hidden bg-slate-900">
-                  <img :src="rest.coverImage || fallbackCover" @error="handleImgError($event)" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                  <img :src="rest.coverImage || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
                   <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
                   
-                  <!-- Open/Closed Tag -->
                   <div class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md"
                        :class="rest.isOpen !== false ? 'bg-emerald-500/80 text-slate-950' : 'bg-rose-500/80 text-white'">
                     <span x-text="rest.isOpen !== false ? 'Open Now' : 'Closed'"></span>
                   </div>
 
-                  <!-- Favorite Button -->
                   <button @click.stop="toggleFavorite(rest.id)" class="absolute top-3 right-3 w-9 h-9 rounded-full glass-panel flex items-center justify-center text-slate-300 hover:text-rose-400 transition">
                     <i :class="isFavorite(rest.id) ? 'fa-solid fa-heart text-rose-500' : 'fa-regular fa-heart'"></i>
                   </button>
-
-                  <!-- Offer Tag if Available -->
-                  <div x-show="rest.offer" class="absolute bottom-3 left-3 px-2 py-0.5 rounded bg-amber-500/90 text-slate-950 text-[10px] font-extrabold">
-                    <i class="fa-solid fa-tag mr-1"></i><span x-text="rest.offer"></span>
-                  </div>
                 </div>
 
-                <!-- Info Details -->
                 <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div>
                     <div class="flex items-start justify-between gap-2">
-                      <h3 class="text-lg font-bold text-white group-hover:text-emerald-400 transition" x-text="rest.name || 'Unnamed Restaurant'"></h3>
+                      <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition" x-text="rest.name"></h3>
                       <div class="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold">
                         <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
-                        <span x-text="rest.rating || '4.8'"></span>
+                        <span x-text="rest.rating || '4.5'"></span>
                       </div>
                     </div>
-                    <p class="text-xs text-slate-400 mt-1 truncate" x-text="rest.cuisines || 'Multi-Cuisine'"></p>
+                    <p class="text-xs text-slate-400 mt-1 truncate" x-text="rest.cuisines || 'Multi-cuisine'"></p>
+                    <p class="text-[11px] text-slate-500 mt-1" x-text="rest.area ? rest.area + ', ' + (rest.city || '') : 'Location unavailable'"></p>
                   </div>
 
-                  <div class="grid grid-cols-3 gap-2 py-2 border-y border-slate-800/80 text-[11px] text-slate-400">
-                    <div>
-                      <span class="block text-[10px] text-slate-500">TIME</span>
-                      <span class="font-semibold text-slate-200" x-text="(rest.deliveryTime || '30-40') + ' mins'"></span>
-                    </div>
-                    <div>
-                      <span class="block text-[10px] text-slate-500">MIN ORDER</span>
-                      <span class="font-semibold text-slate-200" x-text="'₹' + (rest.minOrder || 200)"></span>
-                    </div>
-                    <div>
-                      <span class="block text-[10px] text-slate-500">FEE</span>
-                      <span class="font-semibold text-slate-200" x-text="rest.deliveryFee ? '₹' + rest.deliveryFee : 'Free'"></span>
-                    </div>
-                  </div>
-
-                  <!-- Actions -->
-                  <div class="flex gap-2 pt-1">
-                    <button @click="openRestaurantMenu(rest)" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-glow-emerald">
+                  <div class="flex gap-2 pt-2 border-t border-slate-800/60">
+                    <button @click="openRestaurantMenu(rest)" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-glow-emerald">
                       View Menu
                     </button>
-                    <button @click="openReservationModal(rest)" class="px-3 py-2.5 rounded-xl glass-card border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition text-xs font-semibold">
+                    <button @click="openReservationModal(rest)" class="px-3 py-2 rounded-xl glass-card border border-slate-700 text-slate-300 hover:text-white transition text-xs" title="Reserve Table">
                       <i class="fa-regular fa-calendar-check"></i>
                     </button>
                   </div>
@@ -386,567 +364,358 @@
           </div>
         </div>
 
-        <!-- SPECIAL OFFERS BANNER -->
-        <div x-show="offers.length > 0" class="space-y-4 pt-4">
-          <h2 class="text-xl font-bold text-white tracking-wide">Special Promotional Offers</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <template x-for="offer in offers" :key="offer.id">
-              <div class="glass-card p-4 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-slate-900 to-amber-950/20 flex items-center justify-between">
-                <div>
-                  <span class="px-2 py-0.5 text-[10px] font-bold rounded bg-amber-500/20 text-amber-400 border border-amber-500/30" x-text="offer.code"></span>
-                  <h4 class="text-sm font-bold text-white mt-1" x-text="offer.title"></h4>
-                  <p class="text-xs text-slate-400" x-text="offer.description"></p>
-                </div>
-                <button @click="applyCouponCode(offer.code)" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition">
-                  Apply
-                </button>
-              </div>
-            </template>
-          </div>
-        </div>
-
       </section>
 
-      <!-- ================= TAB 2: RESTAURANT MENU VIEW ================= -->
-      <section x-show="currentTab === 'menu'" x-transition.opacity.duration.200ms class="space-y-6">
-        
-        <!-- Back Button -->
+      <!-- ================= TAB 2: MENU VIEW ================= -->
+      <section x-show="currentTab === 'menu'" x-transition.opacity.duration.200ms class="space-y-6" x-cloak>
         <button @click="switchTab('home')" class="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-emerald-400 transition">
           <i class="fa-solid fa-arrow-left"></i> Back to Restaurants
         </button>
 
-        <!-- Restaurant Header Info -->
         <template x-if="activeRestaurant">
-          <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800">
-            <div class="relative h-48 sm:h-64 bg-slate-900">
-              <img :src="activeRestaurant.coverImage || fallbackCover" @error="handleImgError($event)" class="w-full h-full object-cover" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+          <div class="glass-panel rounded-3xl overflow-hidden border border-slate-800 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+            <div class="space-y-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider" x-text="activeRestaurant.cuisines"></span>
+              <h1 class="text-2xl sm:text-4xl font-black text-white" x-text="activeRestaurant.name"></h1>
+              <p class="text-xs text-slate-400" x-text="activeRestaurant.description || 'Authentic culinary experience'"></p>
             </div>
-            
-            <div class="p-6 sm:p-8 -mt-16 relative z-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-              <div class="space-y-2">
-                <div class="flex items-center gap-3">
-                  <h1 class="text-2xl sm:text-4xl font-black text-white" x-text="activeRestaurant.name"></h1>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold"
-                        :class="activeRestaurant.isOpen !== false ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'"
-                        x-text="activeRestaurant.isOpen !== false ? 'Open' : 'Closed'"></span>
-                </div>
-                <p class="text-xs sm:text-sm text-slate-300" x-text="activeRestaurant.cuisines || 'Gourmet Cuisine'"></p>
-                <p class="text-xs text-slate-400 flex items-center gap-2">
-                  <i class="fa-solid fa-location-dot text-emerald-400"></i>
-                  <span x-text="activeRestaurant.address || 'Location on map'"></span>
-                </p>
-              </div>
-
-              <button @click="openReservationModal(activeRestaurant)" class="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-glow-amber">
-                <i class="fa-regular fa-calendar-check mr-2"></i> Book a Table
-              </button>
-            </div>
+            <button @click="openReservationModal(activeRestaurant)" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-glow-amber">
+              <i class="fa-regular fa-calendar-check mr-2"></i> Reserve a Table
+            </button>
           </div>
         </template>
 
-        <!-- Menu Filter Controls -->
-        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between glass-card p-4 rounded-2xl border border-slate-800">
-          <!-- Dietary Filters -->
-          <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-            <button @click="menuFilter = 'ALL'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition"
-                    :class="menuFilter === 'ALL' ? 'bg-slate-800 text-white border border-slate-600' : 'text-slate-400 hover:text-white'">All Items</button>
-            <button @click="menuFilter = 'VEG'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5"
-                    :class="menuFilter === 'VEG' ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/40' : 'text-slate-400 hover:text-white'">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Pure Veg
-            </button>
-            <button @click="menuFilter = 'NONVEG'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5"
-                    :class="menuFilter === 'NONVEG' ? 'bg-rose-950 text-rose-400 border border-rose-500/40' : 'text-slate-400 hover:text-white'">
-              <span class="w-2 h-2 rounded-full bg-rose-500"></span> Non-Veg
-            </button>
-            <button @click="menuFilter = 'BESTSELLER'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5"
-                    :class="menuFilter === 'BESTSELLER' ? 'bg-amber-950 text-amber-400 border border-amber-500/40' : 'text-slate-400 hover:text-white'">
-              <i class="fa-solid fa-fire text-amber-400"></i> Bestsellers
-            </button>
-          </div>
-
-          <!-- Menu Search -->
-          <div class="relative w-full sm:w-64">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-            <input type="text" x-model="menuSearchQuery" placeholder="Search menu items..." class="w-full pl-9 pr-3 py-1.5 rounded-lg glass-input text-xs text-white">
-          </div>
-        </div>
-
-        <!-- Menu Items Grid -->
+        <!-- Menu Items List -->
         <div class="space-y-4">
-          <div x-show="filteredMenuItems.length === 0" class="text-center py-12 glass-card rounded-2xl border border-slate-800">
-            <p class="text-slate-400 text-sm">No dishes match your selected filters.</p>
+          <div x-show="activeMenuItems.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800">
+            <i class="fa-solid fa-utensils text-4xl text-slate-600 mb-3"></i>
+            <p class="text-slate-300 font-bold text-sm">Menu Coming Soon</p>
+            <p class="text-xs text-slate-500 mt-1">No items currently available for this restaurant.</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <template x-for="item in filteredMenuItems" :key="item.id">
-              <div class="glass-card p-4 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition flex gap-4">
-                <img :src="item.image || fallbackFood" @error="handleImgError($event)" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover bg-slate-900 flex-shrink-0" />
-                <div class="flex-1 flex flex-col justify-between">
+            <template x-for="item in activeMenuItems" :key="item.id">
+              <div class="glass-card p-4 rounded-2xl border border-slate-800 flex gap-4 items-center">
+                <img :src="item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'" class="w-24 h-24 rounded-xl object-cover bg-slate-900 flex-shrink-0" />
+                <div class="flex-1 flex flex-col justify-between h-full">
                   <div>
                     <div class="flex items-center gap-2">
-                      <!-- Veg / Non-Veg Indicator Icon -->
-                      <span class="w-3 h-3 rounded-sm border flex items-center justify-center p-0.5"
-                            :class="item.isVeg ? 'border-emerald-500' : 'border-rose-500'">
+                      <span class="w-3 h-3 rounded-full border flex items-center justify-center p-0.5" :class="item.isVeg ? 'border-emerald-500' : 'border-rose-500'">
                         <span class="w-1.5 h-1.5 rounded-full" :class="item.isVeg ? 'bg-emerald-500' : 'bg-rose-500'"></span>
                       </span>
-                      <h4 class="text-sm font-bold text-white truncate" x-text="item.name"></h4>
-                      <span x-show="item.isBestseller" class="px-1.5 py-0.5 text-[9px] font-black rounded bg-amber-500/20 text-amber-400 uppercase">Bestseller</span>
+                      <h4 class="text-sm font-bold text-white" x-text="item.name"></h4>
                     </div>
-                    <p class="text-xs text-slate-400 mt-1 line-clamp-2" x-text="item.description || 'Prepared fresh with luxury ingredients.'"></p>
+                    <p class="text-xs text-slate-400 mt-1 line-clamp-2" x-text="item.description"></p>
                   </div>
-
                   <div class="flex items-center justify-between mt-3">
-                    <span class="text-base font-extrabold text-emerald-400" x-text="'₹' + item.price"></span>
-                    
-                    <button x-show="item.isAvailable !== false" @click="addToCart(item)" 
-                            class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition flex items-center gap-1.5 shadow-glow-emerald">
-                      <i class="fa-solid fa-plus"></i> ADD
+                    <span class="text-sm font-extrabold text-emerald-400" x-text="'₹' + item.price"></span>
+                    <button @click="addToCart(item)" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
+                      <i class="fa-solid fa-plus mr-1"></i> ADD
                     </button>
-                    <span x-show="item.isAvailable === false" class="text-xs text-rose-400 font-semibold">Sold Out</span>
                   </div>
                 </div>
               </div>
             </template>
           </div>
         </div>
-
       </section>
 
-      <!-- ================= TAB 3: ORDERS HISTORY & TRACKING ================= -->
-      <section x-show="currentTab === 'orders'" x-transition.opacity.duration.200ms class="space-y-6">
+      <!-- ================= TAB 3: ORDERS ================= -->
+      <section x-show="currentTab === 'orders'" x-transition.opacity.duration.200ms class="space-y-6" x-cloak>
         <div>
-          <h1 class="text-2xl font-black text-white">Your Culinary Orders</h1>
-          <p class="text-xs text-slate-400">Track active orders and review order history</p>
+          <h1 class="text-2xl font-black text-white">Your Orders</h1>
+          <p class="text-xs text-slate-400">Live order status and past history</p>
         </div>
 
-        <div x-show="userOrders.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800">
-          <i class="fa-solid fa-receipt text-4xl text-slate-600 mb-3"></i>
-          <p class="text-slate-300 font-bold">No orders placed yet</p>
-          <p class="text-xs text-slate-500 mt-1">Explore our restaurants and place your first order!</p>
-          <button @click="switchTab('home')" class="mt-4 px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs">Explore Menu</button>
+        <div x-show="userOrders.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800 space-y-2">
+          <i class="fa-solid fa-receipt text-4xl text-slate-600"></i>
+          <p class="text-slate-300 font-bold text-sm">No orders found</p>
+          <p class="text-xs text-slate-500">You haven't placed any orders yet.</p>
         </div>
 
-        <div class="space-y-4">
+        <div class="space-y-6">
           <template x-for="order in userOrders" :key="order.id">
             <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
-              <!-- Order Header -->
-              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-4 border-b border-slate-800">
+              
+              <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-800/80 pb-4">
                 <div>
-                  <div class="flex items-center gap-3">
-                    <h3 class="text-base font-bold text-white" x-text="order.restaurantName || 'FeastHub Restaurant'"></h3>
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider"
-                          :class="{
-                            'bg-amber-500/20 text-amber-400 border border-amber-500/30': order.orderStatus === 'PLACED',
-                            'bg-blue-500/20 text-blue-400 border border-blue-500/30': order.orderStatus === 'CONFIRMED' || order.orderStatus === 'PREPARING',
-                            'bg-purple-500/20 text-purple-400 border border-purple-500/30': order.orderStatus === 'OUT_FOR_DELIVERY',
-                            'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30': order.orderStatus === 'DELIVERED',
-                            'bg-rose-500/20 text-rose-400 border border-rose-500/30': order.orderStatus === 'CANCELLED'
-                          }" x-text="order.orderStatus"></span>
-                  </div>
-                  <p class="text-xs text-slate-400 mt-1">Order #<span x-text="order.id.substring(0,8)"></span> • <span x-text="formatDate(order.createdAt)"></span></p>
+                  <span class="text-[10px] font-mono text-emerald-400 font-bold" x-text="order.id"></span>
+                  <h3 class="text-base font-bold text-white" x-text="order.restaurantName"></h3>
+                  <p class="text-xs text-slate-400" x-text="formatDate(order.createdAt)"></p>
                 </div>
-                <div class="text-left sm:text-right">
-                  <span class="text-xs text-slate-400 block">Total Amount</span>
-                  <span class="text-base font-black text-emerald-400" x-text="'₹' + order.total"></span>
+                <div class="text-right">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+                        :class="{
+                          'bg-amber-500/10 text-amber-400 border border-amber-500/20': order.orderStatus === 'PLACED' || order.orderStatus === 'PREPARING',
+                          'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20': order.orderStatus === 'DELIVERED',
+                          'bg-rose-500/10 text-rose-400 border border-rose-500/20': order.orderStatus === 'CANCELLED'
+                        }"
+                        x-text="order.orderStatus || 'PROCESSING'"></span>
                 </div>
               </div>
 
-              <!-- Order Timeline Indicator -->
-              <div class="py-2">
-                <div class="flex items-center justify-between relative">
-                  <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-0.5 bg-slate-800 z-0"></div>
-                  
-                  <template x-for="(step, idx) in ['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED']" :key="idx">
-                    <div class="relative z-10 flex flex-col items-center">
-                      <div class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition"
-                           :class="isStatusReached(order.orderStatus, step) ? 'bg-emerald-500 text-slate-950 font-black shadow-glow-emerald' : 'bg-slate-800 text-slate-500'">
-                        <i :class="getStatusIcon(step)"></i>
-                      </div>
-                      <span class="text-[9px] text-slate-400 mt-1 hidden sm:block" x-text="step.replace('_',' ')"></span>
+              <!-- Order Timeline for Active Orders -->
+              <template x-if="order.orderStatus !== 'DELIVERED' && order.orderStatus !== 'CANCELLED'">
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-3">
+                  <p class="text-xs font-bold text-slate-300">Live Tracking Status</p>
+                  <div class="flex items-center justify-between text-[11px]">
+                    <div class="flex items-center gap-1.5" :class="order.orderStatus === 'PLACED' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
+                      <i class="fa-solid fa-circle-check"></i> Placed
                     </div>
-                  </template>
+                    <div class="h-0.5 flex-1 bg-slate-800 mx-2"></div>
+                    <div class="flex items-center gap-1.5" :class="order.orderStatus === 'PREPARING' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
+                      <i class="fa-solid fa-fire"></i> Preparing
+                    </div>
+                    <div class="h-0.5 flex-1 bg-slate-800 mx-2"></div>
+                    <div class="flex items-center gap-1.5" :class="order.orderStatus === 'OUT_FOR_DELIVERY' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
+                      <i class="fa-solid fa-person-biking"></i> On The Way
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </template>
 
-              <!-- Item List Accordion -->
-              <div class="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60 text-xs space-y-1">
+              <!-- Items Breakdown -->
+              <div class="text-xs text-slate-300 space-y-2">
                 <template x-for="item in order.items" :key="item.id">
-                  <div class="flex justify-between text-slate-300">
-                    <span><span class="text-emerald-400 font-bold" x-text="item.quantity + 'x'"></span> <span x-text="item.name"></span></span>
+                  <div class="flex justify-between">
+                    <span x-text="item.quantity + 'x ' + item.name"></span>
                     <span x-text="'₹' + (item.price * item.quantity)"></span>
                   </div>
                 </template>
               </div>
+
+              <div class="flex justify-between items-center font-bold text-sm text-emerald-400 pt-3 border-t border-slate-800">
+                <span class="text-xs text-slate-400 font-normal">Total Amount Paid</span>
+                <span x-text="'₹' + order.total"></span>
+              </div>
             </div>
           </template>
         </div>
       </section>
 
-      <!-- ================= TAB 4: TABLE RESERVATIONS ================= -->
-      <section x-show="currentTab === 'reservations'" x-transition.opacity.duration.200ms class="space-y-6">
-        <div class="flex justify-between items-center">
-          <div>
-            <h1 class="text-2xl font-black text-white">Table Reservations</h1>
-            <p class="text-xs text-slate-400">Manage your VIP dining bookings</p>
-          </div>
-          <button @click="openReservationModal()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
-            <i class="fa-solid fa-plus mr-1"></i> New Reservation
-          </button>
+      <!-- ================= TAB 4: RESERVATIONS ================= -->
+      <section x-show="currentTab === 'reservations'" x-transition.opacity.duration.200ms class="space-y-6" x-cloak>
+        <div>
+          <h1 class="text-2xl font-black text-white">Table Reservations</h1>
+          <p class="text-xs text-slate-400">Manage your table bookings</p>
         </div>
 
-        <div x-show="userReservations.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800">
-          <i class="fa-regular fa-calendar-xmark text-4xl text-slate-600 mb-3"></i>
-          <p class="text-slate-300 font-bold">No reservations found</p>
-          <p class="text-xs text-slate-500 mt-1">Book a table in advance for guaranteed luxury dining.</p>
+        <div x-show="userReservations.length === 0" class="text-center py-16 glass-card rounded-2xl border border-slate-800 space-y-2">
+          <i class="fa-regular fa-calendar-xmark text-4xl text-slate-600"></i>
+          <p class="text-slate-300 font-bold text-sm">No reservations found</p>
+          <p class="text-xs text-slate-500">You haven't booked any dining tables yet.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <template x-for="res in userReservations" :key="res.id">
-            <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-3">
+            <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-3">
               <div class="flex justify-between items-start">
                 <div>
                   <h3 class="text-base font-bold text-white" x-text="res.restaurantName"></h3>
-                  <span class="text-xs text-amber-400 font-mono font-bold" x-text="'Booking Code: ' + (res.bookingCode || 'FH-RES')"></span>
+                  <span class="text-[10px] font-mono text-emerald-400" x-text="'Code: ' + res.confirmationCode"></span>
                 </div>
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase"
-                      :class="res.status === 'CONFIRMED' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'"
-                      x-text="res.status"></span>
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase" x-text="res.status || 'CONFIRMED'"></span>
               </div>
 
-              <div class="grid grid-cols-3 gap-2 py-2 border-y border-slate-800 text-xs text-slate-300">
-                <div><i class="fa-regular fa-calendar text-emerald-400 mr-1"></i> <span x-text="res.date"></span></div>
-                <div><i class="fa-regular fa-clock text-emerald-400 mr-1"></i> <span x-text="res.time"></span></div>
-                <div><i class="fa-solid fa-user-group text-emerald-400 mr-1"></i> <span x-text="res.guests + ' Guests'"></span></div>
-              </div>
-
-              <div x-show="res.requests" class="text-xs text-slate-400 italic">
-                "<span x-text="res.requests"></span>"
+              <div class="text-xs text-slate-300 space-y-1.5 pt-2 border-t border-slate-800/80">
+                <div class="flex items-center gap-2"><i class="fa-regular fa-calendar text-emerald-400 w-4"></i> <span x-text="res.date"></span></div>
+                <div class="flex items-center gap-2"><i class="fa-regular fa-clock text-emerald-400 w-4"></i> <span x-text="res.time"></span></div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-user-group text-emerald-400 w-4"></i> <span x-text="res.guests + ' Guests'"></span></div>
               </div>
             </div>
           </template>
         </div>
       </section>
 
-      <!-- ================= TAB 5: PROFILE & ADDRESSES ================= -->
-      <section x-show="currentTab === 'profile'" x-transition.opacity.duration.200ms class="space-y-6 max-w-3xl mx-auto">
+      <!-- ================= TAB 5: PROFILE ================= -->
+      <section x-show="currentTab === 'profile'" x-transition.opacity.duration.200ms class="space-y-6" x-cloak>
         <div>
-          <h1 class="text-2xl font-black text-white">Account Profile</h1>
-          <p class="text-xs text-slate-400">Manage personal details and delivery addresses</p>
+          <h1 class="text-2xl font-black text-white">Profile Settings</h1>
+          <p class="text-xs text-slate-400">Account info and saved delivery addresses</p>
         </div>
 
-        <!-- Personal Info Card -->
-        <div class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-6">
-          <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-2xl bg-slate-800 text-emerald-400 font-black flex items-center justify-center text-xl border border-slate-700">
-              <span x-text="getInitials(userProfile.name)"></span>
-            </div>
-            <div>
-              <h2 class="text-lg font-bold text-white" x-text="userProfile.name || 'Valued Customer'"></h2>
-              <p class="text-xs text-slate-400" x-text="userProfile.email"></p>
-              <span class="inline-block mt-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">Customer Account</span>
-            </div>
-          </div>
-
-          <form @submit.prevent="updateUserProfile()" class="space-y-4 pt-4 border-t border-slate-800">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Profile Information -->
+          <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+            <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Personal Information</h3>
+            
+            <div class="space-y-3">
               <div>
                 <label class="block text-xs text-slate-400 mb-1">Full Name</label>
-                <input type="text" x-model="profileForm.name" class="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs text-white">
+                <input type="text" x-model="userProfile.name" class="w-full p-2.5 rounded-xl glass-input text-xs text-white">
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Email Address</label>
+                <input type="email" x-model="userProfile.email" disabled class="w-full p-2.5 rounded-xl glass-input text-xs text-slate-500 cursor-not-allowed">
               </div>
               <div>
                 <label class="block text-xs text-slate-400 mb-1">Phone Number</label>
-                <input type="tel" x-model="profileForm.phone" placeholder="+91 XXXXX XXXXX" class="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs text-white">
-              </div>
-              <div>
-                <label class="block text-xs text-slate-400 mb-1">City</label>
-                <input type="text" x-model="profileForm.city" class="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs text-white">
+                <input type="text" x-model="userProfile.phone" placeholder="+91 9876543210" class="w-full p-2.5 rounded-xl glass-input text-xs text-white">
               </div>
             </div>
 
-            <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-glow-emerald">
+            <button @click="saveProfile()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-glow-emerald">
               Save Profile Changes
             </button>
-          </form>
-        </div>
-
-        <!-- Saved Addresses Section -->
-        <div class="space-y-4">
-          <div class="flex justify-between items-center">
-            <h3 class="text-lg font-bold text-white">Saved Delivery Addresses</h3>
-            <button @click="openAddressModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 text-xs font-bold transition">
-              <i class="fa-solid fa-plus mr-1"></i> Add Address
-            </button>
           </div>
 
-          <div x-show="addresses.length === 0" class="text-center py-8 glass-card rounded-2xl border border-slate-800">
-            <p class="text-xs text-slate-500">No saved addresses yet.</p>
-          </div>
-
-          <div class="grid grid-cols-1 gap-3">
-            <template x-for="addr in addresses" :key="addr.id">
-              <div class="glass-card p-4 rounded-xl border border-slate-800 flex justify-between items-center">
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 text-[9px] font-bold uppercase rounded bg-slate-800 text-emerald-400" x-text="addr.label || 'Home'"></span>
-                    <span class="text-xs font-bold text-white" x-text="addr.name"></span>
-                  </div>
-                  <p class="text-xs text-slate-400 mt-1" x-text="addr.address + ', ' + addr.city + ' - ' + addr.pincode"></p>
-                </div>
-                <button @click="deleteAddress(addr.id)" class="p-2 text-slate-500 hover:text-rose-400 text-xs">
-                  <i class="fa-regular fa-trash-can"></i>
-                </button>
+          <!-- Saved Address Management -->
+          <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-4">
+            <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2">Saved Addresses</h3>
+            
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Address Label</label>
+                <input type="text" x-model="addressForm.label" placeholder="Home, Work, etc." class="w-full p-2.5 rounded-xl glass-input text-xs text-white">
               </div>
-            </template>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Complete Address</label>
+                <textarea x-model="addressForm.address" placeholder="Flat No, Building, Street..." class="w-full p-2.5 rounded-xl glass-input text-xs text-white h-20"></textarea>
+              </div>
+            </div>
+
+            <button @click="saveAddress()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition border border-slate-700">
+              <i class="fa-solid fa-plus mr-1"></i> Add Delivery Address
+            </button>
+
+            <!-- List of saved addresses -->
+            <div class="space-y-2 pt-2">
+              <template x-for="(addr, id) in userAddresses" :key="id">
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex justify-between items-center text-xs">
+                  <div>
+                    <span class="font-bold text-emerald-400" x-text="addr.label"></span>
+                    <p class="text-slate-400 truncate max-w-[200px]" x-text="addr.address"></p>
+                  </div>
+                  <button @click="deleteAddress(id)" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
-
       </section>
 
     </main>
 
-    <!-- ================= MODAL / DRAWER 1: SLIDE-OVER CART ================= -->
-    <div x-show="cartDrawerOpen" x-transition.opacity.duration.300ms class="fixed inset-0 z-50 overflow-hidden bg-slate-950/80 backdrop-blur-sm flex justify-end">
-      <div @click.outside="cartDrawerOpen = false" class="w-full max-w-md bg-slate-900 h-full border-l border-slate-800 flex flex-col justify-between shadow-2xl">
-        
-        <!-- Cart Header -->
-        <div class="p-5 border-b border-slate-800 flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-bag-shopping text-emerald-400"></i>
-            <h3 class="font-bold text-white text-base">Your Gourmet Order</h3>
-          </div>
-          <button @click="cartDrawerOpen = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-        </div>
-
-        <!-- Cart Items List -->
-        <div class="flex-1 overflow-y-auto p-5 space-y-4">
-          <div x-show="cart.length === 0" class="text-center py-16 text-slate-500">
-            <i class="fa-solid fa-basket-shopping text-4xl mb-3 block"></i>
-            <p class="text-sm">Your cart is currently empty.</p>
-          </div>
-
-          <template x-for="item in cart" :key="item.id">
-            <div class="glass-card p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div class="flex-1 pr-2">
-                <h4 class="text-xs font-bold text-white truncate" x-text="item.name"></h4>
-                <span class="text-xs text-emerald-400 font-semibold" x-text="'₹' + item.price"></span>
-              </div>
-              
-              <div class="flex items-center gap-2 bg-slate-950 rounded-lg border border-slate-800 px-2 py-1">
-                <button @click="updateCartQty(item.id, -1)" class="text-slate-400 hover:text-emerald-400 text-xs px-1">-</button>
-                <span class="text-xs font-bold text-white px-1" x-text="item.quantity"></span>
-                <button @click="updateCartQty(item.id, 1)" class="text-slate-400 hover:text-emerald-400 text-xs px-1">+</button>
-              </div>
-            </div>
-          </template>
-
-          <!-- Coupon Input -->
-          <div x-show="cart.length > 0" class="pt-4 border-t border-slate-800 space-y-2">
-            <label class="text-xs text-slate-400 font-semibold">Apply Coupon</label>
-            <div class="flex gap-2">
-              <input type="text" x-model="appliedCouponCode" placeholder="Enter Code" class="flex-1 px-3 py-1.5 rounded-lg glass-input text-xs text-white uppercase">
-              <button @click="applyCouponCode(appliedCouponCode)" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs">Apply</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Cart Footer & Price Summary -->
-        <div x-show="cart.length > 0" class="p-5 border-t border-slate-800 glass-panel space-y-3">
-          <div class="text-xs space-y-1.5 text-slate-300">
-            <div class="flex justify-between"><span>Subtotal</span><span x-text="'₹' + cartTotals.subtotal"></span></div>
-            <div class="flex justify-between"><span>Packaging Fee</span><span x-text="'₹' + cartTotals.packaging"></span></div>
-            <div class="flex justify-between"><span>Estimated Delivery</span><span x-text="'₹' + cartTotals.delivery"></span></div>
-            <div x-show="cartTotals.discount > 0" class="flex justify-between text-amber-400 font-bold">
-              <span>Coupon Discount</span><span x-text="'-₹' + cartTotals.discount"></span>
-            </div>
-            <div class="flex justify-between text-sm font-black text-white pt-2 border-t border-slate-800">
-              <span>Grand Total</span><span class="text-emerald-400" x-text="'₹' + cartTotals.grandTotal"></span>
-            </div>
-          </div>
-
-          <button @click="proceedToCheckout()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-glow-emerald">
-            Proceed to Checkout
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ================= MODAL 2: CHECKOUT SCREEN ================= -->
-    <div x-show="showCheckoutModal" x-transition.opacity.duration.200ms class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div @click.outside="showCheckoutModal = false" class="glass-panel w-full max-w-xl rounded-3xl border border-slate-800 p-6 sm:p-8 space-y-6">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-          <h2 class="text-xl font-bold text-white">Checkout & Order Review</h2>
-          <button @click="showCheckoutModal = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-        </div>
-
-        <!-- Address Selection -->
-        <div class="space-y-2">
-          <label class="text-xs font-bold text-slate-300">Select Delivery Address</label>
-          <select x-model="selectedAddressId" class="w-full p-3 rounded-xl glass-input text-xs text-white bg-slate-900">
-            <option value="">-- Choose an Address --</option>
-            <template x-for="addr in addresses" :key="addr.id">
-              <option :value="addr.id" x-text="addr.label + ': ' + addr.address + ', ' + addr.city"></option>
-            </template>
-          </select>
-        </div>
-
-        <!-- Payment Method -->
-        <div class="space-y-2">
-          <label class="text-xs font-bold text-slate-300">Payment Option</label>
-          <div class="grid grid-cols-2 gap-3">
-            <button @click="checkoutPaymentMethod = 'COD'" class="p-3 rounded-xl border text-xs font-bold text-center transition"
-                    :class="checkoutPaymentMethod === 'COD' ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'glass-card border-slate-800 text-slate-400'">
-              Cash on Delivery
-            </button>
-            <button @click="checkoutPaymentMethod = 'ONLINE'" class="p-3 rounded-xl border text-xs font-bold text-center transition"
-                    :class="checkoutPaymentMethod === 'ONLINE' ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'glass-card border-slate-800 text-slate-400'">
-              Online Gateway
-            </button>
-          </div>
-          <p x-show="checkoutPaymentMethod === 'ONLINE'" class="text-[10px] text-amber-400 mt-1">
-            * Note: Payment integration required. Defaulting to verified order reservation state.
-          </p>
-        </div>
-
-        <button @click="placeOrder()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider transition shadow-glow-emerald">
-          Confirm & Place Order
-        </button>
-      </div>
-    </div>
-
-    <!-- ================= MODAL 3: TABLE RESERVATION MODAL ================= -->
-    <div x-show="showReservationModal" x-transition.opacity.duration.200ms class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div @click.outside="showReservationModal = false" class="glass-panel w-full max-w-md rounded-3xl border border-slate-800 p-6 space-y-4">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-          <h3 class="text-lg font-bold text-white">Reserve a VIP Table</h3>
-          <button @click="showReservationModal = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <form @submit.prevent="submitReservation()" class="space-y-3 text-xs">
-          <div>
-            <label class="block text-slate-400 mb-1">Restaurant</label>
-            <input type="text" :value="reservationForm.restaurantName" disabled class="w-full p-2.5 rounded-xl glass-input text-slate-400 bg-slate-900/50">
-          </div>
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-slate-400 mb-1">Date</label>
-              <input type="date" x-model="reservationForm.date" required class="w-full p-2.5 rounded-xl glass-input text-white">
-            </div>
-            <div>
-              <label class="block text-slate-400 mb-1">Time</label>
-              <input type="time" x-model="reservationForm.time" required class="w-full p-2.5 rounded-xl glass-input text-white">
-            </div>
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Number of Guests</label>
-            <input type="number" min="1" max="20" x-model="reservationForm.guests" required class="w-full p-2.5 rounded-xl glass-input text-white">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Special Requests</label>
-            <textarea x-model="reservationForm.requests" rows="2" placeholder="Seating preference, birthday, allergy..." class="w-full p-2.5 rounded-xl glass-input text-white"></textarea>
-          </div>
-
-          <button type="submit" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
-            Confirm Reservation
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- ================= MODAL 4: ADD ADDRESS MODAL ================= -->
-    <div x-show="showAddressModal" x-transition.opacity.duration.200ms class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div @click.outside="showAddressModal = false" class="glass-panel w-full max-w-md rounded-3xl border border-slate-800 p-6 space-y-4">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-          <h3 class="text-lg font-bold text-white">Add Delivery Address</h3>
-          <button @click="showAddressModal = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <form @submit.prevent="saveAddress()" class="space-y-3 text-xs">
-          <div>
-            <label class="block text-slate-400 mb-1">Address Label (e.g. Home, Office)</label>
-            <input type="text" x-model="addressForm.label" required placeholder="Home" class="w-full p-2.5 rounded-xl glass-input text-white">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Full Name</label>
-            <input type="text" x-model="addressForm.name" required class="w-full p-2.5 rounded-xl glass-input text-white">
-          </div>
-          <div>
-            <label class="block text-slate-400 mb-1">Full Address / Flat / Street</label>
-            <textarea x-model="addressForm.address" required rows="2" class="w-full p-2.5 rounded-xl glass-input text-white"></textarea>
-          </div>
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-slate-400 mb-1">City</label>
-              <input type="text" x-model="addressForm.city" required class="w-full p-2.5 rounded-xl glass-input text-white">
-            </div>
-            <div>
-              <label class="block text-slate-400 mb-1">Pincode (6-digit)</label>
-              <input type="text" x-model="addressForm.pincode" required pattern="^[1-9][0-9]{5}$" placeholder="400001" class="w-full p-2.5 rounded-xl glass-input text-white">
-            </div>
-          </div>
-
-          <button type="submit" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition">
-            Save Address
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 glass-panel border-t border-slate-800 px-2 py-2 pb-safe">
-      <div class="grid grid-cols-4 gap-1 text-center">
-        <button @click="switchTab('home')" class="py-1.5 flex flex-col items-center gap-1 transition"
-                :class="currentTab === 'home' || currentTab === 'menu' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
-          <i class="fa-solid fa-compass text-lg"></i>
-          <span class="text-[10px]">Explore</span>
-        </button>
-
-        <button @click="switchTab('orders')" class="py-1.5 flex flex-col items-center gap-1 transition relative"
-                :class="currentTab === 'orders' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
-          <i class="fa-solid fa-clock-rotate-left text-lg"></i>
-          <span class="text-[10px]">Orders</span>
-        </button>
-
-        <button @click="switchTab('reservations')" class="py-1.5 flex flex-col items-center gap-1 transition"
-                :class="currentTab === 'reservations' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
-          <i class="fa-regular fa-calendar-check text-lg"></i>
-          <span class="text-[10px]">Bookings</span>
-        </button>
-
-        <button @click="switchTab('profile')" class="py-1.5 flex flex-col items-center gap-1 transition"
-                :class="currentTab === 'profile' ? 'text-emerald-400 font-bold' : 'text-slate-500'">
-          <i class="fa-regular fa-user text-lg"></i>
-          <span class="text-[10px]">Profile</span>
-        </button>
-      </div>
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-panel border-t border-slate-800 flex justify-around py-3 px-2">
+      <button @click="switchTab('home')" class="flex flex-col items-center gap-1 text-[11px]" :class="currentTab === 'home' ? 'text-emerald-400 font-bold' : 'text-slate-400'">
+        <i class="fa-solid fa-house text-base"></i> Explore
+      </button>
+      <button @click="switchTab('orders')" class="flex flex-col items-center gap-1 text-[11px]" :class="currentTab === 'orders' ? 'text-emerald-400 font-bold' : 'text-slate-400'">
+        <i class="fa-solid fa-receipt text-base"></i> Orders
+      </button>
+      <button @click="switchTab('reservations')" class="flex flex-col items-center gap-1 text-[11px]" :class="currentTab === 'reservations' ? 'text-emerald-400 font-bold' : 'text-slate-400'">
+        <i class="fa-regular fa-calendar-check text-base"></i> Bookings
+      </button>
+      <button @click="switchTab('profile')" class="flex flex-col items-center gap-1 text-[11px]" :class="currentTab === 'profile' ? 'text-emerald-400 font-bold' : 'text-slate-400'">
+        <i class="fa-regular fa-user text-base"></i> Account
+      </button>
     </nav>
-
   </div>
 
-  <!-- ================= FIREBASE MODULE INITIALIZATION & APPLICATION STATE ================= -->
+  <!-- CART SLIDE-OVER DRAWER -->
+  <div x-show="showCartDrawer" class="fixed inset-0 z-[9990] flex justify-end" x-cloak>
+    <div @click="showCartDrawer = false" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+    
+    <div class="relative w-full max-w-md bg-slate-900 border-l border-slate-800 h-full flex flex-col z-10 p-6 space-y-6">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-bag-shopping text-emerald-400"></i> Your Order Cart</h2>
+        <button @click="showCartDrawer = false" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-3">
+        <template x-for="item in cart" :key="item.id">
+          <div class="flex justify-between items-center glass-card p-3 rounded-xl border border-slate-800">
+            <div>
+              <p class="text-xs font-bold text-white" x-text="item.name"></p>
+              <p class="text-xs text-emerald-400 font-semibold" x-text="'₹' + item.price"></p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button @click="updateCartQuantity(item.id, -1)" class="w-7 h-7 rounded-lg bg-slate-800 text-white font-bold text-xs flex items-center justify-center">-</button>
+              <span class="text-xs font-bold text-white w-4 text-center" x-text="item.quantity"></span>
+              <button @click="updateCartQuantity(item.id, 1)" class="w-7 h-7 rounded-lg bg-slate-800 text-white font-bold text-xs flex items-center justify-center">+</button>
+            </div>
+          </div>
+        </template>
+        <div x-show="cart.length === 0" class="text-center py-16 text-slate-500 text-xs">
+          Your cart is currently empty.
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800 pt-4 space-y-3">
+        <div class="flex justify-between text-xs text-slate-400">
+          <span>Subtotal</span>
+          <span class="text-white" x-text="'₹' + cartSubtotal"></span>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400">
+          <span>Taxes & Delivery Fee</span>
+          <span class="text-white" x-text="'₹' + deliveryFee"></span>
+        </div>
+        <div class="flex justify-between text-sm font-bold text-white pt-2 border-t border-slate-800">
+          <span>Grand Total</span>
+          <span class="text-emerald-400" x-text="'₹' + cartGrandTotal"></span>
+        </div>
+
+        <button @click="processCheckout()" :disabled="cart.length === 0 || isSubmitting" 
+                class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-800 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-glow-emerald">
+          <span x-text="isSubmitting ? 'Placing Order...' : 'Confirm Order & Pay'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE RESERVATION MODAL -->
+  <div x-show="showReservationModal" class="fixed inset-0 z-[9990] flex items-center justify-center p-4" x-cloak>
+    <div @click="showReservationModal = false" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+
+    <div class="relative w-full max-w-md glass-panel p-6 rounded-3xl border border-slate-800 z-10 space-y-4">
+      <h3 class="text-base font-bold text-white">Book Table at <span class="text-emerald-400" x-text="modalRestaurant?.name"></span></h3>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Date</label>
+          <input type="date" x-model="resForm.date" class="w-full p-2.5 rounded-xl glass-input text-xs text-white">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Time</label>
+          <input type="time" x-model="resForm.time" class="w-full p-2.5 rounded-xl glass-input text-xs text-white">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Number of Guests</label>
+          <input type="number" min="1" max="12" x-model="resForm.guests" class="w-full p-2.5 rounded-xl glass-input text-xs text-white">
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button @click="showReservationModal = false" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-xs font-bold text-slate-300 hover:bg-slate-700">Cancel</button>
+        <button @click="confirmReservation()" :disabled="isSubmitting" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow-glow-emerald">
+          <span x-text="isSubmitting ? 'Booking...' : 'Confirm Booking'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONE-RESTAURANT CART CONFLICT MODAL -->
+  <div x-show="showConflictModal" class="fixed inset-0 z-[9995] flex items-center justify-center p-4" x-cloak>
+    <div class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+    <div class="relative max-w-sm w-full glass-panel p-6 rounded-3xl border border-slate-800 z-10 space-y-4 text-center">
+      <i class="fa-solid fa-triangle-exclamation text-3xl text-amber-400"></i>
+      <h3 class="text-base font-bold text-white">Replace Cart Items?</h3>
+      <p class="text-xs text-slate-400">Your cart contains items from another restaurant. Would you like to clear the cart and add items from this restaurant instead?</p>
+      <div class="flex gap-2 pt-2">
+        <button @click="showConflictModal = false" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-xs font-bold text-slate-300">Cancel</button>
+        <button @click="clearAndAddToCart()" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white">Clear & Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREBASE MODULAR SDK LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      onAuthStateChanged, 
-      signOut 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getDatabase, 
-      ref, 
-      get, 
-      set, 
-      push, 
-      update, 
-      remove, 
-      onValue, 
-      query, 
-      orderByChild, 
-      equalTo 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, get, set, push, onValue, off, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Production Firebase Configuration
+    // Firebase Credentials
     const firebaseConfig = {
       apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
       authDomain: "yukti-247.firebaseapp.com",
@@ -958,632 +727,494 @@
       measurementId: "G-6BGFCBKTD7"
     };
 
-    // Initialize Firebase Services Safely
+    // Robust Singleton Initialization
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getDatabase(app);
+    const db = getDatabase(app, "https://yukti-247-default-rtdb.firebaseio.com");
 
-    // Primary Reactive Alpine Application
     window.feasthubApp = function() {
       return {
-        // Auth & App States
-        authLoading: true,
-        authLoadingMessage: "Authenticating Secure Portal...",
-        showAuthRetry: false,
-        currentUser: null,
-        userProfile: {},
+        appState: 'INITIALIZING', // INITIALIZING, AUTHENTICATING, AUTH_REQUIRED, LOADING_DATA, READY, ERROR
+        statusMessage: 'Connecting to FeastHub...',
+        isOnline: navigator.onLine,
+        isSubmitting: false,
+        
+        authUser: null,
+        userProfile: { name: '', email: '', phone: '', photoURL: '' },
+        userAddresses: {},
+        addressForm: { label: '', address: '' },
+
         currentTab: 'home',
-        dataLoading: false,
-
-        // Fallback Media Assets
-        fallbackCover: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
-        fallbackFood: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80',
-
-        // Data Storage
-        restaurants: [],
-        filteredRestaurants: [],
-        menuItems: [],
-        filteredMenuItems: [],
-        categories: [],
-        offers: [],
-        favorites: [],
-        userOrders: [],
-        userReservations: [],
-        addresses: [],
-        cart: [],
-
-        // UI Filters & Selections
         searchQuery: '',
         selectedCategory: 'ALL',
-        activeRestaurant: null,
-        menuFilter: 'ALL',
-        menuSearchQuery: '',
-        
-        // Modals & Drawers
-        cartDrawerOpen: false,
-        showCheckoutModal: false,
+        filterVegOnly: false,
+        filterOpenOnly: false,
+
+        showCartDrawer: false,
         showReservationModal: false,
-        showAddressModal: false,
-        showNotificationsModal: false,
+        showConflictModal: false,
+        pendingConflictItem: null,
+        modalRestaurant: null,
 
-        // Form Binds
-        appliedCouponCode: '',
-        appliedCoupon: null,
-        selectedAddressId: '',
-        checkoutPaymentMethod: 'COD',
-        
-        profileForm: { name: '', phone: '', city: '' },
-        reservationForm: { restaurantId: '', restaurantName: '', date: '', time: '', guests: 2, requests: '' },
-        addressForm: { label: 'Home', name: '', address: '', city: '', pincode: '' },
-
-        // Toast Messages Queue
         toasts: [],
+        categories: [],
+        restaurants: [],
+        filteredRestaurants: [],
+        activeRestaurant: null,
+        activeMenuItems: [],
+        favorites: [],
+        cart: [],
+        cartRestaurantId: null,
+        cartRestaurantName: '',
+        
+        userOrders: [],
+        userReservations: [],
 
-        // --- 1. INITIALIZATION & AUTH GUARD ---
-        initApp() {
-          this.loadLocalCart();
+        resForm: { date: '', time: '', guests: 2 },
 
-          // Auth connection safety timer
-          const safetyTimer = setTimeout(() => {
-            if (this.authLoading) {
-              this.showAuthRetry = true;
-              console.warn("[Firebase Auth] Auth verification taking longer than expected.");
-            }
-          }, 6000);
+        async initApp() {
+          this.appState = 'INITIALIZING';
+          this.statusMessage = 'Connecting to database...';
 
-          // Primary Authentication Listener
+          window.addEventListener('online', () => this.isOnline = true);
+          window.addEventListener('offline', () => this.isOnline = false);
+
+          // 1. Fetch Public Data First (Restaurants & Categories)
+          await this.loadPublicCatalog();
+
+          // 2. Setup Firebase Auth Listener
+          this.appState = 'AUTHENTICATING';
+          this.statusMessage = 'Verifying security credentials...';
+
           onAuthStateChanged(auth, async (user) => {
-            clearTimeout(safetyTimer);
             if (user) {
-              this.currentUser = user;
-              await this.verifyAndLoadUserRole(user);
+              this.authUser = user;
+              this.appState = 'LOADING_DATA';
+              this.statusMessage = 'Loading customer profile...';
+              await this.loadCustomerProfile(user);
+              this.setupRealtimeListeners(user.uid);
             } else {
-              console.info("[Firebase Auth] No authenticated user found. Redirecting to sign in.");
-              this.redirectToLogin();
+              this.authUser = null;
             }
+            this.appState = 'READY';
           }, (error) => {
-            clearTimeout(safetyTimer);
-            console.error("[Firebase Auth Error]", error);
-            this.addToast("Authentication error occurred. Please sign in again.", "error");
-            this.redirectToLogin();
+            console.error("Auth Listener Error:", error);
+            this.handleFirebaseError(error);
           });
         },
 
-        retryAuth() {
-          window.location.reload();
-        },
-
-        redirectToLogin() {
-          window.location.href = "index.html";
-        },
-
-        async verifyAndLoadUserRole(user) {
+        async loadPublicCatalog() {
           try {
-            const userRef = ref(db, `users/${user.uid}`);
-            const snapshot = await get(userRef);
-
-            if (snapshot.exists()) {
-              const data = snapshot.val();
-              
-              // Enforce CUSTOMER Role Access Only
-              if (data.role && data.role !== 'CUSTOMER') {
-                this.addToast("Access Denied: Customer Portal is for customer accounts only.", "error");
-                setTimeout(() => this.signOutUser(), 2000);
-                return;
-              }
-
-              this.userProfile = { ...data, email: user.email };
-            } else {
-              // Create minimal safe profile if non-existent
-              const newProfile = {
-                name: user.displayName || "Valued Customer",
-                email: user.email,
-                role: "CUSTOMER",
-                createdAt: Date.now()
-              };
-              await set(userRef, newProfile);
-              this.userProfile = newProfile;
+            // Load Categories
+            const catSnap = await get(ref(db, "categories"));
+            if (catSnap.exists()) {
+              const data = catSnap.val();
+              this.categories = Object.keys(data).map(k => ({ id: k, ...data[k] }));
             }
 
-            this.profileForm.name = this.userProfile.name || '';
-            this.profileForm.phone = this.userProfile.phone || '';
-            this.profileForm.city = this.userProfile.city || 'Mumbai';
-
-            // Load Primary Core Application Data
-            await Promise.all([
-              this.loadRestaurants(),
-              this.loadCategories(),
-              this.loadOffers(),
-              this.loadUserDataListeners()
-            ]);
-
-            this.authLoading = false;
-          } catch (err) {
-            console.error("[Customer Profile Error]", err);
-            this.addToast("Failed to load user profile.", "error");
-            this.authLoading = false;
-          }
-        },
-
-        // --- 2. REALTIME DATABASE DATA LOADERS ---
-        async loadRestaurants() {
-          this.dataLoading = true;
-          try {
-            const restRef = ref(db, 'restaurant');
-            const snap = await get(restRef);
-            if (snap.exists()) {
-              const val = snap.val();
-              this.restaurants = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+            // Load Restaurants
+            const restSnap = await get(ref(db, "restaurants"));
+            if (restSnap.exists()) {
+              const data = restSnap.val();
+              this.restaurants = Object.keys(data).map(k => ({ id: k, ...data[k] }));
               this.filteredRestaurants = [...this.restaurants];
             } else {
               this.restaurants = [];
               this.filteredRestaurants = [];
             }
           } catch (err) {
-            console.error("[Restaurant Data Error]", err);
-          } finally {
-            this.dataLoading = false;
+            console.error("Catalog Load Error:", err);
           }
         },
 
-        async loadCategories() {
+        async loadCustomerProfile(user) {
           try {
-            const snap = await get(ref(db, 'categories'));
-            if (snap.exists()) {
-              const val = snap.val();
-              this.categories = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+            const custRef = ref(db, `customers/${user.uid}`);
+            const custSnap = await get(custRef);
+
+            if (custSnap.exists()) {
+              this.userProfile = custSnap.val();
+            } else {
+              // Create default profile if not present
+              const newProfile = {
+                name: user.displayName || 'Customer',
+                email: user.email || '',
+                phone: '',
+                photoURL: user.photoURL || '',
+                createdAt: serverTimestamp()
+              };
+              await set(custRef, newProfile);
+              this.userProfile = newProfile;
+            }
+
+            // Load Cart Persistence
+            const cartSnap = await get(ref(db, `carts/${user.uid}`));
+            if (cartSnap.exists()) {
+              const cData = cartSnap.val();
+              this.cart = cData.items || [];
+              this.cartRestaurantId = cData.restaurantId || null;
+              this.cartRestaurantName = cData.restaurantName || '';
+            }
+
+            // Load Addresses
+            const addrSnap = await get(ref(db, `addresses/${user.uid}`));
+            if (addrSnap.exists()) {
+              this.userAddresses = addrSnap.val();
             }
           } catch (err) {
-            console.error("[Category Data Error]", err);
+            console.error("Profile Load Error:", err);
+            this.handleFirebaseError(err);
           }
         },
 
-        async loadOffers() {
-          try {
-            const snap = await get(ref(db, 'offers'));
-            if (snap.exists()) {
-              const val = snap.val();
-              this.offers = Object.keys(val)
-                .map(key => ({ id: key, ...val[key] }))
-                .filter(o => o.active !== false);
-            }
-          } catch (err) {
-            console.error("[Offers Load Error]", err);
-          }
-        },
-
-        async loadUserDataListeners() {
-          if (!this.currentUser) return;
-          const uid = this.currentUser.uid;
-
-          // Realtime Orders Listener
-          const ordersQuery = query(ref(db, 'orders'), orderByChild('userId'), equalTo(uid));
-          onValue(ordersQuery, (snap) => {
-            if (snap.exists()) {
-              const val = snap.val();
-              this.userOrders = Object.keys(val)
-                .map(k => ({ id: k, ...val[k] }))
-                .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setupRealtimeListeners(uid) {
+          // Listen for Realtime Orders
+          const ordersRef = ref(db, "orders");
+          onValue(ordersRef, (snapshot) => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              this.userOrders = Object.keys(data)
+                .map(k => ({ id: k, ...data[k] }))
+                .filter(o => o.customerId === uid)
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
             } else {
               this.userOrders = [];
             }
-          }, (err) => console.error("[Orders Listener Error]", err));
+          });
 
-          // Realtime Reservations Listener
-          const resQuery = query(ref(db, 'reservations'), orderByChild('userId'), equalTo(uid));
-          onValue(resQuery, (snap) => {
-            if (snap.exists()) {
-              const val = snap.val();
-              this.userReservations = Object.keys(val)
-                .map(k => ({ id: k, ...val[k] }))
-                .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+          // Listen for Reservations
+          const resRef = ref(db, "reservations");
+          onValue(resRef, (snapshot) => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              this.userReservations = Object.keys(data)
+                .map(k => ({ id: k, ...data[k] }))
+                .filter(r => r.customerId === uid)
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
             } else {
               this.userReservations = [];
             }
           });
-
-          // Realtime Addresses Listener
-          onValue(ref(db, `addresses/${uid}`), (snap) => {
-            if (snap.exists()) {
-              const val = snap.val();
-              this.addresses = Object.keys(val).map(k => ({ id: k, ...val[k] }));
-              if (this.addresses.length > 0 && !this.selectedAddressId) {
-                this.selectedAddressId = this.addresses[0].id;
-              }
-            } else {
-              this.addresses = [];
-            }
-          });
-
-          // Favorites Listener
-          onValue(ref(db, `users/${uid}/favorites`), (snap) => {
-            this.favorites = snap.exists() ? Object.keys(snap.val()) : [];
-          });
         },
 
-        // --- 3. UI INTERACTIONS & NAVIGATION ---
+        async loginWithGoogle() {
+          const provider = new GoogleAuthProvider();
+          try {
+            await signInWithPopup(auth, provider);
+            this.showToast('Successfully signed in!', 'success');
+          } catch (err) {
+            console.error("Google Sign-in Error:", err);
+            this.showToast('Authentication failed. Please try again.', 'error');
+          }
+        },
+
+        async logout() {
+          try {
+            await signOut(auth);
+            this.userProfile = { name: '', email: '', phone: '', photoURL: '' };
+            this.cart = [];
+            this.userOrders = [];
+            this.userReservations = [];
+            this.showToast('Logged out successfully', 'info');
+          } catch (err) {
+            this.showToast('Logout error', 'error');
+          }
+        },
+
+        continueAsGuest() {
+          this.appState = 'READY';
+          this.showToast('Browsing in guest mode', 'info');
+        },
+
         switchTab(tab) {
           this.currentTab = tab;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
         },
 
         filterCatalog() {
-          let list = [...this.restaurants];
-
-          if (this.searchQuery.trim() !== '') {
-            const q = this.searchQuery.toLowerCase();
-            list = list.filter(r => 
-              (r.name && r.name.toLowerCase().includes(q)) || 
-              (r.cuisines && r.cuisines.toLowerCase().includes(q))
-            );
-          }
-
-          if (this.selectedCategory !== 'ALL') {
-            const cat = this.selectedCategory.toLowerCase();
-            list = list.filter(r => r.cuisines && r.cuisines.toLowerCase().includes(cat));
-          }
-
-          this.filteredRestaurants = list;
+          const q = this.searchQuery.toLowerCase().trim();
+          this.filteredRestaurants = this.restaurants.filter(r => {
+            const matchesQuery = !q || (r.name && r.name.toLowerCase().includes(q)) || (r.cuisines && r.cuisines.toLowerCase().includes(q));
+            const matchesCategory = this.selectedCategory === 'ALL' || (r.cuisines && r.cuisines.toLowerCase().includes(this.selectedCategory.toLowerCase()));
+            const matchesVeg = !this.filterVegOnly || r.isPureVeg === true;
+            const matchesOpen = !this.filterOpenOnly || r.isOpen !== false;
+            return matchesQuery && matchesCategory && matchesVeg && matchesOpen;
+          });
         },
 
-        async openRestaurantMenu(restaurant) {
-          this.activeRestaurant = restaurant;
+        async openRestaurantMenu(rest) {
+          this.activeRestaurant = rest;
+          this.activeMenuItems = [];
           this.switchTab('menu');
 
           try {
-            const snap = await get(ref(db, 'menuItems'));
-            if (snap.exists()) {
-              const val = snap.val();
-              this.menuItems = Object.keys(val)
-                .map(k => ({ id: k, ...val[k] }))
-                .filter(item => item.restaurantId === restaurant.id || !item.restaurantId);
-              this.applyMenuFilters();
-            } else {
-              this.menuItems = [];
-              this.filteredMenuItems = [];
+            const menuSnap = await get(ref(db, "menuItems"));
+            if (menuSnap.exists()) {
+              const data = menuSnap.val();
+              this.activeMenuItems = Object.keys(data)
+                .map(k => ({ id: k, ...data[k] }))
+                .filter(m => m.restaurantId === rest.id && m.isAvailable !== false);
             }
           } catch (err) {
-            console.error("[Menu Data Error]", err);
-            this.addToast("Failed to load restaurant menu.", "error");
+            console.error("Menu Load Error:", err);
           }
-        },
-
-        applyMenuFilters() {
-          let list = [...this.menuItems];
-
-          if (this.menuFilter === 'VEG') list = list.filter(i => i.isVeg === true);
-          if (this.menuFilter === 'NONVEG') list = list.filter(i => i.isVeg === false);
-          if (this.menuFilter === 'BESTSELLER') list = list.filter(i => i.isBestseller === true);
-
-          if (this.menuSearchQuery.trim() !== '') {
-            const q = this.menuSearchQuery.toLowerCase();
-            list = list.filter(i => i.name && i.name.toLowerCase().includes(q));
-          }
-
-          this.filteredMenuItems = list;
-        },
-
-        // --- 4. CART & ORDER LOGIC ---
-        loadLocalCart() {
-          try {
-            const saved = localStorage.getItem('feasthub_cart');
-            if (saved) this.cart = JSON.parse(saved);
-          } catch (e) {
-            this.cart = [];
-          }
-        },
-
-        saveLocalCart() {
-          try {
-            localStorage.setItem('feasthub_cart', JSON.stringify(this.cart));
-          } catch (e) {}
-        },
-
-        toggleCartDrawer() {
-          this.cartDrawerOpen = !this.cartDrawerOpen;
         },
 
         addToCart(item) {
-          // Check Restaurant Conflict
-          if (this.cart.length > 0 && this.cart[0].restaurantId && item.restaurantId) {
-            if (this.cart[0].restaurantId !== item.restaurantId) {
-              if (confirm("Your cart contains items from another restaurant. Clear cart and add this item?")) {
-                this.cart = [];
-              } else {
-                return;
-              }
-            }
+          // Check for One-Restaurant Cart Protection
+          if (this.cart.length > 0 && this.cartRestaurantId !== this.activeRestaurant.id) {
+            this.pendingConflictItem = item;
+            this.showConflictModal = true;
+            return;
           }
 
-          const existing = this.cart.find(i => i.id === item.id);
+          this.cartRestaurantId = this.activeRestaurant.id;
+          this.cartRestaurantName = this.activeRestaurant.name;
+
+          const existing = this.cart.find(c => c.id === item.id);
           if (existing) {
-            existing.quantity += 1;
+            existing.quantity++;
           } else {
-            this.cart.push({
-              id: item.id,
-              restaurantId: item.restaurantId || (this.activeRestaurant ? this.activeRestaurant.id : ''),
-              name: item.name,
-              price: Number(item.price),
-              quantity: 1
-            });
+            this.cart.push({ ...item, quantity: 1 });
           }
 
-          this.saveLocalCart();
-          this.addToast(`Added ${item.name} to cart`, "success");
+          this.syncCartToFirebase();
+          this.showToast(`${item.name} added to cart`, 'success');
         },
 
-        updateCartQty(itemId, delta) {
-          const idx = this.cart.findIndex(i => i.id === itemId);
-          if (idx !== -1) {
-            this.cart[idx].quantity += delta;
-            if (this.cart[idx].quantity <= 0) {
-              this.cart.splice(idx, 1);
-            }
-            this.saveLocalCart();
+        clearAndAddToCart() {
+          this.cart = [];
+          this.showConflictModal = false;
+          if (this.pendingConflictItem) {
+            this.addToCart(this.pendingConflictItem);
+            this.pendingConflictItem = null;
+          }
+        },
+
+        updateCartQuantity(id, change) {
+          const item = this.cart.find(c => c.id === id);
+          if (!item) return;
+          
+          item.quantity += change;
+          if (item.quantity <= 0) {
+            this.cart = this.cart.filter(c => c.id !== id);
+          }
+          if (this.cart.length === 0) {
+            this.cartRestaurantId = null;
+            this.cartRestaurantName = '';
+          }
+          this.syncCartToFirebase();
+        },
+
+        async syncCartToFirebase() {
+          if (!this.authUser) return;
+          try {
+            await set(ref(db, `carts/${this.authUser.uid}`), {
+              restaurantId: this.cartRestaurantId,
+              restaurantName: this.cartRestaurantName,
+              items: this.cart
+            });
+          } catch (err) {
+            console.error("Cart Sync Error:", err);
           }
         },
 
         get cartItemsCount() {
-          return this.cart.reduce((acc, item) => acc + item.quantity, 0);
+          return this.cart.reduce((sum, item) => sum + item.quantity, 0);
         },
 
-        get cartTotals() {
-          const subtotal = this.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-          const packaging = subtotal > 0 ? 30 : 0;
-          const delivery = subtotal > 0 ? 45 : 0;
-          let discount = 0;
-
-          if (this.appliedCoupon) {
-            if (this.appliedCoupon.type === 'PERCENTAGE') {
-              discount = (subtotal * this.appliedCoupon.value) / 100;
-              if (this.appliedCoupon.maximumDiscount) {
-                discount = Math.min(discount, this.appliedCoupon.maximumDiscount);
-              }
-            } else if (this.appliedCoupon.type === 'FIXED') {
-              discount = this.appliedCoupon.value;
-            }
-          }
-
-          const grandTotal = Math.max(0, subtotal + packaging + delivery - discount);
-
-          return { subtotal, packaging, delivery, discount, grandTotal };
+        get cartSubtotal() {
+          return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         },
 
-        applyCouponCode(code) {
-          if (!code) return;
-          const cleanCode = code.trim().toUpperCase();
-          const match = this.offers.find(o => o.code === cleanCode);
+        get deliveryFee() {
+          return this.cart.length > 0 ? 40 : 0;
+        },
 
-          if (!match) {
-            this.addToast("Invalid coupon code.", "error");
+        get cartGrandTotal() {
+          return this.cartSubtotal + this.deliveryFee;
+        },
+
+        async processCheckout() {
+          if (!this.authUser) {
+            this.showToast('Please sign in to place orders', 'warning');
+            this.appState = 'AUTH_REQUIRED';
             return;
           }
-
-          if (match.minimumOrder && this.cartTotals.subtotal < match.minimumOrder) {
-            this.addToast(`Minimum order of ₹${match.minimumOrder} required for this coupon.`, "warning");
-            return;
-          }
-
-          this.appliedCoupon = match;
-          this.appliedCouponCode = cleanCode;
-          this.addToast(`Coupon ${cleanCode} applied!`, "success");
-        },
-
-        proceedToCheckout() {
           if (this.cart.length === 0) return;
-          this.cartDrawerOpen = false;
-          this.showCheckoutModal = true;
-        },
 
-        async placeOrder() {
-          if (!this.selectedAddressId) {
-            this.addToast("Please select a delivery address.", "warning");
-            return;
-          }
-
-          const selectedAddr = this.addresses.find(a => a.id === this.selectedAddressId);
-          if (!selectedAddr) return;
+          this.isSubmitting = true;
 
           try {
-            const totals = this.cartTotals;
+            const orderRef = push(ref(db, "orders"));
             const newOrder = {
-              userId: this.currentUser.uid,
-              restaurantId: this.cart[0].restaurantId || 'default',
-              restaurantName: this.activeRestaurant ? this.activeRestaurant.name : 'FeastHub Dining',
+              customerId: this.authUser.uid,
+              restaurantId: this.cartRestaurantId,
+              restaurantName: this.cartRestaurantName,
               items: this.cart,
-              subtotal: totals.subtotal,
-              packagingFee: totals.packaging,
-              deliveryFee: totals.delivery,
-              discount: totals.discount,
-              total: totals.grandTotal,
-              paymentMethod: this.checkoutPaymentMethod,
-              paymentStatus: this.checkoutPaymentMethod === 'COD' ? 'PENDING' : 'HELD_IN_ESCROW',
+              subtotal: this.cartSubtotal,
+              deliveryFee: this.deliveryFee,
+              total: this.cartGrandTotal,
+              paymentMethod: 'Cash on Delivery',
+              paymentStatus: 'PENDING',
               orderStatus: 'PLACED',
-              deliveryAddress: selectedAddr,
-              customerName: this.userProfile.name || 'Customer',
-              customerPhone: selectedAddr.phone || this.userProfile.phone || '',
-              createdAt: Date.now(),
-              updatedAt: Date.now()
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
             };
 
-            const ordersRef = ref(db, 'orders');
-            await push(ordersRef, newOrder);
+            await set(orderRef, newOrder);
 
+            // Clear Cart
             this.cart = [];
-            this.saveLocalCart();
-            this.showCheckoutModal = false;
-            this.addToast("Order placed successfully!", "success");
+            this.cartRestaurantId = null;
+            this.cartRestaurantName = '';
+            await this.syncCartToFirebase();
+
+            this.showCartDrawer = false;
+            this.showToast('Order placed successfully!', 'success');
             this.switchTab('orders');
           } catch (err) {
-            console.error("[Place Order Error]", err);
-            this.addToast("Failed to place order. Check network connection.", "error");
+            console.error("Checkout Error:", err);
+            this.showToast('Failed to place order. Try again.', 'error');
+          } finally {
+            this.isSubmitting = false;
           }
         },
 
-        // --- 5. RESERVATIONS & ADDRESSES ---
-        openReservationModal(restaurant = null) {
-          const target = restaurant || this.restaurants[0];
-          if (!target) {
-            this.addToast("No restaurant available for reservation.", "warning");
-            return;
-          }
-
-          this.reservationForm = {
-            restaurantId: target.id,
-            restaurantName: target.name,
-            date: new Date().toISOString().split('T')[0],
-            time: "19:00",
-            guests: 2,
-            requests: ''
-          };
+        openReservationModal(rest) {
+          this.modalRestaurant = rest;
           this.showReservationModal = true;
         },
 
-        async submitReservation() {
+        async confirmReservation() {
+          if (!this.authUser) {
+            this.showToast('Please sign in to make a reservation', 'warning');
+            this.appState = 'AUTH_REQUIRED';
+            return;
+          }
+          if (!this.resForm.date || !this.resForm.time) {
+            this.showToast('Please select date and time', 'warning');
+            return;
+          }
+
+          this.isSubmitting = true;
+
           try {
-            const bookingCode = 'FH-' + Math.floor(100000 + Math.random() * 900000);
+            const resRef = push(ref(db, "reservations"));
             const newRes = {
-              userId: this.currentUser.uid,
-              ...this.reservationForm,
+              customerId: this.authUser.uid,
+              restaurantId: this.modalRestaurant.id,
+              restaurantName: this.modalRestaurant.name,
+              date: this.resForm.date,
+              time: this.resForm.time,
+              guests: this.resForm.guests,
               status: 'CONFIRMED',
-              bookingCode: bookingCode,
-              createdAt: Date.now()
+              confirmationCode: 'FH-' + Math.floor(1000 + Math.random() * 9000),
+              createdAt: serverTimestamp()
             };
 
-            await push(ref(db, 'reservations'), newRes);
+            await set(resRef, newRes);
+
             this.showReservationModal = false;
-            this.addToast(`Table Reserved! Booking Code: ${bookingCode}`, "success");
+            this.showToast('Table booking confirmed!', 'success');
             this.switchTab('reservations');
           } catch (err) {
-            console.error("[Reservation Error]", err);
-            this.addToast("Failed to complete reservation.", "error");
+            console.error("Reservation Error:", err);
+            this.showToast('Booking failed. Try again.', 'error');
+          } finally {
+            this.isSubmitting = false;
           }
         },
 
-        openAddressModal() {
-          this.addressForm = { label: 'Home', name: this.userProfile.name || '', address: '', city: this.userProfile.city || 'Mumbai', pincode: '' };
-          this.showAddressModal = true;
+        async saveProfile() {
+          if (!this.authUser) return;
+          try {
+            await set(ref(db, `customers/${this.authUser.uid}`), {
+              ...this.userProfile,
+              updatedAt: serverTimestamp()
+            });
+            this.showToast('Profile updated successfully!', 'success');
+          } catch (err) {
+            this.showToast('Failed to update profile', 'error');
+          }
         },
 
         async saveAddress() {
-          try {
-            const userAddrRef = ref(db, `addresses/${this.currentUser.uid}`);
-            await push(userAddrRef, {
-              ...this.addressForm,
-              createdAt: Date.now()
-            });
+          if (!this.authUser) return;
+          if (!this.addressForm.label || !this.addressForm.address) {
+            this.showToast('Please fill in label and address', 'warning');
+            return;
+          }
 
-            this.showAddressModal = false;
-            this.addToast("Address saved successfully.", "success");
+          try {
+            const addrRef = push(ref(db, `addresses/${this.authUser.uid}`));
+            await set(addrRef, { ...this.addressForm });
+            
+            // Reload Addresses
+            const addrSnap = await get(ref(db, `addresses/${this.authUser.uid}`));
+            if (addrSnap.exists()) this.userAddresses = addrSnap.val();
+
+            this.addressForm = { label: '', address: '' };
+            this.showToast('Address added!', 'success');
           } catch (err) {
-            console.error("[Save Address Error]", err);
-            this.addToast("Failed to save address.", "error");
+            this.showToast('Failed to add address', 'error');
           }
         },
 
         async deleteAddress(id) {
+          if (!this.authUser) return;
           try {
-            await remove(ref(db, `addresses/${this.currentUser.uid}/${id}`));
-            this.addToast("Address removed.", "info");
+            await set(ref(db, `addresses/${this.authUser.uid}/${id}`), null);
+            delete this.userAddresses[id];
+            this.showToast('Address removed', 'info');
           } catch (err) {
-            console.error("[Delete Address Error]", err);
+            this.showToast('Failed to delete address', 'error');
           }
         },
 
-        // --- 6. USER PROFILE UPDATES & FAVORITES ---
-        async updateUserProfile() {
-          try {
-            const userRef = ref(db, `users/${this.currentUser.uid}`);
-            await update(userRef, {
-              name: this.profileForm.name,
-              phone: this.profileForm.phone,
-              city: this.profileForm.city,
-              updatedAt: Date.now()
-            });
-
-            this.userProfile.name = this.profileForm.name;
-            this.userProfile.phone = this.profileForm.phone;
-            this.userProfile.city = this.profileForm.city;
-
-            this.addToast("Profile updated successfully.", "success");
-          } catch (err) {
-            console.error("[Profile Update Error]", err);
-            this.addToast("Failed to update profile.", "error");
+        toggleFavorite(id) {
+          if (this.favorites.includes(id)) {
+            this.favorites = this.favorites.filter(fId => fId !== id);
+            this.showToast('Removed from favorites', 'info');
+          } else {
+            this.favorites.push(id);
+            this.showToast('Added to favorites!', 'success');
           }
         },
 
-        async toggleFavorite(restaurantId) {
-          const uid = this.currentUser.uid;
-          const favRef = ref(db, `users/${uid}/favorites/${restaurantId}`);
-
-          try {
-            if (this.isFavorite(restaurantId)) {
-              await remove(favRef);
-              this.addToast("Removed from favorites", "info");
-            } else {
-              await set(favRef, true);
-              this.addToast("Added to favorites!", "success");
-            }
-          } catch (err) {
-            console.error("[Favorite Toggle Error]", err);
-          }
+        isFavorite(id) {
+          return this.favorites.includes(id);
         },
 
-        isFavorite(restaurantId) {
-          return this.favorites.includes(restaurantId);
-        },
-
-        async logoutUser() {
-          try {
-            await signOut(auth);
-            this.redirectToLogin();
-          } catch (err) {
-            console.error("[SignOut Error]", err);
-          }
-        },
-
-        // --- 7. UTILITY HELPERS ---
         getInitials(name) {
-          if (!name) return "CU";
-          const parts = name.trim().split(' ');
-          return parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0][0].toUpperCase();
+          return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
         },
 
-        formatDate(ts) {
-          if (!ts) return '';
-          return new Date(ts).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        formatDate(timestamp) {
+          if (!timestamp) return 'Recent';
+          return new Date(timestamp).toLocaleDateString(undefined, {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
         },
 
-        handleImgError(event) {
-          event.target.src = this.fallbackFood;
-        },
-
-        isStatusReached(currentStatus, targetStep) {
-          const orderSteps = ['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED'];
-          return orderSteps.indexOf(currentStatus) >= orderSteps.indexOf(targetStep);
-        },
-
-        getStatusIcon(step) {
-          switch (step) {
-            case 'PLACED': return 'fa-solid fa-receipt';
-            case 'CONFIRMED': return 'fa-solid fa-circle-check';
-            case 'PREPARING': return 'fa-solid fa-fire-burner';
-            case 'OUT_FOR_DELIVERY': return 'fa-solid fa-motorcycle';
-            case 'DELIVERED': return 'fa-solid fa-house-chimney-check';
-            default: return 'fa-solid fa-circle';
+        handleFirebaseError(err) {
+          this.appState = 'ERROR';
+          if (err.code === 'PERMISSION_DENIED') {
+            this.statusMessage = 'Database access denied. Check database security rules.';
+          } else {
+            this.statusMessage = 'Could not communicate with Firebase database.';
           }
         },
 
-        addToast(message, type = 'info') {
-          const id = Date.now() + Math.random();
+        showToast(message, type = 'info') {
+          const id = Date.now();
           this.toasts.push({ id, message, type });
-          setTimeout(() => this.removeToast(id), 4000);
+          setTimeout(() => this.removeToast(id), 3000);
         },
 
         removeToast(id) {
           this.toasts = this.toasts.filter(t => t.id !== id);
         }
-      }
+      };
     };
   </script>
 </body>
