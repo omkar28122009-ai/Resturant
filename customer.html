@@ -1,757 +1,1687 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070914">
-<meta name="description" content="FeastHub — premium restaurant discovery and table booking.">
-<title>FeastHub — Premium Dining</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GharSeva Dining & Kitchen Hub | Premium Experience</title>
+    
+    <!-- Icons & Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* --- HIGH-END MODERN LUXURY DINING DESIGN SYSTEM --- */
+        :root {
+            --brand-primary: #6366f1;       
+            --brand-primary-glow: rgba(99, 102, 241, 0.4);
+            --brand-success: #10b981;
+            --brand-danger: #ef4444;
+            --brand-glow-gold: #f59e0b;     
+            --brand-glow-orange: #f97316;   
+            --brand-info: #38bdf8;
+            
+            --bg-main: #070913;             
+            --bg-card: rgba(15, 23, 42, 0.7); 
+            --bg-card-hover: rgba(30, 41, 59, 0.8);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(249, 115, 22, 0.5);
+            
+            --card-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+            --glow-shadow: 0 0 25px rgba(249, 115, 22, 0.25);
+            
+            --radius-round: 999px;
+            --radius-card: 22px;
+            --radius-sm: 12px;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-stack: 'Plus Jakarta Sans', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
 
-<style>
-:root{
-  --bg:#070914;--bg2:#0b1020;--card:rgba(16,24,43,.72);--card2:rgba(21,31,53,.82);
-  --line:rgba(255,255,255,.09);--muted:#91a0b7;--text:#f8fafc;
-  --brand:#7c5cff;--brand2:#4f46e5;--gold:#f6b73c;--green:#18c88b;
-  --red:#f05b6f;--cyan:#46c8ff;--shadow:0 20px 70px rgba(0,0,0,.38)
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;font-family:"Plus Jakarta Sans",sans-serif;background:
-radial-gradient(circle at 15% -10%,rgba(124,92,255,.18),transparent 30%),
-radial-gradient(circle at 100% 20%,rgba(24,200,139,.11),transparent 28%),var(--bg);color:var(--text)}
-body{overflow-x:hidden}
-button,input,textarea,select{font:inherit}button{cursor:pointer}
-button:disabled{cursor:not-allowed;opacity:.55}
-[x-cloak]{display:none!important}
-::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:#26314a;border-radius:99px}
-.app{min-height:100vh;padding-bottom:88px}
-.shell{width:min(1180px,100%);margin:auto;padding:0 16px}
-.glass{background:var(--card);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:var(--shadow)}
-.header{position:sticky;top:0;z-index:80;background:rgba(7,9,20,.78);border-bottom:1px solid var(--line);backdrop-filter:blur(22px)}
-.header-inner{height:70px;display:flex;align-items:center;gap:16px}
-.logo{display:flex;align-items:center;gap:10px;border:0;background:none;color:#fff}
-.logo-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--brand),var(--green));display:grid;place-items:center;box-shadow:0 10px 35px rgba(124,92,255,.3)}
-.logo-text{font-weight:800;letter-spacing:.08em}.logo-text span{color:var(--green)}
-.search{position:relative;flex:1;max-width:500px;margin:auto}.search input,.field{
-width:100%;background:rgba(4,8,18,.62);border:1px solid var(--line);color:#fff;outline:0;border-radius:14px;padding:12px 14px}
-.search input{padding-left:42px}.search i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#68758d}
-.field:focus,.search input:focus{border-color:rgba(124,92,255,.7);box-shadow:0 0 0 4px rgba(124,92,255,.11)}
-.icon-btn{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;display:grid;place-items:center}
-.primary{border:0;color:#fff;background:linear-gradient(135deg,var(--brand),#5d4de7);box-shadow:0 10px 28px rgba(124,92,255,.28)}
-.green{border:0;color:#06140f;background:linear-gradient(135deg,#36e0a3,#11b97e);box-shadow:0 10px 28px rgba(24,200,139,.22)}
-.btn{border-radius:13px;padding:12px 15px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;font-weight:800;font-size:12px}
-.btn:active{transform:scale(.98)}
-.hero{margin-top:22px;border-radius:30px;padding:30px;overflow:hidden;position:relative;background:
-radial-gradient(circle at 90% 10%,rgba(70,200,255,.16),transparent 24%),
-radial-gradient(circle at 72% 100%,rgba(124,92,255,.18),transparent 35%),
-linear-gradient(135deg,#11172a,#0a1020 65%,#0a1718);border:1px solid var(--line)}
-.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-90px;border:1px solid rgba(255,255,255,.07);box-shadow:0 0 0 28px rgba(255,255,255,.018),0 0 0 58px rgba(255,255,255,.012)}
-.eyebrow{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:rgba(124,92,255,.12);border:1px solid rgba(124,92,255,.25);color:#c6bbff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
-.hero h1{font-size:clamp(34px,6vw,64px);line-height:1.02;margin:18px 0 12px;max-width:720px;letter-spacing:-.045em}
-.gradient{background:linear-gradient(90deg,#fff,#b8bfff 48%,#69e4b7);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{color:var(--muted);max-width:650px;font-size:14px;line-height:1.75}
-.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.stat{padding:10px 13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035);font-size:11px;color:#cbd5e1}
-.stat b{color:#fff}.section{margin-top:28px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
-.section-head h2{font-size:20px;margin:0}.section-head p{font-size:11px;color:var(--muted);margin:4px 0 0}
-.chips{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.chip{white-space:nowrap;border:1px solid var(--line);background:rgba(255,255,255,.035);color:#aeb9ca;padding:9px 13px;border-radius:999px;font-size:11px;font-weight:800}.chip.active{background:rgba(124,92,255,.17);border-color:rgba(124,92,255,.55);color:#fff}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.restaurant{overflow:hidden;border-radius:22px}.cover{height:190px;position:relative;background:#10182a}.cover img{width:100%;height:100%;object-fit:cover;transition:.5s}.restaurant:hover .cover img{transform:scale(1.04)}.cover:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,rgba(3,7,15,.85))}
-.badge{position:absolute;z-index:2;top:12px;left:12px;padding:6px 9px;border-radius:999px;font-size:9px;font-weight:900}.open{background:#b8f8df;color:#062118}.closed{background:#ff7181;color:#fff}
-.favorite{position:absolute;z-index:3;right:12px;top:12px}.restaurant-body{padding:17px}.restaurant-title{display:flex;justify-content:space-between;gap:10px}.restaurant h3{margin:0;font-size:15px}.restaurant p{color:var(--muted);font-size:11px;line-height:1.6}.rating{color:#f9c34f;font-size:11px}.actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:14px}
-.empty{padding:45px 18px;text-align:center;color:var(--muted);border-radius:22px}.empty i{font-size:34px;opacity:.35;margin-bottom:12px}.empty b{display:block;color:#fff;font-size:14px;margin-bottom:5px}
-.page{padding:24px 0}.two{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.card{border-radius:22px;padding:20px}.back{border:0;background:none;color:#9eabc0;font-size:11px;padding:0;margin-bottom:15px}.menu-hero{padding:24px;border-radius:25px}.menu-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}.menu-item{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.025)}.menu-item img{width:78px;height:78px;border-radius:13px;object-fit:cover}.menu-item h3{margin:0;font-size:13px}.menu-item p{font-size:10px;color:var(--muted);line-height:1.5;margin:5px 0}.price{color:#7ff0c5;font-weight:900;font-size:12px}.mini{font-size:10px;color:var(--muted)}
-.booking-shell{display:grid;grid-template-columns:1fr .72fr;gap:16px}.stepper{display:flex;gap:8px;overflow:auto;margin-bottom:15px}.step{white-space:nowrap;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:10px;color:#7e8ba2}.step.active{color:#fff;border-color:rgba(124,92,255,.55);background:rgba(124,92,255,.14)}
-label{display:block;color:#8f9bb0;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin:0 0 12px}.field{margin-top:6px;font-size:12px}textarea.field{min-height:100px;resize:vertical}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.guest-control{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:14px;padding:9px}.guest-control button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#11192a;color:#fff}.guest-num{font-weight:900}
-.availability{padding:13px;border-radius:15px;border:1px solid rgba(24,200,139,.22);background:rgba(24,200,139,.07);font-size:11px;color:#baf4df;margin:10px 0}.availability.warn{border-color:rgba(246,183,60,.25);background:rgba(246,183,60,.07);color:#ffe2a0}.availability.bad{border-color:rgba(240,91,111,.25);background:rgba(240,91,111,.07);color:#ffc0c9}
-.res-card{position:sticky;top:88px}.res-list{display:grid;gap:12px}.res{border-radius:20px;padding:17px;background:rgba(255,255,255,.035);border:1px solid var(--line)}.res-top{display:flex;justify-content:space-between;gap:10px}.status{font-size:9px;font-weight:900;border-radius:999px;padding:6px 9px}.s-pending{background:#2a2440;color:#cbbfff}.s-verified{background:#17362d;color:#91f0cb}.s-transit{background:#153546;color:#91dcff}.s-completed{background:#17372b;color:#9bf1c5}.s-cancelled{background:#3b2027;color:#ffabb8}.res h3{font-size:14px;margin:0}.res p{font-size:10px;color:var(--muted);margin:5px 0}.res-meta{display:grid;gap:7px;margin-top:12px;color:#b8c2d1;font-size:10px}.res-actions{display:flex;gap:8px;margin-top:13px}.res-actions .btn{flex:1}
-.bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(8,11,22,.86);border-top:1px solid var(--line);backdrop-filter:blur(22px);padding:8px max(10px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-bottom))}
-.bottom-inner{max-width:600px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav-btn{border:0;background:none;color:#68758c;padding:7px 3px;border-radius:13px;font-size:9px}.nav-btn i{display:block;font-size:16px;margin-bottom:4px}.nav-btn.active{color:#bdb3ff;background:rgba(124,92,255,.09)}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(9px);z-index:300;display:flex;align-items:flex-end;justify-content:center}.sheet{width:min(620px,100%);max-height:92vh;overflow:auto;background:#0d1322;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:20px;box-shadow:0 -30px 80px rgba(0,0,0,.5);animation:sheet .25s ease}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.sheet h2{font-size:18px;margin:0}@keyframes sheet{from{transform:translateY(30px);opacity:.5}to{transform:none;opacity:1}}
-.toast-wrap{position:fixed;z-index:500;top:16px;left:50%;transform:translateX(-50%);width:min(420px,calc(100% - 28px));display:grid;gap:8px}.toast{padding:12px 14px;border:1px solid var(--line);background:rgba(13,19,34,.94);backdrop-filter:blur(18px);border-radius:14px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:center;font-size:11px;animation:toast .25s ease}.toast.success i{color:#36dda4}.toast.error i{color:#ff7181}.toast.warn i{color:#f7c253}.toast.info i{color:#65cfff}@keyframes toast{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-.loading{position:fixed;inset:0;z-index:1000;background:#070914;display:grid;place-items:center;padding:20px}.loader-box{text-align:center}.loader{width:58px;height:58px;border-radius:50%;border:2px solid rgba(124,92,255,.2);border-top-color:#8c7aff;animation:spin 1s linear infinite;margin:auto}@keyframes spin{to{transform:rotate(360deg)}}.loader-box b{display:block;margin-top:17px;letter-spacing:.12em}.loader-box p{font-size:10px;color:var(--muted)}.error-screen{max-width:430px;text-align:center;padding:25px;border:1px solid rgba(240,91,111,.2);background:rgba(240,91,111,.05);border-radius:22px}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two,.booking-shell{grid-template-columns:1fr}.res-card{position:static}}
-@media(max-width:640px){.shell{padding:0 13px}.header-inner{height:62px}.logo-text{font-size:13px}.search{display:none}.hero{padding:23px;border-radius:24px}.hero h1{font-size:37px}.grid,.menu-items,.form-grid{grid-template-columns:1fr}.cover{height:205px}.page{padding-top:18px}.card{padding:16px}.desktop-only{display:none}.hero p{font-size:12px}.booking-shell{gap:12px}}
-</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-stack);
+            -webkit-tap-highlight-color: transparent;
+        }
 
-<!-- Define the factory BEFORE Alpine is loaded. This is intentionally a classic script. -->
-<script>
-window.feasthubApp = function(){
-  return {
-    ready:false, loading:true, firebaseReady:false, appError:"", isOnline:navigator.onLine,
-    authUser:null, guest:true, currentTab:"home",
-    restaurants:[], filteredRestaurants:[], categories:[], activeRestaurant:null, activeMenuItems:[],
-    searchQuery:"", selectedCategory:"all", filterVegOnly:false, filterOpenOnly:false,
-    favorites:[], bookingStep:1, selectedRestaurant:null,
-    resForm:{date:"",time:"",guests:2,name:"",phone:"",address:"",specialRequest:""},
-    availability:{state:"idle",available:true,remaining:null,message:"Select a date and time to check availability."},
-    userBookings:[], bookingFilter:"all", bookingSearch:"",
-    isSubmitting:false, bookingError:"", lastBooking:null,
-    modal:null, toasts:[], profile:{name:"Guest User",email:"",phone:"",photoURL:""},
-    cart:[], selectedServices:[],
-    async initApp(){
-      /* Alpine can initialize before the ES module below finishes evaluating.
-         Wait for the bootstrap instead of entering permanent fallback mode. */
-      if(window.__feastInit) return window.__feastInit(this);
-      this.loading=true;this.ready=false;
-      const started=Date.now();
-      while(!window.__feastInit && Date.now()-started<12000){
-        await new Promise(resolve=>setTimeout(resolve,50));
-      }
-      if(window.__feastInit) return window.__feastInit(this);
-      return this.failInit("Application bootstrap did not load. Please reload the page.");
-    },
-    failInit(msg){ this.appError=msg;this.loading=false;this.ready=true; },
-    switchTab(tab){this.currentTab=tab;window.scrollTo({top:0,behavior:"smooth"})},
-    selectRestaurant(r){this.selectedRestaurant=r;this.resForm={...this.resForm,date:"",time:"",guests:2};this.availability={state:"idle",available:true,remaining:null,message:"Select a date and time to check availability."};this.bookingStep=1;this.currentTab="booking";window.scrollTo({top:0,behavior:"smooth"})},
-    openMenu(r){this.activeRestaurant=r;window.__feastLoadMenu?.(r);this.currentTab="menu";window.scrollTo({top:0,behavior:"smooth"})},
-    filterCatalog(){
-      const q=this.searchQuery.trim().toLowerCase(), c=(this.selectedCategory||"all").toLowerCase();
-      this.filteredRestaurants=this.restaurants.filter(r=>{
-        const text=[r.name,r.cuisines,r.area,r.city,r.description].filter(Boolean).join(" ").toLowerCase();
-        return (!q||text.includes(q)) &&
-          (c==="all"||(r.cuisines||"").toLowerCase().includes(c)) &&
-          (!this.filterVegOnly||r.isPureVeg===true)&&(!this.filterOpenOnly||r.isOpen!==false);
-      });
-    },
-    changeGuests(d){this.resForm.guests=Math.max(1,Math.min(20,Number(this.resForm.guests||2)+d));this.checkAvailability()},
-    async checkAvailability(){return window.__feastCheckAvailability?.(this)},
-    async submitBooking(){return window.__feastSubmitBooking?.(this)},
-    openBookingFromCard(r){this.selectRestaurant(r)},
-    cancelBooking(id){return window.__feastCancelBooking?.(this,id)},
-    openSupport(b){this.modal={type:"support",booking:b}},
-    signIn(){return window.__feastLogin?.(this)},
-    signOut(){return window.__feastLogout?.(this)},
-    saveProfile(){return window.__feastSaveProfile?.(this)},
-    get filteredBookings(){
-      const q=this.bookingSearch.trim().toLowerCase();
-      return this.userBookings.filter(b=>{
-        const status=(b.status||"Pending");
-        const ok=this.bookingFilter==="all" || (this.bookingFilter==="Technician Sent"?(status==="Technician Sent"||status==="In-Transit"):status===this.bookingFilter);
-        const text=[b.id,b.customerName,b.customerAddress,(b.services||[]).map(s=>s.name).join(" "),b.restaurantName].join(" ").toLowerCase();
-        return ok&&(!q||text.includes(q));
-      });
-    },
-    statusClass(status){
-      if(status==="Verified")return"s-verified";if(status==="Technician Sent"||status==="In-Transit")return"s-transit";
-      if(status==="Completed")return"s-completed";if(status==="Cancelled")return"s-cancelled";return"s-pending";
-    },
-    statusIcon(status){
-      if(status==="Completed")return"fa-circle-check";if(status==="Cancelled")return"fa-ban";if(status==="Verified")return"fa-shield-halved";
-      if(status==="Technician Sent"||status==="In-Transit")return"fa-truck-fast";return"fa-clock";
-    },
-    formatDate(v){if(!v)return"Awaiting schedule";const d=new Date(v);return isNaN(d)?String(v):d.toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})},
-    shortId(id){return id?String(id).slice(0,8):"—"},
-    totalServices(b){return Array.isArray(b.services)?b.services.length:0},
-    toast(message,type="info"){const id=Date.now()+Math.random();this.toasts.push({id,message,type});setTimeout(()=>this.toasts=this.toasts.filter(x=>x.id!==id),3400)}
-  };
-};
-</script>
+        body {
+            background-color: #030712; 
+            color: var(--text-main);
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
 
-<script>
-/* Load Alpine only after the factory above exists. */
-(function(){
-  const s=document.createElement("script");
-  s.defer=true;
-  s.src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js";
-  s.onload=function(){window.__alpineLoaded=true};
-  s.onerror=function(){window.__alpineFailed=true};
-  document.head.appendChild(s);
-})();
-</script>
+        body.page-loaded { opacity: 1; }
 
-<script type="module">
-import {initializeApp,getApps,getApp} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import {getFirestore,collection,addDoc,onSnapshot,query,where,doc,updateDoc,getDoc} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import {getDatabase,ref,get,push,onValue,update} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        .container {
+            width: 100%;
+            max-width: 480px; 
+            background: var(--bg-main);
+            box-shadow: 0 0 80px rgba(249, 115, 22, 0.12); 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 90px; /* Elevated space for Bottom Mobile Navigation */
+            min-height: 100vh;
+        }
 
-const firebaseConfig={
- apiKey:"AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
- authDomain:"yukti-247.firebaseapp.com",
- databaseURL:"https://yukti-247-default-rtdb.firebaseio.com",
- projectId:"yukti-247",
- storageBucket:"yukti-247.firebasestorage.app",
- messagingSenderId:"244123454826",
- appId:"1:244123454826:web:56b4d88c3628bb06cfa913",
- measurementId:"G-6BGFCBKTD7"
-};
+        /* Dynamic Background Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 1;
+            animation: orbFloat 10s ease-in-out infinite alternate;
+        }
+        .orb-1 { top: -2%; right: -50px; width: 250px; height: 250px; background: var(--brand-glow-orange); }
+        .orb-2 { top: 40%; left: -60px; width: 280px; height: 280px; background: var(--brand-glow-gold); animation-delay: -3s; }
+        .orb-3 { bottom: 5%; right: -40px; width: 220px; height: 220px; background: var(--brand-primary); animation-delay: -6s; }
 
-let app=null,auth=null,firestore=null,rtdb=null,unsubscribeBookings=null;
-const FALLBACK_RESTAURANTS=[
- {id:"demo-1",name:"The Green Table",cuisines:"Indian • Vegetarian",area:"Andheri",city:"Mumbai",rating:4.8,isOpen:true,isPureVeg:true,
-  description:"Modern Indian vegetarian dining with handcrafted favourites.",coverImage:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=85"},
- {id:"demo-2",name:"Bella Napoli",cuisines:"Italian • Pizza",area:"Bandra",city:"Mumbai",rating:4.7,isOpen:true,isPureVeg:false,
-  description:"Wood-fired pizzas, pasta and Italian comfort food.",coverImage:"https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1100&q=85"},
- {id:"demo-3",name:"Wok & Bowl",cuisines:"Chinese • Asian",area:"Powai",city:"Mumbai",rating:4.6,isOpen:false,isPureVeg:false,
-  description:"Fresh Asian bowls, noodles and wok-tossed classics.",coverImage:"https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1100&q=85"}
-];
-const FALLBACK_MENU={
- "demo-1":[
-  {id:"m11",name:"Paneer Tikka",description:"Smoky tandoori paneer with mint chutney.",price:299,isVeg:true,image:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=600&q=85"},
-  {id:"m12",name:"Dal Makhani",description:"Slow-cooked black lentils finished with butter.",price:249,isVeg:true,image:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=85"},
-  {id:"m13",name:"Veg Biryani",description:"Aromatic basmati rice, vegetables and herbs.",price:279,isVeg:true,image:"https://images.unsplash.com/photo-1563379091339-03246963d51a?auto=format&fit=crop&w=600&q=85"}],
- "demo-2":[
-  {id:"m21",name:"Margherita Pizza",description:"Tomato, mozzarella, basil and extra virgin olive oil.",price:349,isVeg:true,image:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=85"},
-  {id:"m22",name:"Penne Arrabbiata",description:"Penne tossed in spicy tomato and garlic sauce.",price:299,isVeg:true,image:"https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=600&q=85"}],
- "demo-3":[
-  {id:"m31",name:"Veg Hakka Noodles",description:"Wok-tossed noodles with crisp vegetables.",price:229,isVeg:true,image:"https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=85"},
-  {id:"m32",name:"Crispy Chilli Chicken",description:"Crispy chicken with peppers and chilli glaze.",price:329,isVeg:false,image:"https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=600&q=85"}]
-};
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(15px, 20px) scale(1.08); }
+            100% { transform: translate(-10px, 10px) scale(0.95); }
+        }
 
-const wait=ms=>new Promise(r=>setTimeout(r,ms));
-async function withTimeout(promise,ms=9000){
-  let timer;
-  try{return await Promise.race([promise,new Promise((_,rej)=>timer=setTimeout(()=>rej(new Error("TIMEOUT")),ms))])}
-  finally{clearTimeout(timer)}
-}
-function normalize(v){return v&&typeof v==="object"?v:{}}
-function arr(v){return Object.keys(normalize(v)).map(k=>({id:k,...normalize(v[k])}))}
-function localISO(d=new Date()){const x=new Date(d.getTime()-d.getTimezoneOffset()*60000);return x.toISOString().slice(0,16)}
-function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+        .section-padding { padding: 20px; position: relative; z-index: 2; }
+        
+        /* Glassmorphism Standard Cards */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--radius-card);
+            padding: 22px;
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-async function initFirebase(state){
-  try{
-    app=getApps().length?getApp():initializeApp(firebaseConfig);
-    auth=getAuth(app);firestore=getFirestore(app);rtdb=getDatabase(app);
-    state.firebaseReady=true;return true;
-  }catch(e){
-    console.error("Firebase initialization:",e);
-    state.appError="Firebase could not initialize. You can still browse the restaurant catalog in safe fallback mode.";
-    state.firebaseReady=false;return false;
-  }
-}
+        /* Top Sticky Header */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(7, 9, 19, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
 
-async function loadCatalog(state){
-  state.restaurants=FALLBACK_RESTAURANTS.slice();
-  state.categories=["all","indian","italian","chinese","burger","dessert"];
-  try{
-    if(!rtdb)return;
-    const snap=await withTimeout(get(ref(rtdb,"restaurants")),7000);
-    if(snap.exists()){
-      const remote=arr(snap.val());
-      if(remote.length)state.restaurants=remote;
-    }
-    const catSnap=await withTimeout(get(ref(rtdb,"categories")),5000).catch(()=>null);
-    if(catSnap?.exists())state.categories=["all",...arr(catSnap.val()).map(x=>String(x.name||x.id).toLowerCase()).filter(Boolean)];
-  }catch(e){console.warn("Catalog fallback:",e)}
-  state.filteredRestaurants=state.restaurants.slice();state.filterCatalog();
-}
+        .brand-logo-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-window.__feastLoadMenu=async function(r){
-  const state=document.querySelector("[x-data]")?Alpine.$data(document.querySelector("[x-data]")):null;
-  if(!state)return;
-  state.activeMenuItems=[];
-  try{
-    if(rtdb){
-      const s=await withTimeout(get(ref(rtdb,"menuItems")),7000);
-      if(s.exists()){
-        state.activeMenuItems=arr(s.val()).filter(x=>x.restaurantId===r.id&&x.isAvailable!==false);
-      }
-    }
-  }catch(e){console.warn("Menu fallback:",e)}
-  if(!state.activeMenuItems.length)state.activeMenuItems=(FALLBACK_MENU[r.id]||[]).map(x=>({...x,restaurantId:r.id}));
-};
+        .brand-logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--brand-glow-orange), var(--brand-glow-gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+        }
 
-window.__feastLogin=async function(state){
-  if(!auth){state.toast("Authentication is unavailable. Please retry after Firebase reconnects.","error");return}
-  try{
-    await signInWithPopup(auth,new GoogleAuthProvider());
-    state.toast("Signed in successfully","success");
-  }catch(e){
-    console.error("Google sign-in:",e);
-    const msg=e.code==="auth/popup-blocked"?"Your browser blocked the sign-in popup. Allow popups and retry.":e.code==="auth/popup-closed-by-user"?"Sign-in was cancelled.":"Google sign-in failed. You can keep browsing as a guest.";
-    state.toast(msg,"error");
-  }
-};
+        .header-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
 
-window.__feastLogout=async function(state){
-  try{if(auth)await signOut(auth);state.toast("Signed out","info")}catch(e){state.toast("Could not sign out","error")}
-};
+        .header-title span {
+            color: var(--brand-glow-gold);
+            font-family: var(--font-serif);
+            font-style: italic;
+        }
 
-window.__feastSaveProfile=async function(state){
-  if(!state.authUser||!firestore){state.toast("Sign in to save your profile.","warn");return}
-  try{
-    /* Keep the existing booking.html user path: users/{uid}. */
-    await (await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js")).setDoc(
-      doc(firestore,"users",state.authUser.uid),
-      {fullName:state.profile.name||"",phone:state.profile.phone||"",email:state.profile.email||"",photoURL:state.profile.photoURL||"",updatedAt:new Date().toISOString()},
-      {merge:true}
-    );
-    state.toast("Profile saved","success");
-  }catch(e){console.error(e);state.toast("Could not save profile. Check Firebase rules.","error")}
-};
+        .user-avatar-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .user-avatar-badge:hover { border-color: var(--brand-glow-gold); color: var(--brand-glow-gold); }
 
-window.__feastCheckAvailability=async function(state){
-  const r=state.selectedRestaurant,f=state.resForm;
-  if(!r||!f.date||!f.time){state.availability={state:"idle",available:true,remaining:null,message:"Select a date and time to check availability."};return}
-  state.availability={state:"checking",available:false,remaining:null,message:"Checking table availability…"};
-  try{
-    /*
-      Additive RTDB support:
-      restaurants/{restaurantId}/availability/{YYYY-MM-DD}/{HH:MM}
-      can optionally contain {available:true,remaining:12}.
-      If the node is absent, the UI stays available instead of blocking bookings.
-    */
-    let result=null;
-    if(rtdb){
-      const key=String(f.date)+"_"+String(f.time).replace(":","");
-      const paths=[
-        `restaurants/${r.id}/availability/${f.date}/${f.time}`,
-        `restaurantAvailability/${r.id}/${f.date}/${f.time}`,
-        `availability/${r.id}/${f.date}/${f.time}`
-      ];
-      for(const p of paths){
-        try{const s=await withTimeout(get(ref(rtdb,p)),2500);if(s.exists()){result=s.val();break}}catch(_){}
-      }
-    }
-    if(result){
-      const remaining=Number(result.remaining);
-      const requested=Number(f.guests||2);
-      const available=result.available!==false&&(Number.isNaN(remaining)||remaining>=requested);
-      state.availability={state:available?"available":"full",available,remaining:Number.isNaN(remaining)?null:remaining,
-        message:available?(Number.isNaN(remaining)?"Table availability is open for this slot.":`${remaining} guest capacity remaining for this slot.`):"This slot is currently full. Choose another time."};
-    }else{
-      state.availability={state:"available",available:true,remaining:null,message:"This slot is available to request. Final confirmation is saved with your booking."};
-    }
-  }catch(e){
-    state.availability={state:"available",available:true,remaining:null,message:"Availability service timed out. You can still submit a booking request."};
-  }
-};
+        /* Banner Welcome Portal */
+        .action-portal-card {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(15, 23, 42, 0.75) 100%);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-radius: var(--radius-card);
+            margin-bottom: 22px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
 
-window.__feastSubmitBooking=async function(state){
-  if(state.isSubmitting)return;
-  if(!state.authUser){state.toast("Please sign in to confirm your booking.","warn");return}
-  const f=state.resForm,r=state.selectedRestaurant;
-  if(!r){state.toast("Please select a restaurant.","warn");return}
-  if(!f.date||!f.time||!f.name.trim()||!f.phone.trim()||!f.address.trim()){state.toast("Complete the required booking details.","warn");return}
-  if(!/^[0-9+\-\s()]{8,18}$/.test(f.phone.trim())){state.toast("Enter a valid phone number.","warn");return}
-  if(state.availability.state==="full"||state.availability.available===false){state.toast("Choose another available slot.","warn");return}
-  state.isSubmitting=true;state.bookingError="";
-  try{
-    if(!rtdb)throw new Error("DATABASE_UNAVAILABLE");
-    const slot=new Date(`${f.date}T${f.time}`);
-    if(isNaN(slot.getTime()))throw new Error("INVALID_SLOT");
-    if(slot.getTime()<Date.now()-60000)throw new Error("PAST_SLOT");
+        .portal-text-group h3 { font-size: 0.98rem; font-weight: 800; color: #ffffff; margin-bottom: 2px; }
+        .portal-text-group p { font-size: 0.74rem; color: var(--text-muted); }
 
-    /* The original FeastHub app stores table reservations in Realtime Database
-       under the existing `reservations` path. Keep that path unchanged. */
-    const payloadPacket={
-      userId:state.authUser.uid,
-      customerName:f.name.trim(),
-      customerPhone:f.phone.trim(),
-      customerEmail:state.authUser.email||"",
-      scheduledSlot:slot.toISOString(),
-      date:f.date,
-      time:f.time,
-      customerAddress:f.address.trim(),
-      restaurantId:r.id,
-      restaurantName:r.name,
-      restaurantArea:r.area||"",
-      guests:Number(f.guests)||2,
-      specialRequest:f.specialRequest.trim(),
-      bookingType:"TABLE",
-      status:"Pending",
-      verificationPin:String(Math.floor(1000+Math.random()*9000)),
-      createdAt:new Date().toISOString(),
-      updatedAt:new Date().toISOString()
-    };
-    /* Use Firebase's native push(ref, value) write. This creates the child and
-       writes its complete payload in one operation, which is also the simplest
-       form for Realtime Database security rules. */
-    const reservationRef=await withTimeout(push(ref(rtdb,"reservations"),payloadPacket),10000);
-    if(!reservationRef?.key)throw new Error("BOOKING_KEY_MISSING");
-    state.lastBooking={id:reservationRef.key,...payloadPacket};
-    state.bookingStep=4;
-    state.toast("Booking request saved successfully.","success");
-    if(window.__feastRefreshBookings)window.__feastRefreshBookings(state);
-  }catch(e){
-    console.error("Booking write error:",e);
-    let msg="Booking could not be saved. Please retry.";
-    if(e.message==="PAST_SLOT")msg="That date/time has already passed.";
-    else if(e.message==="INVALID_SLOT")msg="Please select a valid date and time.";
-    else if(e.message==="DATABASE_UNAVAILABLE")msg="Firebase Realtime Database is not connected.";
-    else if(e.code==="PERMISSION_DENIED"||e.code==="PERMISSION_DENIED: Permission denied")msg="Firebase denied this booking write. Check the reservations write rule for signed-in users.";
-    else if(e.message==="TIMEOUT")msg="Firebase took too long to save the booking. Check your connection and retry.";
-    else if(e.code==="auth/network-request-failed")msg="Your sign-in session lost its network connection. Sign in again and retry.";
-    else if(e.message==="BOOKING_KEY_MISSING")msg="Firebase accepted the request but did not return a booking ID. Retry once.";
-    else msg=`Booking save failed (${e.code||e.message||"unknown Firebase error"}). Open the browser console for the exact Firebase error.`;
-    state.bookingError=msg;
-    state.toast(msg,"error");
-  }finally{state.isSubmitting=false}
-};
+        /* Section Headings & Badges */
+        .section-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
 
-window.__feastCancelBooking=async function(state,id){
-  if(!state.authUser||!rtdb||!id)return;
-  const booking=state.userBookings.find(b=>b.id===id);
-  if(!booking||booking.userId!==state.authUser.uid){state.toast("Booking not found.","error");return}
-  if(["Cancelled","Completed"].includes(booking.status)){state.toast("This booking can no longer be cancelled.","warn");return}
-  if(!confirm("Cancel this booking?"))return;
-  try{
-    await withTimeout(update(ref(rtdb,`reservations/${id}`),{status:"Cancelled",updatedAt:new Date().toISOString()}),9000);
-    state.toast("Booking cancelled successfully.","success");
-  }catch(e){console.error(e);state.toast(e.code==="PERMISSION_DENIED"?"Firebase denied cancellation. Check the reservations update rule.":"Failed to cancel booking. Please retry.","error")}
-};
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.01em;
+        }
 
-window.__feastRefreshBookings=function(state){
-  if(!state.authUser||!rtdb)return;
-  if(unsubscribeBookings)unsubscribeBookings();
-  try{
-    /* Read the existing RTDB reservations path and filter by the signed-in owner. */
-    const reservationsRef=ref(rtdb,"reservations");
-    unsubscribeBookings=onValue(reservationsRef,snapshot=>{
-      const raw=snapshot.val()||{};
-      state.userBookings=Object.keys(raw).map(id=>({id,...(raw[id]||{})}))
-        .filter(b=>b.userId===state.authUser.uid)
-        .sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
-    },err=>{
-      console.error("Reservation realtime sync:",err);
-      state.toast(err?.code==="PERMISSION_DENIED"?"Firebase denied reservation reads. Check the reservations read rule.":"Live reservation sync is unavailable.","error");
-    });
-  }catch(e){console.error(e)}
-};
+        .sync-indicator {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--brand-success);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 4px 10px;
+            border-radius: var(--radius-round);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sync-dot {
+            width: 7px; height: 7px; background-color: var(--brand-success); border-radius: 50%; position: relative;
+        }
+        .sync-dot::after {
+            content: ''; position: absolute; width: 100%; height: 100%; background: inherit; border-radius: 50%;
+            animation: ping 1.6s infinite ease-out;
+        }
+        @keyframes ping { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
 
-window.__feastInit=async function(state){
-  if(window.__feastBooted)return;
-  window.__feastBooted=true;
-  state.loading=true;
-  window.addEventListener("online",()=>{state.isOnline=true;state.toast("Connection restored","success")});
-  window.addEventListener("offline",()=>{state.isOnline=false;state.toast("You are offline. Browsing fallback data is still available.","warn")});
+        /* Search Controls */
+        .search-wrapper { position: relative; margin-bottom: 16px; }
+        .search-control {
+            width: 100%; background: rgba(11, 15, 25, 0.7); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px; padding: 12px 14px 12px 42px; color: #ffffff; font-size: 0.82rem; outline: none;
+            transition: all 0.3s;
+        }
+        .search-control:focus { 
+            border-color: var(--brand-glow-orange); 
+            background: rgba(15, 23, 42, 0.9);
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.2);
+        }
+        .search-icon-decor { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.88rem; }
 
-  const fb=await initFirebase(state);
-  await loadCatalog(state);
+        /* Filter Ribbon Chips */
+        .filter-ribbon { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+        .filter-ribbon::-webkit-scrollbar { display: none; }
+        .filter-chip {
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            color: var(--text-muted);
+            padding: 8px 14px; 
+            border-radius: var(--radius-round); 
+            font-size: 0.72rem; 
+            font-weight: 700; 
+            cursor: pointer;
+            white-space: nowrap; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .filter-chip:hover { background: rgba(255, 255, 255, 0.08); color: #ffffff; }
+        .filter-chip.active { 
+            background: rgba(249, 115, 22, 0.2); 
+            border-color: var(--brand-glow-orange); 
+            color: #ffffff; 
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.25);
+        }
+        .filter-chip-count { background: rgba(255, 255, 255, 0.1); padding: 1px 7px; border-radius: 8px; font-size: 0.65rem; }
 
-  const today=new Date();today.setMinutes(today.getMinutes()-today.getTimezoneOffset());
-  state.resForm.date=today.toISOString().slice(0,10);
-  state.resForm.time="19:00";
+        /* Food & Cuisine Catalog List */
+        .services-vertical-stack { display: flex; flex-direction: column; gap: 16px; }
+        .catalog-card {
+            display: flex;
+            padding: 16px;
+            gap: 16px;
+            cursor: pointer;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-card);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .catalog-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(249, 115, 22, 0.4);
+            background: var(--bg-card-hover);
+        }
+        .catalog-img-container { width: 85px; height: 85px; border-radius: 16px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border-color); position: relative; }
+        .catalog-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .catalog-details { display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
+        .catalog-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .catalog-title { font-size: 0.95rem; font-weight: 800; color: #ffffff; }
+        .catalog-price { font-size: 0.9rem; font-weight: 800; color: var(--brand-glow-gold); }
+        .catalog-desc { font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; margin: 4px 0 10px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .catalog-footer { display: flex; justify-content: space-between; align-items: center; }
+        .catalog-rating { font-size: 0.7rem; font-weight: 700; color: #e2e8f0; display: flex; align-items: center; gap: 4px; }
+        .catalog-rating i { color: var(--brand-glow-gold); }
 
-  if(fb&&auth){
-    let authResolved=false;
-    await new Promise(resolve=>{
-      let done=false;
-      const finish=()=>{if(!done){done=true;resolve()}};
-      const unsub=onAuthStateChanged(auth,async user=>{
-        authResolved=true;state.authUser=user||null;state.guest=!user;
-        if(user){
-          state.profile={name:user.displayName||"Customer",email:user.email||"",phone:user.phoneNumber||"",photoURL:user.photoURL||""};
-          try{
-            const s=await withTimeout(getDoc(doc(firestore,"users",user.uid)),6000);
-            if(s.exists()){const d=s.data();state.profile={...state.profile,name:d.fullName||state.profile.name,phone:d.phone||state.profile.phone}}
-          }catch(e){console.warn("Profile read fallback:",e)}
-          window.__feastRefreshBookings(state);
-        }else{state.userBookings=[]}
-        state.loading=false;state.ready=true;finish();unsub();
-      },err=>{
-        console.error("Auth listener:",err);state.guest=true;state.loading=false;state.ready=true;
-        state.appError="Authentication is unavailable. You can browse and sign in again later.";finish();unsub();
-      });
-      setTimeout(()=>{if(!authResolved){state.loading=false;state.ready=true;finish()}},8000);
-    });
-  }else{
-    state.guest=true;state.loading=false;state.ready=true;
-  }
-};
-</script>
+        .btn-catalog-book {
+            padding: 6px 14px; font-size: 0.72rem; font-weight: 800; border-radius: var(--radius-round); border: none; cursor: pointer;
+            background: linear-gradient(135deg, var(--brand-glow-orange) 0%, var(--brand-glow-gold) 100%); color: #0f172a; transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+        .btn-catalog-book.selected { background: var(--brand-success); color: #ffffff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+
+        /* Cart & Checkout Items */
+        .cart-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+        .cart-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-sm); border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .cart-item-name { font-size: 0.88rem; font-weight: 600; color: #ffffff; }
+        .cart-item-meta { display: flex; align-items: center; gap: 14px; }
+        .cart-item-price { font-size: 0.9rem; font-weight: 800; color: var(--brand-glow-gold); }
+        .btn-remove-item {
+            background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #fca5a5;
+            width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .btn-remove-item:hover { background: var(--brand-danger); color: #ffffff; transform: scale(1.08); }
+
+        .breakdown-row { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px; }
+        .breakdown-row.discount { color: var(--brand-success); display: none; font-weight: 700; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); margin: 14px 0; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 1.2rem; color: #ffffff; }
+        .total-price { color: var(--brand-glow-gold); text-shadow: 0 0 12px rgba(245, 158, 11, 0.3); }
+
+        .promo-wrapper { display: flex; gap: 8px; margin-top: 16px; }
+        .promo-input {
+            flex-grow: 1; background: rgba(11, 15, 25, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+            padding: 10px 14px; color: #ffffff; font-size: 0.82rem; outline: none; text-transform: uppercase; transition: all 0.2s;
+        }
+        .promo-input:focus { border-color: var(--brand-glow-orange); box-shadow: 0 0 12px rgba(249, 115, 22, 0.25); }
+        .btn-promo-apply {
+            background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border-color); color: #ffffff; padding: 0 18px;
+            border-radius: 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-promo-apply:hover { border-color: var(--brand-glow-gold); color: var(--brand-glow-gold); background: rgba(245, 158, 11, 0.1); }
+
+        /* Billing Form Inputs */
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.68rem; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.8px; }
+        .form-control {
+            width: 100%; background: rgba(11, 15, 25, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+            padding: 12px 14px; color: #ffffff; font-size: 0.85rem; outline: none; transition: all 0.25s;
+        }
+        .form-control:focus { border-color: var(--brand-glow-orange); box-shadow: 0 0 18px rgba(249, 115, 22, 0.2); background: rgba(15, 23, 42, 0.9); }
+        textarea.form-control { resize: none; height: 80px; }
+
+        .btn-checkout-confirm, .btn-primary-action {
+            width: 100%; padding: 16px; font-size: 0.95rem; font-weight: 800; border-radius: var(--radius-card); border: none;
+            background: linear-gradient(135deg, var(--brand-glow-orange) 0%, var(--brand-glow-gold) 100%); color: #0f172a; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.35); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; justify-content: center; gap: 10px; text-align: center;
+        }
+        .btn-checkout-confirm:hover, .btn-primary-action:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(249, 115, 22, 0.5); }
+
+        /* Order Tracking Feed */
+        .feed-container { display: flex; flex-direction: column; gap: 16px; }
+        .tracking-card {
+            background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: var(--radius-card);
+            padding: 18px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; box-shadow: var(--card-shadow);
+        }
+        .tracking-card:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); background: var(--bg-card-hover); }
+        .tracking-card.pulse-active { border-color: rgba(249, 115, 22, 0.4); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(249, 115, 22, 0.1); }
+        
+        .card-top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .card-service-title { font-size: 0.95rem; font-weight: 800; color: #ffffff; max-width: 70%; line-height: 1.3; }
+        
+        .status-badge {
+            font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-round);
+            text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 5px;
+        }
+        .badge-pending { background: rgba(249, 115, 22, 0.12); border: 1px solid rgba(249, 115, 22, 0.3); color: var(--brand-glow-orange); }
+        .badge-verified { background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--brand-info); }
+        .badge-transit { background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.35); color: #a5b4fc; }
+        .badge-completed { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--brand-success); }
+        .badge-cancelled { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--brand-danger); }
+
+        .card-price-matrix { font-size: 1rem; font-weight: 800; color: var(--brand-glow-gold); }
+
+        /* Animated Progress Bar Nodes */
+        .tracking-progress-wrapper { display: flex; align-items: center; justify-content: space-between; margin: 22px 6px 12px 6px; position: relative; }
+        .progress-line-back { position: absolute; height: 4px; background: rgba(255, 255, 255, 0.08); width: 100%; top: 50%; transform: translateY(-50%); z-index: 1; border-radius: 4px; }
+        .progress-line-fill { 
+            position: absolute; height: 4px; background: linear-gradient(90deg, var(--brand-glow-orange), var(--brand-glow-gold), var(--brand-success));
+            width: 0%; top: 50%; transform: translateY(-50%); z-index: 2; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 4px;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        .progress-step-node {
+            width: 32px; height: 32px; border-radius: 50%; background: #0f172a; border: 2px solid #334155; z-index: 3;
+            display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #64748b; transition: all 0.4s; position: relative;
+        }
+        .progress-step-node.completed { background: linear-gradient(135deg, var(--brand-success) 0%, #059669 100%); border-color: var(--brand-success); color: #ffffff; box-shadow: 0 0 14px rgba(16, 185, 129, 0.6); transform: scale(1.05); }
+        .progress-step-node.active { background: #0b0f19; border-color: var(--brand-glow-orange); color: var(--brand-glow-orange); box-shadow: 0 0 18px var(--brand-glow-orange); animation: pulseActiveNode 2s infinite alternate; }
+
+        @keyframes pulseActiveNode {
+            0% { transform: scale(1); box-shadow: 0 0 10px var(--brand-glow-orange); }
+            100% { transform: scale(1.18); box-shadow: 0 0 22px var(--brand-glow-orange); }
+        }
+
+        .card-interactive-row { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.74rem; margin-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 12px; }
+        .chevron-icon { transition: transform 0.3s ease; }
+        .tracking-card.active .chevron-icon { transform: rotate(180deg); color: var(--brand-glow-orange); }
+
+        .card-details-drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; }
+        .tracking-card.active .card-details-drawer { grid-template-rows: 1fr; opacity: 1; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .drawer-content { overflow: hidden; display: flex; flex-direction: column; gap: 10px; }
+        
+        .detail-row { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: #cbd5e1; }
+        .action-icon-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #ffffff; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; transition: all 0.2s; }
+        .action-icon-btn:hover { background: rgba(255,255,255,0.15); color: var(--brand-glow-gold); }
+
+        .drawer-button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn-drawer-action { padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #ffffff; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.25s; }
+        .btn-drawer-action.chat-trigger { border-color: rgba(249, 115, 22, 0.4); background: rgba(249, 115, 22, 0.1); color: #fdba74; }
+        .btn-drawer-action.chat-trigger:hover { background: var(--brand-glow-orange); color: #ffffff; box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4); }
+        .btn-drawer-action.cancel-trigger { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.1); color: #fca5a5; }
+        .btn-drawer-action.cancel-trigger:hover { background: var(--brand-danger); color: #ffffff; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+
+        /* Item Quick View Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 20000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-window { width: 100%; max-width: 480px; background: #0f172a; border-top: 2px solid rgba(251, 191, 36, 0.3); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); max-height: 85vh; overflow-y: auto; }
+        .modal-overlay.active .modal-window { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .modal-header h3 { font-size: 1.25rem; font-weight: 800; color: #fff; max-width: 85%; }
+        .btn-close-modal { background: transparent; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
+
+        .deep-view-body { display: flex; flex-direction: column; gap: 18px; }
+        .deep-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+        .deep-block-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--brand-glow-gold); letter-spacing: 0.5px; margin-bottom: 8px; }
+
+        .quick-info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 4px; }
+        .info-pill-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 8px 4px; border-radius: 12px; text-align: center; }
+        .info-pill-card i { font-size: 0.85rem; color: var(--brand-glow-orange); margin-bottom: 4px; display: block; }
+        .info-pill-title { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+        .info-pill-value { font-size: 0.72rem; color: #ffffff; font-weight: 700; margin-top: 2px; }
+
+        .inc-exc-box { display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); padding: 12px; border-radius: 14px; }
+        .matrix-item { display: flex; align-items: flex-start; gap: 8px; font-size: 0.78rem; color: #e2e8f0; line-height: 1.4; }
+        .matrix-item i.fa-circle-check { color: var(--brand-success); margin-top: 2px; }
+
+        .premium-pricing-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .price-structure-row { display: flex; justify-content: space-between; align-items: center; }
+        .price-metric-group { display: flex; align-items: baseline; gap: 8px; }
+        .price-actual { font-size: 1.5rem; font-weight: 800; color: var(--brand-success); }
+        .price-strike { font-size: 0.95rem; color: var(--text-muted); text-decoration: line-through; }
+        .saving-badge { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: var(--radius-round); }
+
+        /* Success & Backdrops */
+        .success-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 7, 18, 0.92);
+            backdrop-filter: blur(25px); z-index: 25000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease; padding: 20px;
+        }
+        .success-overlay.active { opacity: 1; pointer-events: auto; }
+        .success-window { text-align: center; max-width: 380px; transform: scale(0.85); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .success-overlay.active .success-window { transform: scale(1); }
+        .success-checkmark-glow {
+            width: 80px; height: 80px; border-radius: 50%; background: rgba(16, 185, 129, 0.15);
+            border: 2px solid var(--brand-success); color: var(--brand-success); font-size: 2.4rem;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;
+            box-shadow: 0 0 35px rgba(16, 185, 129, 0.5);
+        }
+
+        .modal-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px); z-index: 15000; display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: all 0.3s ease; padding: 20px;
+        }
+        .modal-backdrop.active { opacity: 1; pointer-events: auto; }
+        .modal-box { background: #0f172a; border: 1px solid var(--border-color); border-radius: 22px; padding: 24px; width: 100%; max-width: 360px; box-shadow: var(--card-shadow); }
+
+        /* Live Chat Support Drawer */
+        .chat-drawer-overlay {
+            position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px); z-index: 18000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .chat-drawer-overlay.active { opacity: 1; pointer-events: auto; }
+        .chat-container-box {
+            position: fixed; bottom: 0; left: 50%; transform: translate(-50%, 100%); width: 100%; max-width: 480px;
+            height: 75vh; background: #0b0f19; border-radius: 28px 28px 0 0; border: 1px solid var(--border-color);
+            box-shadow: 0 -15px 50px rgba(0,0,0,0.6); z-index: 19000; display: flex; flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .chat-drawer-overlay.active + .chat-container-box, 
+        .chat-container-box.active { transform: translate(-50%, 0); }
+        
+        .chat-header { padding: 18px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.8); }
+        .chat-logs-area { flex-grow: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        
+        .chat-bubble { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 0.8rem; line-height: 1.45; animation: slideIn 0.25s ease forwards; }
+        .chat-bubble.agent { background: rgba(255,255,255,0.06); color: #f1f5f9; align-self: flex-start; border-radius: 4px 16px 16px 16px; border: 1px solid rgba(255,255,255,0.05); }
+        .chat-bubble.client { background: linear-gradient(135deg, var(--brand-glow-orange) 0%, #ea580c 100%); color: #ffffff; align-self: flex-end; border-radius: 16px 16px 4px 16px; box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3); }
+        
+        .chat-input-bar { padding: 14px; border-top: 1px solid var(--border-color); display: flex; gap: 10px; background: rgba(15, 23, 42, 0.8); }
+        .chat-input-field { flex-grow: 1; background: rgba(3,7,18,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 14px; color: #fff; font-size: 0.82rem; outline: none; }
+        .chat-input-field:focus { border-color: var(--brand-glow-orange); }
+
+        /* Floating Cart Sticky Bar */
+        .cart-drawer {
+            position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%) translateY(120%); width: calc(100% - 40px); max-width: 440px;
+            background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 18px; padding: 14px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: space-between; z-index: 1000;
+            backdrop-filter: blur(16px); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cart-drawer.active { transform: translateX(-50%) translateY(0); }
+        .cart-info { display: flex; align-items: center; gap: 12px; }
+        .cart-badge { background: linear-gradient(135deg, var(--brand-glow-orange) 0%, var(--brand-glow-gold) 100%); color: #0f172a; font-weight: 800; font-size: 0.8rem; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .cart-text h5 { font-size: 0.85rem; font-weight: 800; color: #ffffff; }
+        .cart-text p { font-size: 0.7rem; color: var(--text-muted); }
+        .btn-cart-checkout { background: #ffffff; color: #030712; padding: 8px 16px; border-radius: var(--radius-round); font-size: 0.75rem; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+        /* --- PREVIEW ULTRA MOBILE BOTTOM NAVIGATION BAR --- */
+        .bottom-nav-bar {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;
+            height: 65px; background: rgba(7, 9, 19, 0.92); backdrop-filter: blur(20px); border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around; align-items: center; z-index: 12000; padding: 0 10px;
+        }
+
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+            color: var(--text-muted); text-decoration: none; font-size: 0.68rem; font-weight: 700; width: 20%;
+            transition: all 0.25s ease; cursor: pointer; border: none; background: transparent;
+        }
+
+        .nav-item i { font-size: 1.15rem; transition: transform 0.25s ease; }
+        .nav-item.active { color: var(--brand-glow-orange); }
+        .nav-item.active i { transform: translateY(-2px); color: var(--brand-glow-gold); }
+
+        /* Views Switching System */
+        .app-view-section { display: none; }
+        .app-view-section.active { display: block; animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Toast Notifications */
+        .toast-container { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 30000; display: flex; flex-direction: column; gap: 10px; width: calc(100% - 40px); max-width: 380px; }
+        .toast-popup {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15);
+            padding: 12px 20px; border-radius: var(--radius-round); color: #ffffff; font-size: 0.8rem; font-weight: 600;
+            display: flex; align-items: center; gap: 10px; box-shadow: var(--card-shadow);
+            transform: translateY(-40px); opacity: 0; transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-popup.active { transform: translateY(0); opacity: 1; }
+    </style>
 </head>
+<body>
 
-<body x-data="feasthubApp()" x-init="initApp()">
+    <div class="container">
+        <!-- Dynamic Glow Background Effects -->
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
 
-<div x-show="loading" class="loading" x-cloak>
-  <div class="loader-box">
-    <div class="loader"></div>
-    <b>FEASTHUB</b>
-    <p>Preparing your dining experience…</p>
-  </div>
-</div>
-
-<div class="toast-wrap">
-  <template x-for="t in toasts" :key="t.id">
-    <div class="toast" :class="t.type">
-      <i :class="t.type==='success'?'fa-solid fa-circle-check':t.type==='error'?'fa-solid fa-circle-xmark':t.type==='warn'?'fa-solid fa-triangle-exclamation':'fa-solid fa-circle-info'"></i>
-      <span x-text="t.message"></span>
-    </div>
-  </template>
-</div>
-
-<div x-show="ready" x-cloak class="app">
-<header class="header">
-  <div class="shell header-inner">
-    <button class="logo" @click="switchTab('home')">
-      <span class="logo-mark"><i class="fa-solid fa-utensils"></i></span>
-      <span class="logo-text">FEAST<span>HUB</span></span>
-    </button>
-
-    <div class="search">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input x-model="searchQuery" @input="filterCatalog()" placeholder="Search restaurants, cuisine or area…">
-    </div>
-
-    <div style="display:flex;gap:8px;margin-left:auto">
-      <button class="icon-btn desktop-only" @click="switchTab('bookings')" title="My reservations"><i class="fa-regular fa-calendar-check"></i></button>
-      <button class="icon-btn" @click="switchTab('profile')" :title="authUser?'Account':'Sign in'">
-        <img x-show="profile.photoURL" :src="profile.photoURL" style="width:25px;height:25px;border-radius:8px;object-fit:cover">
-        <span x-show="!profile.photoURL" x-text="(profile.name||'G').split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase()" style="font-size:10px;font-weight:900;color:#bdb3ff"></span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<main class="shell">
-  <section x-show="currentTab==='home'" class="page">
-    <div class="hero">
-      <span class="eyebrow"><i class="fa-solid fa-sparkles"></i> Premium table booking</span>
-      <h1>Good food deserves a <span class="gradient">great table.</span></h1>
-      <p>Discover restaurants, choose your date and time, check table availability and manage every reservation from one polished dining app.</p>
-      <div class="stats">
-        <span class="stat"><b>Live</b> booking updates</span>
-        <span class="stat"><b>Secure</b> Firebase booking records</span>
-        <span class="stat"><b>24/7</b> guest browsing</span>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-head"><div><h2>Explore cuisines</h2><p>Find the mood for your next meal.</p></div><button class="btn" @click="selectedCategory='all';filterCatalog()">Reset</button></div>
-      <div class="chips">
-        <template x-for="cat in categories" :key="cat">
-          <button class="chip" :class="selectedCategory===cat?'active':''" @click="selectedCategory=cat;filterCatalog()" x-text="cat==='all'?'All Cuisines':cat.charAt(0).toUpperCase()+cat.slice(1)"></button>
-        </template>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-        <button class="chip" :class="filterVegOnly?'active':''" @click="filterVegOnly=!filterVegOnly;filterCatalog()"><i class="fa-solid fa-leaf"></i> Pure Veg</button>
-        <button class="chip" :class="filterOpenOnly?'active':''" @click="filterOpenOnly=!filterOpenOnly;filterCatalog()"><i class="fa-solid fa-door-open"></i> Open Now</button>
-      </div>
-    </div>
-
-    <div class="section" id="restaurants">
-      <div class="section-head"><div><h2>Featured restaurants</h2><p x-text="filteredRestaurants.length+' places available'"></p></div></div>
-      <div x-show="!filteredRestaurants.length" class="empty glass"><i class="fa-solid fa-store-slash"></i><b>No restaurants found</b><span>Try a different search or filter.</span></div>
-      <div class="grid">
-        <template x-for="r in filteredRestaurants" :key="r.id">
-          <article class="restaurant glass">
-            <div class="cover">
-              <img :src="r.coverImage||r.image||'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=85'" loading="lazy" @error="$event.target.style.display='none'">
-              <span class="badge" :class="r.isOpen!==false?'open':'closed'" x-text="r.isOpen!==false?'OPEN NOW':'CLOSED'"></span>
-              <button class="icon-btn favorite" @click="favorites.includes(r.id)?favorites=favorites.filter(x=>x!==r.id):favorites.push(r.id)">
-                <i :class="favorites.includes(r.id)?'fa-solid fa-heart':'fa-regular fa-heart'" :style="favorites.includes(r.id)?'color:#ff7181':''"></i>
-              </button>
+        <!-- Sticky Mobile App Top Header -->
+        <header class="app-header">
+            <div class="brand-logo-group">
+                <div class="brand-logo-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h1 class="header-title">GharSeva <span>Dining</span></h1>
             </div>
-            <div class="restaurant-body">
-              <div class="restaurant-title">
-                <div><h3 x-text="r.name||'Restaurant'"></h3><p x-text="r.cuisines||'Multi-cuisine'"></p></div>
-                <span class="rating"><i class="fa-solid fa-star"></i> <span x-text="r.rating||'4.5'"></span></span>
-              </div>
-              <p><i class="fa-solid fa-location-dot"></i> <span x-text="[r.area,r.city].filter(Boolean).join(', ')"></span></p>
-              <div class="actions">
-                <button class="btn green" @click="openMenu(r)">View Menu</button>
-                <button class="btn primary" @click="openBookingFromCard(r)" title="Reserve table"><i class="fa-regular fa-calendar-check"></i></button>
-              </div>
+            <div class="user-avatar-badge" id="userProfileBtn" title="Account Settings">
+                <i class="fas fa-user-astronaut"></i>
             </div>
-          </article>
-        </template>
-      </div>
-    </div>
-  </section>
+        </header>
 
-  <section x-show="currentTab==='menu'" x-cloak class="page">
-    <button class="back" @click="switchTab('home')"><i class="fa-solid fa-arrow-left"></i> Back to restaurants</button>
-    <div class="menu-hero glass">
-      <span class="eyebrow" x-text="activeRestaurant?.cuisines||'Restaurant'"></span>
-      <div style="display:flex;justify-content:space-between;gap:15px;align-items:end;margin-top:12px">
-        <div><h1 style="font-size:30px;margin:0" x-text="activeRestaurant?.name"></h1><p style="font-size:12px;color:var(--muted)" x-text="activeRestaurant?.description"></p></div>
-        <button class="btn green desktop-only" @click="openBookingFromCard(activeRestaurant)">Reserve</button>
-      </div>
-    </div>
-    <div class="menu-items">
-      <template x-for="item in activeMenuItems" :key="item.id">
-        <article class="menu-item">
-          <img :src="item.image||'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80'">
-          <div style="min-width:0;flex:1">
-            <div style="display:flex;justify-content:space-between;gap:8px"><h3 x-text="item.name"></h3><span class="price">₹<span x-text="item.price||0"></span></span></div>
-            <p x-text="item.description||'Chef-crafted selection.'"></p>
-            <div style="display:flex;justify-content:space-between;align-items:center"><span class="mini" :style="item.isVeg?'color:#69e4b7':'color:#ff8c9a'" x-text="item.isVeg?'VEG':'NON-VEG'"></span><span class="mini">Available</span></div>
-          </div>
-        </article>
-      </template>
-    </div>
-    <div x-show="!activeMenuItems.length" class="empty glass" style="margin-top:14px"><i class="fa-solid fa-utensils"></i><b>Menu coming soon</b><span>Restaurant menu data was not found in Firebase.</span></div>
-  </section>
+        <!-- VIEW 1: MENU & CATALOG VIEW -->
+        <main class="app-view-section active" id="view-menu">
+            <div class="section-padding" style="padding-bottom: 0;">
+                <div class="action-portal-card">
+                    <div class="portal-text-group">
+                        <h3 id="portalUserWelcome">Loading Gourmet Menu...</h3>
+                        <p>Artisanal dishes prepared by master chefs</p>
+                    </div>
+                </div>
 
-  <section x-show="currentTab==='booking'" x-cloak class="page">
-    <button class="back" @click="switchTab('home')"><i class="fa-solid fa-arrow-left"></i> Back to restaurants</button>
-    <div class="booking-shell">
-      <div>
-        <div class="stepper">
-          <span class="step" :class="bookingStep>=1?'active':''">01 Restaurant</span>
-          <span class="step" :class="bookingStep>=2?'active':''">02 Schedule</span>
-          <span class="step" :class="bookingStep>=3?'active':''">03 Details</span>
-          <span class="step" :class="bookingStep>=4?'active':''">04 Confirmed</span>
+                <div class="search-wrapper">
+                    <i class="fas fa-magnifying-glass search-icon-decor"></i>
+                    <input type="text" id="menuSearchInput" class="search-control" placeholder="Search dishes, ingredients, or dietary tags..." oninput="handleCatalogSearch(this.value)">
+                </div>
+
+                <div class="filter-ribbon">
+                    <button class="filter-chip active" data-category="all" onclick="filterCatalogCategory('all', this)">
+                        All Specialties <span class="filter-chip-count" id="cnt-cat-all">0</span>
+                    </button>
+                    <button class="filter-chip" data-category="mains" onclick="filterCatalogCategory('mains', this)">
+                        Main Course <span class="filter-chip-count" id="cnt-cat-mains">0</span>
+                    </button>
+                    <button class="filter-chip" data-category="starters" onclick="filterCatalogCategory('starters', this)">
+                        Starters <span class="filter-chip-count" id="cnt-cat-starters">0</span>
+                    </button>
+                    <button class="filter-chip" data-category="desserts" onclick="filterCatalogCategory('desserts', this)">
+                        Desserts <span class="filter-chip-count" id="cnt-cat-desserts">0</span>
+                    </button>
+                    <button class="filter-chip" data-category="beverages" onclick="filterCatalogCategory('beverages', this)">
+                        Beverages <span class="filter-chip-count" id="cnt-cat-beverages">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-padding" style="padding-top: 0;">
+                <div class="services-vertical-stack" id="catalogFeedStack">
+                    <!-- Dynamic Items Rendered Here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- VIEW 2: CART & CHECKOUT VIEW -->
+        <main class="app-view-section" id="view-cart">
+            <div class="section-padding">
+                <div class="glass-card" id="checkoutCard" style="display: none;">
+                    <div class="section-title-row">
+                        <h2 class="section-title">
+                            <i class="fas fa-basket-shopping" style="color: var(--brand-glow-gold);"></i> Selected Dining Items
+                        </h2>
+                    </div>
+                    
+                    <div class="cart-list" id="cartListItems"></div>
+
+                    <div class="breakdown-row">
+                        <span>Items Subtotal</span>
+                        <span id="txtSubtotal">₹0.00</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>Gourmet Delivery Fee</span>
+                        <span>₹29.00</span>
+                    </div>
+                    <div class="breakdown-row discount" id="discountRow">
+                        <span>Promo Code Discount</span>
+                        <span id="txtDiscount">-₹0.00</span>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="total-row">
+                        <span>Grand Total</span>
+                        <span class="total-price" id="txtGrandTotal">₹0.00</span>
+                    </div>
+
+                    <div class="promo-wrapper">
+                        <input type="text" id="promoInput" class="promo-input" placeholder="Enter Code (e.g. GHARSEVA100)">
+                        <button class="btn-promo-apply" onclick="applyDiscount()">Apply</button>
+                    </div>
+                </div>
+
+                <div class="glass-card" id="emptyCartState" style="display: block; text-align: center; padding: 35px 20px;">
+                    <i class="fas fa-utensils" style="font-size: 3.2rem; color: var(--brand-glow-gold); margin-bottom: 16px; opacity:0.8;"></i>
+                    <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 6px;">Your Cart is Empty</h3>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 18px;">Select dishes from our menu to place an order.</p>
+                    <button class="btn-primary-action" onclick="switchTab('menu')">
+                        <i class="fas fa-compass"></i> Explore Gourmet Menu
+                    </button>
+                </div>
+
+                <div class="glass-card" id="billingFormCard" style="display: none;">
+                    <div class="section-title-row">
+                        <h2 class="section-title">
+                            <i class="fas fa-map-location-dot" style="color: var(--brand-glow-orange);"></i> Delivery Details
+                        </h2>
+                    </div>
+                    <form id="bookingCheckoutForm" onsubmit="event.preventDefault(); executeBooking();">
+                        <div class="form-group">
+                            <label>Customer Name</label>
+                            <input type="text" id="custName" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="custPhone" class="form-control" placeholder="10-digit phone number" required pattern="[0-9]{10}">
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Delivery Time</label>
+                            <input type="datetime-local" id="scheduledSlot" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Delivery Address & Special Notes</label>
+                            <textarea id="custAddress" class="form-control" placeholder="Complete street address, building, floor, or chef instructions..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-checkout-confirm" id="btnExecuteBooking">
+                            <span>Confirm & Schedule Order</span> <i class="fas fa-shield-check"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- VIEW 3: LIVE TRACKING & ORDERS -->
+        <main class="app-view-section" id="view-orders">
+            <div class="section-padding">
+                <div class="section-title-row" style="margin-bottom: 16px;">
+                    <h2 class="section-title">
+                        <i class="fas fa-satellite-dish" style="color: var(--brand-success);"></i> Live Order Tracking
+                    </h2>
+                    <div class="sync-indicator">
+                        <div class="sync-dot"></div> <span>LIVE SYNC</span>
+                    </div>
+                </div>
+
+                <div class="search-wrapper">
+                    <i class="fas fa-magnifying-glass search-icon-decor"></i>
+                    <input type="text" id="custSearch" class="search-control" placeholder="Search orders by ID, items, or address..." oninput="handleSearch(this.value)">
+                </div>
+
+                <div class="filter-ribbon">
+                    <button class="filter-chip active" id="chip-all" onclick="filterHistory('all', this)">
+                        All Orders <span class="filter-chip-count" id="cnt-all">0</span>
+                    </button>
+                    <button class="filter-chip" id="chip-Pending" onclick="filterHistory('Pending', this)">
+                        Received <span class="filter-chip-count" id="cnt-Pending">0</span>
+                    </button>
+                    <button class="filter-chip" id="chip-Verified" onclick="filterHistory('Verified', this)">
+                        Kitchen Preparing <span class="filter-chip-count" id="cnt-Verified">0</span>
+                    </button>
+                    <button class="filter-chip" id="chip-Transit" onclick="filterHistory('Technician Sent', this)">
+                        On The Way <span class="filter-chip-count" id="cnt-Transit">0</span>
+                    </button>
+                    <button class="filter-chip" id="chip-Completed" onclick="filterHistory('Completed', this)">
+                        Delivered <span class="filter-chip-count" id="cnt-Completed">0</span>
+                    </button>
+                </div>
+
+                <div class="feed-container" id="bookingFeedContainer">
+                    <!-- Dynamic Firebase Orders Rendered Here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- VIEW 4: PROFILE & HELP -->
+        <main class="app-view-section" id="view-profile">
+            <div class="section-padding">
+                <div class="glass-card" style="text-align: center; padding: 30px 20px;">
+                    <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--brand-glow-orange), var(--brand-glow-gold)); color: #0f172a; font-size: 2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; box-shadow: 0 0 25px rgba(249, 115, 22, 0.4);">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h2 style="font-size: 1.2rem; font-weight: 800; color: #fff;" id="profileAccountName">Authenticated User</h2>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px;" id="profileAccountEmail">Loading email...</p>
+                    <div class="divider"></div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                        <button class="btn-drawer-action" style="background: rgba(255,255,255,0.05); text-align: left; justify-content: flex-start; padding: 14px;" onclick="switchTab('orders')">
+                            <i class="fas fa-receipt" style="color: var(--brand-glow-gold);"></i> My Past Orders
+                        </button>
+                        <button class="btn-drawer-action" style="background: rgba(255,255,255,0.05); text-align: left; justify-content: flex-start; padding: 14px;" onclick="triggerChatSupport('general')">
+                            <i class="fas fa-headset" style="color: var(--brand-info);"></i> 24/7 Chef Support
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Dynamic Floating Sticky Cart Bar -->
+        <div class="cart-drawer" id="cartDrawer">
+            <div class="cart-info">
+                <div class="cart-badge" id="cartCount">0</div>
+                <div class="cart-text">
+                    <h5 id="cartTitle">Items Selected</h5>
+                    <p id="cartTotal">Total: ₹0.00</p>
+                </div>
+            </div>
+            <button class="btn-cart-checkout" onclick="switchTab('cart')">
+                View Cart <i class="fas fa-arrow-right"></i>
+            </button>
         </div>
 
-        <div x-show="bookingStep<4" class="glass card">
-          <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px">
-            <div><span class="mini">Restaurant</span><h2 style="margin:3px 0 0;font-size:20px" x-text="selectedRestaurant?.name"></h2></div>
-            <button class="btn" @click="switchTab('home')">Change</button>
-          </div>
+        <!-- ULTRA MOBILE BOTTOM NAVIGATION BAR -->
+        <nav class="bottom-nav-bar">
+            <button class="nav-item active" id="nav-menu" onclick="switchTab('menu')">
+                <i class="fas fa-utensils"></i>
+                <span>Menu</span>
+            </button>
+            <button class="nav-item" id="nav-cart" onclick="switchTab('cart')">
+                <i class="fas fa-basket-shopping"></i>
+                <span>Cart</span>
+            </button>
+            <button class="nav-item" id="nav-orders" onclick="switchTab('orders')">
+                <i class="fas fa-clock-rotate-left"></i>
+                <span>Orders</span>
+            </button>
+            <button class="nav-item" id="nav-profile" onclick="switchTab('profile')">
+                <i class="fas fa-circle-user"></i>
+                <span>Account</span>
+            </button>
+        </nav>
 
-          <div x-show="bookingStep===1">
-            <div class="form-grid">
-              <label>Date<input class="field" type="date" x-model="resForm.date" :min="new Date().toISOString().slice(0,10)" @change="checkAvailability()"></label>
-              <label>Time<input class="field" type="time" x-model="resForm.time" @change="checkAvailability()"></label>
+    </div>
+
+    <!-- ITEM DETAIL MODAL -->
+    <div class="modal-overlay" id="deepViewModal" onclick="toggleDeepViewModal(false)">
+        <div class="modal-window" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="deepModalTitle">Dish Matrix Details</h3>
+                <button class="btn-close-modal" onclick="toggleDeepViewModal(false)"><i class="fas fa-xmark"></i></button>
             </div>
-            <label>Guests
-              <div class="guest-control">
-                <button type="button" @click="changeGuests(-1)">−</button><span class="guest-num"><span x-text="resForm.guests"></span> guests</span><button type="button" @click="changeGuests(1)">+</button>
-              </div>
-            </label>
-            <div class="availability" :class="availability.state==='full'?'bad':availability.state==='checking'?'warn':''">
-              <i :class="availability.state==='checking'?'fa-solid fa-spinner fa-spin':availability.available?'fa-solid fa-circle-check':'fa-solid fa-circle-xmark'"></i>
-              <span x-text="availability.message"></span>
+            
+            <div class="deep-view-body">
+                <p class="deep-desc" id="deepModalDesc"></p>
+
+                <div class="quick-info-grid">
+                    <div class="info-pill-card">
+                        <i class="fas fa-fire"></i>
+                        <div class="info-pill-title">Preparation</div>
+                        <div class="info-pill-value" id="infoWarranty">25-30 Min</div>
+                    </div>
+                    <div class="info-pill-card">
+                        <i class="fas fa-leaf"></i>
+                        <div class="info-pill-title">Quality</div>
+                        <div class="info-pill-value">100% Fresh</div>
+                    </div>
+                    <div class="info-pill-card">
+                        <i class="fas fa-hat-chef"></i>
+                        <div class="info-pill-title">Chef</div>
+                        <div class="info-pill-value">Master Prep</div>
+                    </div>
+                    <div class="info-pill-card">
+                        <i class="fas fa-box"></i>
+                        <div class="info-pill-title">Packaging</div>
+                        <div class="info-pill-value">Thermal Sealed</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="deep-block-title">Key Gourmet Ingredients</div>
+                    <div class="inc-exc-box" id="incExcContainer"></div>
+                </div>
+
+                <div class="premium-pricing-card">
+                    <div class="price-structure-row">
+                        <div>
+                            <span class="deep-block-title" style="margin-bottom:2px;">Special Rate</span>
+                            <div class="price-metric-group">
+                                <span class="price-actual" id="deepModalPrice">₹499</span>
+                                <span class="price-strike" id="deepModalStrike">₹699</span>
+                            </div>
+                        </div>
+                        <span class="saving-badge" id="deepModalSavings">Save ₹200</span>
+                    </div>
+                </div>
             </div>
-            <button class="btn primary" style="width:100%;margin-top:10px" @click="bookingStep=2;checkAvailability()">Continue to details <i class="fa-solid fa-arrow-right"></i></button>
-          </div>
 
-          <div x-show="bookingStep===2">
-            <div class="form-grid">
-              <label>Full name<input class="field" x-model="resForm.name" placeholder="Your name"></label>
-              <label>Phone number<input class="field" x-model="resForm.phone" inputmode="tel" placeholder="+91 98765 43210"></label>
+            <div style="margin-top: 20px;" id="deepModalActionSlot"></div>
+        </div>
+    </div>
+
+    <!-- SUCCESS OVERLAY MODAL -->
+    <div class="success-overlay" id="successScreenWindow">
+        <div class="success-window">
+            <div class="success-checkmark-glow">
+                <i class="fas fa-check"></i>
             </div>
-            <label>Address / contact location<textarea class="field" x-model="resForm.address" placeholder="Optional location for reservation contact or special arrangements"></textarea></label>
-            <label>Special requests<textarea class="field" x-model="resForm.specialRequest" placeholder="Birthday, anniversary, accessibility request, seating preference…"></textarea></label>
-            <div style="display:flex;gap:8px"><button class="btn" @click="bookingStep=1">Back</button><button class="btn primary" style="flex:1" @click="bookingStep=3">Review booking <i class="fa-solid fa-arrow-right"></i></button></div>
-          </div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: #ffffff; margin-bottom: 8px;">Order Confirmed!</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 24px;" id="successModalInvoiceNarrative">
+                Your gourmet culinary order has been successfully sent to our kitchen.
+            </p>
+            <button class="btn-primary-action" onclick="closeSuccessAndRefresh()">
+                <i class="fas fa-satellite-dish"></i> Track Order Status
+            </button>
+        </div>
+    </div>
 
-          <div x-show="bookingStep===3">
-            <div class="res glass" style="background:rgba(255,255,255,.025)">
-              <div class="res-top"><div><span class="mini">Restaurant</span><h3 x-text="selectedRestaurant?.name"></h3></div><span class="status s-verified">REQUEST</span></div>
-              <div class="res-meta">
-                <div><i class="fa-regular fa-calendar"></i> <span x-text="resForm.date"></span></div>
-                <div><i class="fa-regular fa-clock"></i> <span x-text="resForm.time"></span></div>
-                <div><i class="fa-solid fa-users"></i> <span x-text="resForm.guests+' guests'"></span></div>
-                <div><i class="fa-solid fa-user"></i> <span x-text="resForm.name"></span></div>
-                <div><i class="fa-solid fa-phone"></i> <span x-text="resForm.phone"></span></div>
-                <div x-show="resForm.specialRequest"><i class="fa-regular fa-note-sticky"></i> <span x-text="resForm.specialRequest"></span></div>
-              </div>
+    <!-- CONFIRM CANCELLATION MODAL -->
+    <div class="modal-backdrop" id="confirmBackdrop">
+        <div class="modal-box">
+            <h3 style="font-size:1.05rem; font-weight:800; color:#fff; margin-bottom:8px;">
+                <i class="fas fa-triangle-exclamation" style="color:var(--brand-danger); margin-right:6px;"></i> Cancel Order
+            </h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:20px; line-height:1.4;">
+                Are you sure you want to cancel this culinary order? This cannot be undone.
+            </p>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn-promo-apply" style="margin:0; background:rgba(255,255,255,0.04);" onclick="closeConfirmModal()">Keep Order</button>
+                <button class="btn-primary-action" style="margin:0; background:var(--brand-danger); box-shadow:none;" id="btnConfirmCancellation">Confirm Cancel</button>
             </div>
-            <div x-show="!authUser" class="availability warn" style="margin-top:12px"><i class="fa-brands fa-google"></i> Sign in with Google is required before the booking can be saved.</div>
-            <div x-show="bookingError" class="availability bad" x-text="bookingError"></div>
-            <div style="display:flex;gap:8px;margin-top:12px"><button class="btn" @click="bookingStep=2">Edit</button><button class="btn primary" style="flex:1" @click="authUser?submitBooking():signIn()" :disabled="isSubmitting"><i :class="isSubmitting?'fa-solid fa-spinner fa-spin':'fa-solid fa-calendar-check'"></i> <span x-text="isSubmitting?'Saving booking…':authUser?'Confirm booking':'Sign in & continue'"></span></button></div>
-          </div>
         </div>
+    </div>
 
-        <div x-show="bookingStep===4" class="glass card" x-cloak style="text-align:center">
-          <div style="width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin:0 auto 15px;background:rgba(24,200,139,.12);border:1px solid rgba(24,200,139,.4);color:#54e7b0;font-size:28px"><i class="fa-solid fa-check"></i></div>
-          <span class="eyebrow">Booking saved</span>
-          <h2 style="font-size:25px;margin:15px 0 8px">Table request confirmed</h2>
-          <p class="mini">Your booking is now in your reservation feed. Restaurant-side status updates will appear there in real time.</p>
-          <div class="res" style="text-align:left;margin:18px 0"><div class="res-top"><div><span class="mini">Booking ID</span><h3 x-text="lastBooking?.id"></h3></div><span class="status s-pending">Pending</span></div><div class="res-meta"><div><i class="fa-solid fa-store"></i> <span x-text="lastBooking?.restaurantName"></span></div><div><i class="fa-regular fa-calendar"></i> <span x-text="resForm.date+' • '+resForm.time"></span></div><div><i class="fa-solid fa-users"></i> <span x-text="resForm.guests+' guests'"></span></div></div></div>
-          <button class="btn green" style="width:100%" @click="switchTab('bookings')">View My Reservations</button>
+    <!-- LIVE CHAT ASSISTANT -->
+    <div class="chat-drawer-overlay" id="chatOverlay" onclick="closeChatSupport()"></div>
+    <div class="chat-container-box" id="chatSupportBox">
+        <div class="chat-header">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="sync-dot"></div>
+                <div>
+                    <h4 style="font-size:0.88rem; font-weight:800; color:#fff;" id="chatHeaderTitle">GharSeva Dining Support</h4>
+                    <p style="font-size:0.68rem; color:var(--text-muted);">Real-time kitchen assistant</p>
+                </div>
+            </div>
+            <button class="user-avatar-badge" style="width:32px; height:32px; font-size:0.75rem;" onclick="closeChatSupport()">
+                <i class="fas fa-xmark"></i>
+            </button>
         </div>
-      </div>
+        
+        <div class="chat-logs-area" id="chatMessagesDump"></div>
 
-      <aside class="glass card res-card">
-        <span class="mini">Booking summary</span>
-        <h3 style="font-size:18px;margin:5px 0 15px" x-text="selectedRestaurant?.name"></h3>
-        <div class="res-meta">
-          <div><i class="fa-regular fa-calendar"></i> <span x-text="resForm.date||'Choose date'"></span></div>
-          <div><i class="fa-regular fa-clock"></i> <span x-text="resForm.time||'Choose time'"></span></div>
-          <div><i class="fa-solid fa-users"></i> <span x-text="resForm.guests+' guests'"></span></div>
+        <div class="chat-input-bar">
+            <input type="text" id="chatTextIn" class="chat-input-field" placeholder="Ask about order, spices, delivery..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+            <button class="user-avatar-badge" style="border-radius:12px; width:40px; height:40px; background:var(--brand-glow-orange); color:#fff; border:none;" onclick="sendChatMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
         </div>
-        <div class="availability" style="margin-top:15px"><i class="fa-solid fa-shield-halved"></i> Your booking remains under the existing <b>bookings</b> Firebase collection and user ownership logic.</div>
-      </aside>
     </div>
-  </section>
 
-  <section x-show="currentTab==='bookings'" x-cloak class="page">
-    <div class="section-head"><div><h2>My Reservations</h2><p>Live status, schedule and booking management.</p></div><button class="btn" @click="bookingFilter='all'">All</button></div>
-    <div class="search" style="max-width:none;margin:0 0 13px;display:block"><i class="fa-solid fa-magnifying-glass"></i><input x-model="bookingSearch" placeholder="Search booking, restaurant, address…"></div>
-    <div class="chips" style="margin-bottom:15px">
-      <template x-for="f in ['all','Pending','Verified','Technician Sent','Completed','Cancelled']" :key="f"><button class="chip" :class="bookingFilter===f?'active':''" @click="bookingFilter=f" x-text="f==='all'?'All':f"></button></template>
-    </div>
-    <div x-show="!filteredBookings.length" class="empty glass"><i class="fa-regular fa-calendar-xmark"></i><b>No reservations found</b><span>Your confirmed requests and future bookings will appear here.</span><button class="btn green" style="margin-top:14px" @click="switchTab('home')">Explore restaurants</button></div>
-    <div class="res-list">
-      <template x-for="b in filteredBookings" :key="b.id">
-        <article class="res glass">
-          <div class="res-top">
-            <div><span class="mini" x-text="'#'+shortId(b.id)"></span><h3 x-text="b.restaurantName||(b.services?.[0]?.restaurantName)||'Table reservation'"></h3></div>
-            <span class="status" :class="statusClass(b.status)" x-text="b.status||'Pending'"></span>
-          </div>
-          <p x-text="b.customerName||'Customer'"></p>
-          <div class="res-meta">
-            <div><i class="fa-regular fa-calendar"></i> <span x-text="formatDate(b.scheduledSlot)"></span></div>
-            <div><i class="fa-solid fa-users"></i> <span x-text="(b.guests||b.services?.[0]?.guests||1)+' guests'"></span></div>
-            <div x-show="b.customerAddress"><i class="fa-solid fa-location-dot"></i> <span x-text="b.customerAddress"></span></div>
-            <div x-show="b.specialRequest"><i class="fa-regular fa-note-sticky"></i> <span x-text="b.specialRequest"></span></div>
-          </div>
-          <div class="res-actions">
-            <button class="btn" @click="openSupport(b)"><i class="fa-regular fa-comment-dots"></i> Support</button>
-            <button class="btn" x-show="b.status!=='Cancelled'&&b.status!=='Completed'" @click="cancelBooking(b.id)"><i class="fa-solid fa-ban"></i> Cancel</button>
-          </div>
-        </article>
-      </template>
-    </div>
-  </section>
+    <div class="toast-container" id="toastContainer"></div>
 
-  <section x-show="currentTab==='profile'" x-cloak class="page">
-    <div class="two">
-      <div class="glass card">
-        <div class="section-head"><div><h2>Account</h2><p>Customer details used by your existing booking flow.</p></div></div>
-        <div class="form-grid">
-          <label>Full name<input class="field" x-model="profile.name"></label>
-          <label>Phone<input class="field" x-model="profile.phone"></label>
-        </div>
-        <label>Email<input class="field" x-model="profile.email" disabled></label>
-        <button class="btn green" style="width:100%" @click="saveProfile()">Save profile</button>
-        <button x-show="authUser" class="btn" style="width:100%;margin-top:8px;color:#ff9eaa" @click="signOut()">Sign out</button>
-        <button x-show="!authUser" class="btn primary" style="width:100%;margin-top:8px" @click="signIn()"><i class="fa-brands fa-google"></i> Sign in with Google</button>
-      </div>
-      <div class="glass card">
-        <span class="mini">Authentication</span>
-        <h3 style="font-size:18px;margin:6px 0">Firebase customer session</h3>
-        <p class="mini">Browsing works as a guest. Booking creation and live personal booking history use the authenticated user's UID, matching the existing booking.html logic.</p>
-        <div class="availability" :class="authUser?'':'warn'"><i :class="authUser?'fa-solid fa-circle-check':'fa-solid fa-user-clock'"></i> <span x-text="authUser?'Signed in as '+(authUser.email||profile.name):'Guest mode — sign in before confirming a booking.'"></span></div>
-      </div>
-    </div>
-  </section>
-</main>
+    <!-- FIREBASE AND INTEGRATED APPLICATION LOGIC MODULE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-<nav class="bottom">
-  <div class="bottom-inner">
-    <button class="nav-btn" :class="currentTab==='home'?'active':''" @click="switchTab('home')"><i class="fa-solid fa-compass"></i>Explore</button>
-    <button class="nav-btn" :class="currentTab==='booking'?'active':''" @click="selectedRestaurant?switchTab('booking'):switchTab('home')"><i class="fa-regular fa-calendar-check"></i>Book</button>
-    <button class="nav-btn" :class="currentTab==='bookings'?'active':''" @click="switchTab('bookings')"><i class="fa-solid fa-clock-rotate-left"></i>Reservations</button>
-    <button class="nav-btn" :class="currentTab==='profile'?'active':''" @click="switchTab('profile')"><i class="fa-regular fa-user"></i>Account</button>
-  </div>
-</nav>
-</div>
+        // FIREBASE INFRASTRUCTURE CONFIGURATION (PRESERVED)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
+            authDomain: "yukti-247.firebaseapp.com",
+            databaseURL: "https://yukti-247-default-rtdb.firebaseio.com",
+            projectId: "yukti-247",
+            storageBucket: "yukti-247.firebasestorage.app",
+            messagingSenderId: "244123454826",
+            appId: "1:244123454826:web:56b4d88c3628bb06cfa913",
+            measurementId: "G-6BGFCBKTD7"
+        };
 
-<!-- Support sheet -->
-<div x-show="modal?.type==='support'" x-cloak class="overlay" @click.self="modal=null">
-  <div class="sheet">
-    <div class="sheet-head"><div><span class="mini">Booking support</span><h2 x-text="'#'+shortId(modal?.booking?.id)"></h2></div><button class="icon-btn" @click="modal=null"><i class="fa-solid fa-xmark"></i></button></div>
-    <div class="res">
-      <h3 x-text="modal?.booking?.restaurantName||'Table reservation'"></h3>
-      <p>Status: <b x-text="modal?.booking?.status||'Pending'"></b></p>
-      <p x-text="modal?.booking?.specialRequest||'No special request was added.'"></p>
-    </div>
-    <div class="availability" style="margin-top:12px">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>For this customer app, support uses the booking's live Firebase status. Existing status values such as Pending, Verified, Technician Sent, In-Transit, Completed and Cancelled are preserved.</span>
-    </div>
-    <button class="btn green" style="width:100%;margin-top:10px" @click="modal=null">Close</button>
-  </div>
-</div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-<div x-show="appError" x-cloak class="overlay" style="align-items:center;padding:18px">
-  <div class="error-screen">
-    <i class="fa-solid fa-triangle-exclamation" style="font-size:34px;color:#ff7181"></i>
-    <h2 style="margin:12px 0 6px">FeastHub is running in fallback mode</h2>
-    <p style="font-size:11px;color:var(--muted)" x-text="appError"></p>
-    <button class="btn green" style="margin-top:12px" @click="appError='';location.reload()">Retry Firebase</button>
-  </div>
-</div>
+        // SAMPLE RESTAURANT & DINING DISH CATALOG
+        const RESTAURANT_CATALOG = [
+            { id: "dish-101", category: "mains", name: "Royal Butter Chicken", price: 380, strike: 450, rating: "4.9", image: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=500&auto=format&fit=crop", desc: "Tender chicken cooked in a rich, buttery tomato gravy infused with aromatic spices and fresh cream.", ingredients: ["Fresh Farm Chicken", "Butter & Cream", "Kasuri Methi", "Tomato Reduction"] },
+            { id: "dish-102", category: "mains", name: "Dal Makhani Grand", price: 290, strike: 340, rating: "4.8", image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=500&auto=format&fit=crop", desc: "Black lentils slow-cooked overnight with white butter, cream, and subtle secret spices.", ingredients: ["Black Urad Dal", "White Butter", "Fresh Cream", "Garlic Glaze"] },
+            { id: "dish-103", category: "starters", name: "Paneer Tikka Angara", price: 320, strike: 380, rating: "4.7", image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=500&auto=format&fit=crop", desc: "Cottage cheese cubes marinated in spicy yogurt glaze and clay-oven roasted to perfection.", ingredients: ["Fresh Paneer", "Hung Curd", "Kashmiri Chili", "Bell Peppers"] },
+            { id: "dish-104", category: "starters", name: "Crispy Spring Rolls", price: 240, strike: 290, rating: "4.6", image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop", desc: "Golden fried wrappers stuffed with seasoned shredded vegetables and glass noodles.", ingredients: ["Mixed Veggies", "Glass Noodles", "Sesame Oil", "Sweet Chili Dip"] },
+            { id: "dish-105", category: "desserts", name: "Saffron Gulab Jamun", price: 160, strike: 200, rating: "4.9", image: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500&auto=format&fit=crop", desc: "Soft milk dumplings soaked in warm saffron and cardamom scented sugar syrup.", ingredients: ["Khoya Dumplings", "Saffron Strands", "Green Cardamom", "Rose Essence"] },
+            { id: "dish-106", category: "beverages", name: "Fresh Mango Lassi", price: 140, strike: 180, rating: "4.8", image: "https://images.unsplash.com/photo-1571006682862-39218d6e9f16?w=500&auto=format&fit=crop", desc: "Thick chilled yogurt blended with fresh Alphonso mango pulp and topped with pistachios.", ingredients: ["Alphonso Mango", "Fresh Yogurt", "Pistachio Flakes", "Cardamom"] }
+        ];
 
+        let currentUserSession = null;
+        let selectedServices = [];
+        let discountApplied = 0;
+        let appliedPromoCode = "";
+        let cachedBookings = [];
+        let activeFilter = 'all';
+        let activeCategoryFilter = 'all';
+        let catalogSearchQuery = '';
+        let orderSearchQuery = '';
+        let targetCancellationId = null;
+        let activeSupportBooking = null;
+
+        // BOTTOM NAVIGATION SWITCHER
+        function switchTab(tabId) {
+            document.querySelectorAll('.app-view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+
+            const targetSection = document.getElementById(`view-${tabId}`);
+            const targetNav = document.getElementById(`nav-${tabId}`);
+
+            if (targetSection) targetSection.classList.add('active');
+            if (targetNav) targetNav.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setupDateConstraints() {
+            const dateControl = document.getElementById('scheduledSlot');
+            if (dateControl) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                dateControl.min = now.toISOString().slice(0, 16);
+                dateControl.value = now.toISOString().slice(0, 16);
+            }
+        }
+
+        // CART MANAGEMENT SYSTEM
+        function loadCheckoutData() {
+            const stored = localStorage.getItem('selectedGharSevaServices');
+            const checkoutCard = document.getElementById('checkoutCard');
+            const billingFormCard = document.getElementById('billingFormCard');
+            const emptyStateCard = document.getElementById('emptyCartState');
+
+            if (stored) {
+                try { selectedServices = JSON.parse(stored); } catch(e) { selectedServices = []; }
+            } else {
+                selectedServices = [];
+            }
+
+            updateFloatingCartBar();
+
+            if (selectedServices.length === 0) {
+                if (checkoutCard) checkoutCard.style.display = 'none';
+                if (billingFormCard) billingFormCard.style.display = 'none';
+                if (emptyStateCard) emptyStateCard.style.display = 'block';
+            } else {
+                if (checkoutCard) checkoutCard.style.display = 'block';
+                if (billingFormCard) billingFormCard.style.display = 'block';
+                if (emptyStateCard) emptyStateCard.style.display = 'none';
+                
+                renderCart();
+                calculateBill();
+            }
+        }
+
+        function updateFloatingCartBar() {
+            const drawer = document.getElementById('cartDrawer');
+            const cnt = document.getElementById('cartCount');
+            const total = document.getElementById('cartTotal');
+
+            if(!drawer) return;
+
+            const totalAmount = selectedServices.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
+            
+            if(selectedServices.length > 0) {
+                drawer.classList.add('active');
+                if(cnt) cnt.innerText = selectedServices.length;
+                if(total) total.innerText = `Total: ₹${totalAmount.toFixed(2)}`;
+            } else {
+                drawer.classList.remove('active');
+            }
+        }
+
+        function toggleItemCartSelection(dish) {
+            const index = selectedServices.findIndex(s => s.id === dish.id);
+            if (index > -1) {
+                selectedServices.splice(index, 1);
+                showToast(`${dish.name} removed from cart.`);
+            } else {
+                selectedServices.push(dish);
+                showToast(`${dish.name} added to cart!`);
+            }
+            localStorage.setItem('selectedGharSevaServices', JSON.stringify(selectedServices));
+            loadCheckoutData();
+            renderCatalogItems();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartListItems');
+            if(!container) return;
+            container.innerHTML = "";
+            
+            selectedServices.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <span class="cart-item-name">${item.name || 'Gourmet Dish'}</span>
+                    <div class="cart-item-meta">
+                        <span class="cart-item-price">₹${item.price || 0}</span>
+                        <button class="btn-remove-item" onclick="removeCheckoutItem(${index})" title="Remove item">
+                            <i class="far fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function removeCheckoutItem(index) {
+            selectedServices.splice(index, 1);
+            localStorage.setItem('selectedGharSevaServices', JSON.stringify(selectedServices));
+            showToast("Item removed from cart.");
+            loadCheckoutData();
+            renderCatalogItems();
+        }
+
+        function applyDiscount() {
+            const input = document.getElementById('promoInput');
+            if(!input) return;
+            const token = input.value.trim().toUpperCase();
+            
+            if(token === "GHARSEVA100") {
+                discountApplied = 100;
+                appliedPromoCode = token;
+                showToast("Coupon applied: ₹100 Discount!");
+                document.getElementById('discountRow').style.display = 'flex';
+            } else if(token === "") {
+                showToast("Please enter a coupon code.", false);
+            } else {
+                showToast("Invalid coupon code.", false);
+                discountApplied = 0;
+                appliedPromoCode = "";
+                document.getElementById('discountRow').style.display = 'none';
+            }
+            calculateBill();
+        }
+
+        function calculateBill() {
+            const subtotal = selectedServices.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
+            const grandTotal = Math.max(0, subtotal + 29 - discountApplied);
+
+            const subtotalEl = document.getElementById('txtSubtotal');
+            const discountEl = document.getElementById('txtDiscount');
+            const grandTotalEl = document.getElementById('txtGrandTotal');
+
+            if (subtotalEl) subtotalEl.innerText = `₹${subtotal.toFixed(2)}`;
+            if (discountEl) discountEl.innerText = `-₹${discountApplied.toFixed(2)}`;
+            if (grandTotalEl) grandTotalEl.innerText = `₹${grandTotal.toFixed(2)}`;
+        }
+
+        // RENDER RESTAURANT MENU CATALOG
+        function renderCatalogItems() {
+            const container = document.getElementById('catalogFeedStack');
+            if(!container) return;
+
+            let filtered = RESTAURANT_CATALOG;
+
+            if(activeCategoryFilter !== 'all') {
+                filtered = filtered.filter(item => item.category === activeCategoryFilter);
+            }
+
+            if(catalogSearchQuery !== '') {
+                filtered = filtered.filter(item => 
+                    item.name.toLowerCase().includes(catalogSearchQuery) || 
+                    item.desc.toLowerCase().includes(catalogSearchQuery)
+                );
+            }
+
+            recalculateCategoryCounts();
+
+            if(filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--text-muted);">
+                        <i class="fas fa-utensils-slash" style="font-size:2rem; margin-bottom:10px; color:var(--brand-glow-orange);"></i>
+                        <p>No culinary items match your search.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = "";
+            filtered.forEach(dish => {
+                const isSelected = selectedServices.some(s => s.id === dish.id);
+                html += `
+                    <div class="catalog-card" onclick="openDeepViewModal('${dish.id}')">
+                        <div class="catalog-img-container">
+                            <img src="${dish.image}" alt="${dish.name}">
+                        </div>
+                        <div class="catalog-details">
+                            <div class="catalog-header">
+                                <span class="catalog-title">${dish.name}</span>
+                                <span class="catalog-price">₹${dish.price}</span>
+                            </div>
+                            <p class="catalog-desc">${dish.desc}</p>
+                            <div class="catalog-footer">
+                                <span class="catalog-rating"><i class="fas fa-star"></i> ${dish.rating}</span>
+                                <button class="btn-catalog-book ${isSelected ? 'selected' : ''}" onclick="event.stopPropagation(); toggleItemCartSelectionDirect('${dish.id}')">
+                                    <i class="fas ${isSelected ? 'fa-check' : 'fa-plus'}"></i> ${isSelected ? 'Added' : 'Add'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function recalculateCategoryCounts() {
+            const counts = { all: RESTAURANT_CATALOG.length, mains: 0, starters: 0, desserts: 0, beverages: 0 };
+            RESTAURANT_CATALOG.forEach(d => { if(counts[d.category] !== undefined) counts[d.category]++; });
+
+            document.getElementById('cnt-cat-all').innerText = counts.all;
+            document.getElementById('cnt-cat-mains').innerText = counts.mains;
+            document.getElementById('cnt-cat-starters').innerText = counts.starters;
+            document.getElementById('cnt-cat-desserts').innerText = counts.desserts;
+            document.getElementById('cnt-cat-beverages').innerText = counts.beverages;
+        }
+
+        function filterCatalogCategory(cat, el) {
+            activeCategoryFilter = cat;
+            document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+            if(el) el.classList.add('active');
+            renderCatalogItems();
+        }
+
+        function handleCatalogSearch(val) {
+            catalogSearchQuery = val.trim().toLowerCase();
+            renderCatalogItems();
+        }
+
+        function toggleItemCartSelectionDirect(dishId) {
+            const dish = RESTAURANT_CATALOG.find(d => d.id === dishId);
+            if(dish) toggleItemCartSelection(dish);
+        }
+
+        // ITEM DETAIL POPUP
+        function openDeepViewModal(dishId) {
+            const dish = RESTAURANT_CATALOG.find(d => d.id === dishId);
+            if(!dish) return;
+
+            document.getElementById('deepModalTitle').innerText = dish.name;
+            document.getElementById('deepModalDesc').innerText = dish.desc;
+            document.getElementById('deepModalPrice').innerText = `₹${dish.price}`;
+            document.getElementById('deepModalStrike').innerText = `₹${dish.strike}`;
+            document.getElementById('deepModalSavings').innerText = `Save ₹${dish.strike - dish.price}`;
+
+            const container = document.getElementById('incExcContainer');
+            container.innerHTML = dish.ingredients.map(ing => `
+                <div class="matrix-item"><i class="fas fa-circle-check"></i> <span>${ing}</span></div>
+            `).join('');
+
+            const isSelected = selectedServices.some(s => s.id === dish.id);
+            document.getElementById('deepModalActionSlot').innerHTML = `
+                <button class="btn-primary-action" onclick="toggleItemCartSelectionDirect('${dish.id}'); toggleDeepViewModal(false);">
+                    <i class="fas ${isSelected ? 'fa-trash' : 'fa-basket-shopping'}"></i> ${isSelected ? 'Remove from Order' : 'Add to Dining Cart'}
+                </button>
+            `;
+
+            document.getElementById('deepViewModal').classList.add('active');
+        }
+
+        function toggleDeepViewModal(show) {
+            const modal = document.getElementById('deepViewModal');
+            if(show) modal.classList.add('active'); else modal.classList.remove('active');
+        }
+
+        // FIREBASE ORDER SUBMISSION LOGIC
+        async function executeBooking() {
+            if (!currentUserSession) {
+                showToast("Please log in to continue.", false);
+                return;
+            }
+
+            const btn = document.getElementById('btnExecuteBooking');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Placing Order...`;
+
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const slot = document.getElementById('scheduledSlot').value;
+            const addr = document.getElementById('custAddress').value.trim();
+
+            const subtotal = selectedServices.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
+            const grandTotal = Math.max(0, subtotal + 29 - discountApplied);
+            const securePinToken = String(Math.floor(1000 + Math.random() * 9000));
+
+            const payloadPacket = {
+                userId: currentUserSession.uid, 
+                customerName: name,
+                customerPhone: phone,
+                scheduledSlot: slot,
+                customerAddress: addr,
+                services: selectedServices,
+                subtotal: subtotal,
+                discount: discountApplied,
+                promoCode: appliedPromoCode,
+                grandTotal: grandTotal,
+                status: "Pending",
+                verificationPin: securePinToken,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const collectionRef = collection(db, "bookings");
+                await addDoc(collectionRef, payloadPacket);
+                
+                const invoiceDump = document.getElementById('successModalInvoiceNarrative');
+                if (invoiceDump) {
+                    invoiceDump.innerHTML = `
+                        Your culinary request has been received by our kitchen.<br>
+                        <div style="background:rgba(255,255,255,0.04); border-radius:12px; padding:12px; margin:14px 0; font-size:0.75rem; text-align:left; border:1px solid rgba(255,255,255,0.08);">
+                            <div style="display:flex; justify-content:space-between;"><span>Dishes Ordered:</span><span>${selectedServices.length}</span></div>
+                            <div style="display:flex; justify-content:space-between; font-weight:800; margin-top:6px; color:var(--brand-success); font-size:0.85rem;"><span>Total Amount:</span><span>₹${grandTotal.toFixed(2)}</span></div>
+                        </div>
+                        Pay on delivery via Cash or UPI.
+                    `;
+                }
+                
+                localStorage.removeItem('selectedGharSevaServices');
+                document.getElementById('successScreenWindow').classList.add('active');
+            } catch(e) {
+                console.error("Booking write error: ", e);
+                showToast("Failed to place order. Please try again.", false);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Confirm & Schedule Order</span> <i class="fas fa-shield-check"></i>`;
+            }
+        }
+
+        function closeSuccessAndRefresh() {
+            document.getElementById('successScreenWindow').classList.remove('active');
+            loadCheckoutData();
+            switchTab('orders');
+        }
+
+        // REAL-TIME FIREBASE SYNC ENGINE
+        function initRealtimeSync(user) {
+            const feedContainer = document.getElementById('bookingFeedContainer');
+            if(!feedContainer) return;
+
+            const syncQuery = query(
+                collection(db, "bookings"),
+                where("userId", "==", user.uid)
+            );
+
+            onSnapshot(syncQuery, (snapshot) => {
+                cachedBookings = [];
+                snapshot.forEach((doc) => {
+                    cachedBookings.push({ id: doc.id, ...doc.data() });
+                });
+
+                cachedBookings.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                recalculateFilterCounts();
+                renderFeed();
+            }, (error) => {
+                console.error("Snapshot error vector intercepted: ", error);
+                showToast("Connection lost. Retrying sync...", false);
+            });
+        }
+
+        function recalculateFilterCounts() {
+            const counts = { all: cachedBookings.length, Pending: 0, Verified: 0, 'Technician Sent': 0, Completed: 0 };
+            
+            cachedBookings.forEach(b => {
+                let currentStat = b.status;
+                if (currentStat === "In-Transit") currentStat = "Technician Sent";
+                if(counts[currentStat] !== undefined) counts[currentStat]++;
+            });
+
+            document.getElementById('cnt-all').innerText = counts.all;
+            document.getElementById('cnt-Pending').innerText = counts.Pending;
+            document.getElementById('cnt-Verified').innerText = counts.Verified;
+            document.getElementById('cnt-Transit').innerText = counts['Technician Sent'];
+            document.getElementById('cnt-Completed').innerText = counts.Completed;
+        }
+
+        function filterHistory(status, element) {
+            activeFilter = status;
+            document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+            if(element) element.classList.add('active');
+            renderFeed();
+        }
+
+        function handleSearch(val) {
+            orderSearchQuery = val.trim().toLowerCase();
+            renderFeed();
+        }
+
+        function renderFeed() {
+            const listAnchor = document.getElementById('bookingFeedContainer');
+            if (!listAnchor) return;
+
+            let filtered = cachedBookings;
+
+            if (activeFilter !== 'all') {
+                filtered = filtered.filter(b => {
+                    if (activeFilter === "Technician Sent") {
+                        return b.status === "Technician Sent" || b.status === "In-Transit";
+                    }
+                    return b.status === activeFilter;
+                });
+            }
+
+            if (orderSearchQuery !== '') {
+                filtered = filtered.filter(b => 
+                    (b.customerName && b.customerName.toLowerCase().includes(orderSearchQuery)) ||
+                    (b.customerAddress && b.customerAddress.toLowerCase().includes(orderSearchQuery)) ||
+                    (b.services && b.services.some(s => s.name.toLowerCase().includes(orderSearchQuery))) ||
+                    (b.id && b.id.toLowerCase().includes(orderSearchQuery))
+                );
+            }
+
+            if (filtered.length === 0) {
+                listAnchor.innerHTML = `
+                    <div style="text-align:center; padding: 40px 10px; color: var(--text-muted); font-size: 0.8rem;">
+                        <i class="fas fa-folder-open" style="font-size:2.2rem; margin-bottom:12px; display:block; opacity:0.3; color:var(--brand-glow-orange);"></i>
+                        No active orders match your query.
+                    </div>
+                `;
+                return;
+            }
+
+            let htmlPayload = "";
+            filtered.forEach((item) => {
+                let bookedTime = item.createdAt ? new Date(item.createdAt).toLocaleString('en-IN') : "Just Now";
+                let scheduledTime = item.scheduledSlot ? new Date(item.scheduledSlot).toLocaleString('en-IN') : "Immediate Prep";
+                
+                let statusClass = "badge-pending";
+                let fillPercent = "10%";
+                let stepNodes = ["active", "", "", ""];
+                let isPulseActive = false;
+
+                if (item.status === "Verified") {
+                    statusClass = "badge-verified";
+                    fillPercent = "40%";
+                    stepNodes = ["completed", "active", "", ""];
+                    isPulseActive = true;
+                } else if (item.status === "Technician Sent" || item.status === "In-Transit") {
+                    statusClass = "badge-transit";
+                    fillPercent = "75%";
+                    stepNodes = ["completed", "completed", "active", ""];
+                    isPulseActive = true;
+                } else if (item.status === "Completed") {
+                    statusClass = "badge-completed";
+                    fillPercent = "100%";
+                    stepNodes = ["completed", "completed", "completed", "completed"];
+                } else if (item.status === "Cancelled") {
+                    statusClass = "badge-cancelled";
+                    fillPercent = "0%";
+                    stepNodes = ["", "", "", ""];
+                } else {
+                    isPulseActive = true;
+                }
+
+                const namesString = item.services ? item.services.map(s => s.name).join(', ') : 'Gourmet Order';
+                const verificationOtp = item.verificationPin || "3921";
+
+                htmlPayload += `
+                    <div class="tracking-card ${isPulseActive ? 'pulse-active' : ''}" onclick="toggleAccordion(this)">
+                        <div class="card-top-header">
+                            <span class="card-service-title">${namesString}</span>
+                            <span class="status-badge ${statusClass}">
+                                <i class="fas ${item.status==='Completed'?'fa-check-circle':item.status==='Cancelled'?'fa-ban':item.status==='Verified'?'fa-fire':item.status==='Technician Sent' || item.status==='In-Transit'?'fa-motorcycle':'fa-clock'}"></i>
+                                ${item.status}
+                            </span>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                            <div class="card-price-matrix">₹${(item.grandTotal || 0).toFixed(2)}</div>
+                            <div style="font-size:0.65rem; color:var(--text-muted); background:rgba(255,255,255,0.04); padding:3px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.06);" onclick="event.stopPropagation(); navigator.clipboard.writeText('${item.id}'); showToast('Order ID copied');">
+                                ID: ${item.id.substring(0,8)}... <i class="far fa-copy" style="font-size:0.6rem; margin-left:3px;"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="tracking-progress-wrapper">
+                            <div class="progress-line-back"></div>
+                            <div class="progress-line-fill" style="width: ${fillPercent};"></div>
+                            
+                            <div class="progress-step-node ${stepNodes[0]}" title="Order Received">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            
+                            <div class="progress-step-node ${stepNodes[1]}" title="Cooking">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            
+                            <div class="progress-step-node ${stepNodes[2]}" title="On The Way">
+                                <i class="fas fa-motorcycle"></i>
+                            </div>
+                            
+                            <div class="progress-step-node ${stepNodes[3]}" title="Delivered">
+                                <i class="fas fa-circle-check"></i>
+                            </div>
+                        </div>
+
+                        ${item.status === "Technician Sent" || item.status === "In-Transit" ? `
+                            <div style="background: rgba(16, 185, 129, 0.08); border: 1px dashed var(--brand-success); padding: 10px 14px; border-radius: 12px; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; animation: slideIn 0.3s ease;">
+                                <div style="font-size: 0.75rem; color: #cbd5e1; font-weight: 600;">
+                                    <i class="fas fa-key" style="color: var(--brand-success); margin-right: 6px;"></i> Delivery OTP Code:
+                                </div>
+                                <div style="font-size: 1.05rem; font-weight: 800; color: #ffffff; letter-spacing: 3px; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+                                    ${verificationOtp}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <div class="card-interactive-row">
+                            <span><i class="far fa-clock" style="margin-right:4px;"></i> Target Time: ${scheduledTime.split(',')[0]}</span>
+                            <i class="fas fa-chevron-down chevron-icon"></i>
+                        </div>
+
+                        <div class="card-details-drawer">
+                            <div class="drawer-content" onclick="event.stopPropagation();">
+                                <div class="detail-row" style="margin-top:4px;">
+                                    <i class="far fa-calendar-alt" style="color: var(--brand-glow-orange);"></i>
+                                    <span><strong>Placed On:</strong> ${bookedTime}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-location-dot" style="color: var(--brand-glow-gold);"></i>
+                                    <span><strong>Address:</strong> ${item.customerAddress || 'N/A'}</span>
+                                </div>
+
+                                <div class="drawer-button-grid">
+                                    <button class="btn-drawer-action chat-trigger" onclick="triggerChatSupport('${item.id}')">
+                                        <i class="far fa-comment-dots"></i> Support Chat
+                                    </button>
+                                    ${item.status !== 'Cancelled' && item.status !== 'Completed' ? `
+                                        <button class="btn-drawer-action cancel-trigger" onclick="triggerCancellation('${item.id}')">
+                                            <i class="fas fa-ban"></i> Cancel Order
+                                        </button>
+                                    ` : `
+                                        <button class="btn-drawer-action" style="opacity:0.4; cursor:not-allowed;" disabled>
+                                            <i class="fas fa-lock"></i> Completed
+                                        </button>
+                                    `}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            listAnchor.innerHTML = htmlPayload;
+        }
+
+        function toggleAccordion(cardElement) {
+            const wasActive = cardElement.classList.contains('active');
+            document.querySelectorAll('.tracking-card').forEach(c => c.classList.remove('active'));
+            if (!wasActive) cardElement.classList.add('active');
+        }
+
+        function triggerCancellation(bookingId) {
+            targetCancellationId = bookingId;
+            document.getElementById('confirmBackdrop').classList.add('active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmBackdrop').classList.remove('active');
+            targetCancellationId = null;
+        }
+
+        document.getElementById('btnConfirmCancellation').addEventListener('click', async () => {
+            if (targetCancellationId) {
+                try {
+                    const reference = doc(db, "bookings", targetCancellationId);
+                    await updateDoc(reference, { status: "Cancelled" });
+                    closeConfirmModal();
+                    showToast("Order cancelled successfully.");
+                } catch(e) {
+                    showToast("Failed to cancel order.", false);
+                }
+            }
+        });
+
+        // AI LIVE SUPPORT CHAT SYSTEM
+        function triggerChatSupport(bookingId) {
+            if(bookingId === 'general') {
+                activeSupportBooking = { id: 'GENERAL', services: [{ name: 'Gourmet Kitchen Inquiry' }], status: 'ACTIVE', verificationPin: '1234', grandTotal: 0 };
+            } else {
+                activeSupportBooking = cachedBookings.find(b => b.id === bookingId);
+            }
+            if(!activeSupportBooking) return;
+
+            document.getElementById('chatHeaderTitle').innerText = `Support: ${activeSupportBooking.id === 'GENERAL' ? 'Kitchen Helpline' : 'Order #' + activeSupportBooking.id.substring(0,8)}`;
+            
+            const dump = document.getElementById('chatMessagesDump');
+            dump.innerHTML = "";
+
+            const greet = document.createElement('div');
+            greet.className = 'chat-bubble agent';
+            greet.innerHTML = `
+                👋 Hello! Welcome to <strong>GharSeva Culinary Support</strong>.<br><br>
+                Assisting you with order: <strong>${activeSupportBooking.services.map(s => s.name).join(', ')}</strong>.<br>
+                How can we assist with your food preparation or delivery today?
+            `;
+            dump.appendChild(greet);
+
+            document.getElementById('chatOverlay').classList.add('active');
+            document.getElementById('chatSupportBox').classList.add('active');
+        }
+
+        function closeChatSupport() {
+            document.getElementById('chatOverlay').classList.remove('active');
+            document.getElementById('chatSupportBox').classList.remove('active');
+            activeSupportBooking = null;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatTextIn');
+            const messageText = input.value.trim();
+            if(messageText === "") return;
+
+            const dump = document.getElementById('chatMessagesDump');
+            
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-bubble client';
+            userBubble.innerText = messageText;
+            dump.appendChild(userBubble);
+            
+            input.value = "";
+            dump.scrollTop = dump.scrollHeight;
+
+            const typingBubble = document.createElement('div');
+            typingBubble.className = 'chat-bubble agent';
+            typingBubble.innerHTML = `<i class="fas fa-robot fa-spin" style="margin-right:6px; color:var(--brand-glow-orange);"></i> Kitchen Assistant typing...`;
+            dump.appendChild(typingBubble);
+            dump.scrollTop = dump.scrollHeight;
+
+            setTimeout(() => {
+                if(dump.contains(typingBubble)) dump.removeChild(typingBubble);
+
+                const agentBubble = document.createElement('div');
+                agentBubble.className = 'chat-bubble agent';
+                agentBubble.innerHTML = processAiResponse(messageText.toLowerCase(), activeSupportBooking);
+                dump.appendChild(agentBubble);
+                dump.scrollTop = dump.scrollHeight;
+            }, 1000);
+        }
+
+        function processAiResponse(query, booking) {
+            if (query.includes('otp') || query.includes('code') || query.includes('pin')) {
+                return `🔑 Your delivery confirmation code is: <strong style="letter-spacing:2px; font-size:1.1rem; color:var(--brand-success);">${booking.verificationPin || '3921'}</strong>.`;
+            }
+            if (query.includes('status') || query.includes('where') || query.includes('time')) {
+                return `🍳 Current status: <strong>${booking.status || 'PREPARING'}</strong>. Our delivery partner will deliver it warm and fresh!`;
+            }
+            if (query.includes('cancel')) {
+                return `🚨 You can cancel active orders directly inside the Order Card on your screen.`;
+            }
+            return `👨‍🍳 Thank you for reaching out! Our executive kitchen team has logged your message regarding order #${booking.id.substring(0,8)}.`;
+        }
+
+        function showToast(message, isSuccess = true) {
+            const container = document.getElementById('toastContainer');
+            if(!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-popup';
+            const icon = isSuccess ? 'fa-circle-check' : 'fa-triangle-exclamation';
+            const color = isSuccess ? 'var(--brand-success)' : 'var(--brand-danger)';
+            
+            toast.innerHTML = `<i class="fas ${icon}" style="color:${color}"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('active'), 50);
+            setTimeout(() => {
+                toast.classList.remove('active');
+                setTimeout(() => { if(container.contains(toast)) container.removeChild(toast); }, 400);
+            }, 3200);
+        }
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            setupDateConstraints();
+            renderCatalogItems();
+            loadCheckoutData();
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUserSession = user;
+                    
+                    try {
+                        const userDocRef = doc(db, "users", user.uid);
+                        const userDocSnap = await getDoc(userDocRef);
+                        
+                        const welcomeEl = document.getElementById('portalUserWelcome');
+                        const profName = document.getElementById('profileAccountName');
+                        const profEmail = document.getElementById('profileAccountEmail');
+
+                        if(profEmail) profEmail.innerText = user.email || 'Authenticated Account';
+
+                        if(userDocSnap.exists()){
+                            const data = userDocSnap.data();
+                            if(welcomeEl) welcomeEl.innerText = `Welcome, ${data.fullName || 'Gourmet Guest'}!`;
+                            if(profName) profName.innerText = data.fullName || 'Valued Guest';
+                            if(document.getElementById('custName')) document.getElementById('custName').value = data.fullName || '';
+                        } else {
+                            if(welcomeEl) welcomeEl.innerText = `Welcome to GharSeva Dining`;
+                        }
+                    } catch(err) {
+                        const welcomeEl = document.getElementById('portalUserWelcome');
+                        if(welcomeEl) welcomeEl.innerText = `Welcome to GharSeva Dining`;
+                    }
+
+                    initRealtimeSync(user);
+                } else {
+                    document.getElementById('portalUserWelcome').innerText = "Welcome, Guest!";
+                    showToast("Operating in Guest Mode.", true);
+                }
+            });
+
+            setTimeout(() => { document.body.classList.add('page-loaded'); }, 100);
+        });
+
+        // GLOBAL EXPORT BINDINGS
+        window.switchTab = switchTab;
+        window.removeCheckoutItem = removeCheckoutItem;
+        window.applyDiscount = applyDiscount;
+        window.executeBooking = executeBooking;
+        window.closeSuccessAndRefresh = closeSuccessAndRefresh;
+        window.handleSearch = handleSearch;
+        window.filterHistory = filterHistory;
+        window.toggleAccordion = toggleAccordion;
+        window.triggerCancellation = triggerCancellation;
+        window.closeConfirmModal = closeConfirmModal;
+        window.triggerChatSupport = triggerChatSupport;
+        window.closeChatSupport = closeChatSupport;
+        window.sendChatMessage = sendChatMessage;
+        window.showToast = showToast;
+        window.filterCatalogCategory = filterCatalogCategory;
+        window.handleCatalogSearch = handleCatalogSearch;
+        window.toggleItemCartSelectionDirect = toggleItemCartSelectionDirect;
+        window.openDeepViewModal = openDeepViewModal;
+        window.toggleDeepViewModal = toggleDeepViewModal;
+    </script>
 </body>
 </html>
