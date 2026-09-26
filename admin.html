@@ -1,1533 +1,1963 @@
 <!DOCTYPE html>
-<html lang="en" class="dark h-full bg-slate-950">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FeastHub | Enterprise Operations Console</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-            },
-            accent: {
-              500: '#f59e0b',
-              600: '#d97706',
-            },
-            dark: {
-              800: '#1e293b',
-              900: '#0f172a',
-              950: '#020617',
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA OS - Restaurant Master Admin Command Center</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            900: '#7c2d12',
+                        },
+                        dark: {
+                            900: '#0b0f17',
+                            800: '#111827',
+                            700: '#1f2937',
+                            600: '#374151',
+                        }
+                    }
+                }
             }
-          },
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          }
         }
-      }
-    }
-  </script>
+    </script>
 
-  <!-- Google Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #020617; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    .glass-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    
-    .glass-input {
-      background: rgba(2, 6, 23, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #f8fafc;
-    }
-    .glass-input:focus {
-      border-color: #10b981;
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-    }
-  </style>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f17;
+            color: #f3f4f6;
+        }
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+
+        .glass-panel {
+            background: rgba(31, 41, 55, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-badge {
+            font-size: 0.72rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Print styles for billing */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-receipt, #printable-receipt * {
+                visibility: visible;
+            }
+            #printable-receipt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                color: #000;
+                background: #fff;
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
+<body class="h-screen overflow-hidden flex flex-col antialiased select-none">
 
-<body class="h-full text-slate-100 font-sans antialiased bg-slate-950 flex flex-col overflow-hidden">
-
-  <!-- ========================================== -->
-  <!-- AUTHENTICATION / LOADING OVERLAY          -->
-  <!-- ========================================== -->
-  <div id="authGuardOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl transition-opacity duration-300">
-    <div class="glass-card p-8 rounded-2xl max-w-md w-full mx-4 text-center border border-slate-800 shadow-2xl relative overflow-hidden">
-      <div class="absolute -top-10 -left-10 w-32 h-32 bg-brand-500/10 rounded-full blur-2xl"></div>
-      <div class="inline-flex p-4 rounded-2xl bg-brand-500/10 text-brand-500 mb-6">
-        <i class="fa-solid fa-shield-cat text-4xl animate-pulse"></i>
-      </div>
-      <h2 class="text-2xl font-extrabold text-white tracking-tight mb-2">FeastHub Gateway</h2>
-      <p id="authStatusText" class="text-slate-400 text-sm mb-6 font-medium">Initializing Security Protocol...</p>
-      
-      <div id="authSpinner" class="flex justify-center mb-6">
-        <div class="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-
-      <div id="authActions" class="hidden space-y-3">
-        <button onclick="window.location.reload()" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold rounded-xl transition">
-          <i class="fa-solid fa-rotate-right mr-2"></i>Retry Authorization
-        </button>
-        <button onclick="window.location.href='index.html'" class="w-full py-2.5 px-4 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-semibold rounded-xl border border-red-500/20 transition">
-          <i class="fa-solid fa-right-from-bracket mr-2"></i>Exit Portal
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================== -->
-  <!-- MAIN ADMIN APP SYSTEM LAYOUT              -->
-  <!-- ========================================== -->
-  <div id="adminApp" class="hidden flex-1 flex h-full overflow-hidden">
-
-    <!-- SIDEBAR NAV (Desktop) -->
-    <aside id="sidebar" class="w-64 bg-slate-900/80 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shrink-0">
-      <!-- Brand Logo Header -->
-      <div class="h-16 flex items-center justify-between px-6 border-b border-slate-800/80">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/20">
-            <i class="fa-solid fa-utensils text-lg"></i>
-          </div>
-          <span class="font-extrabold text-lg text-white tracking-tight">FeastHub<span class="text-brand-500">.</span></span>
-        </div>
-        <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <!-- Navigation Links -->
-      <div class="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-        <div>
-          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Core Operations</div>
-          <nav class="space-y-1">
-            <button onclick="switchView('overview')" id="nav-overview" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-chart-pie w-5 text-center text-brand-500"></i> Overview
-            </button>
-            <button onclick="switchView('orders')" id="nav-orders" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-5 text-center text-blue-400"></i> Orders</span>
-              <span id="badgeLiveOrders" class="bg-blue-500/20 text-blue-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
-            </button>
-            <button onclick="switchView('reservations')" id="nav-reservations" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <span class="flex items-center gap-3"><i class="fa-solid fa-calendar-check w-5 text-center text-purple-400"></i> Reservations</span>
-              <span id="badgeLiveRes" class="bg-purple-500/20 text-purple-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
-            </button>
-          </nav>
-        </div>
-
-        <div>
-          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Catalog & Store</div>
-          <nav class="space-y-1">
-            <button onclick="switchView('menu')" id="nav-menu" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-burger w-5 text-center text-amber-400"></i> Menu Catalog
-            </button>
-            <button onclick="switchView('categories')" id="nav-categories" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-list-ul w-5 text-center text-teal-400"></i> Categories
-            </button>
-            <button onclick="switchView('restaurants')" id="nav-restaurants" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-store w-5 text-center text-emerald-400"></i> Restaurant Profile
-            </button>
-          </nav>
-        </div>
-
-        <div>
-          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">CRM & Marketing</div>
-          <nav class="space-y-1">
-            <button onclick="switchView('customers')" id="nav-customers" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-users w-5 text-center text-indigo-400"></i> Customers
-            </button>
-            <button onclick="switchView('offers')" id="nav-offers" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-ticket w-5 text-center text-rose-400"></i> Offers & Coupons
-            </button>
-            <button onclick="switchView('tickets')" id="nav-tickets" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <span class="flex items-center gap-3"><i class="fa-solid fa-headset w-5 text-center text-amber-500"></i> Support Tickets</span>
-              <span id="badgeLiveTickets" class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
-            </button>
-          </nav>
-        </div>
-
-        <div>
-          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">System & Governance</div>
-          <nav class="space-y-1">
-            <button onclick="switchView('staff')" id="nav-staff" class="nav-item admin-only w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-user-shield w-5 text-center text-cyan-400"></i> Staff & RBAC
-            </button>
-            <button onclick="switchView('audit')" id="nav-audit" class="nav-item admin-only w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-clock-rotate-left w-5 text-center text-slate-400"></i> Audit Logs
-            </button>
-            <button onclick="switchView('system')" id="nav-system" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
-              <i class="fa-solid fa-heart-pulse w-5 text-center text-emerald-500"></i> System Health
-            </button>
-          </nav>
-        </div>
-      </div>
-
-      <!-- User Footprint Footer -->
-      <div class="p-4 border-t border-slate-800 bg-slate-900/50">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3 overflow-hidden">
-            <div id="adminAvatar" class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white text-sm shrink-0">
-              A
-            </div>
-            <div class="truncate">
-              <div id="adminName" class="text-sm font-bold text-white truncate">Administrator</div>
-              <div id="adminRoleBadge" class="text-[10px] font-extrabold uppercase tracking-wider text-brand-500">ADMIN</div>
-            </div>
-          </div>
-          <button onclick="logoutAdmin()" class="text-slate-400 hover:text-red-400 p-2 transition" title="Logout">
-            <i class="fa-solid fa-power-off text-base"></i>
-          </button>
-        </div>
-      </div>
-    </aside>
-
-    <!-- CONTENT WRAPPER -->
-    <div class="flex-1 flex flex-col min-w-0 bg-slate-950 overflow-hidden">
-
-      <!-- TOP BAR HEADER -->
-      <header class="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur-xl flex items-center justify-between px-4 lg:px-8 shrink-0 z-20">
+    <!-- TOP HEADER / NAV BAR -->
+    <header class="h-16 border-b border-gray-800 bg-dark-800/90 backdrop-blur px-4 flex items-center justify-between z-30 shrink-0">
+        <!-- Left: Logo & Sidebar Toggle -->
         <div class="flex items-center gap-4">
-          <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg">
-            <i class="fa-solid fa-bars text-xl"></i>
-          </button>
-          
-          <div class="relative hidden sm:block w-72">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-            <input type="text" id="globalSearchInput" onkeyup="handleGlobalSearch(event)" placeholder="Search Order ID, Customer, Menu..." class="w-full glass-input rounded-xl pl-9 pr-4 py-1.5 text-xs font-medium focus:ring-1 focus:ring-brand-500">
-          </div>
+            <button id="sidebar-toggle" class="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-700/50 transition">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center font-black text-white shadow-lg shadow-brand-500/20">
+                    <i class="fa-solid fa-utensils text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base tracking-tight leading-none text-white flex items-center gap-2">
+                        AURA <span class="text-xs px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-500 font-semibold border border-brand-500/30">COMMAND CENTER</span>
+                    </h1>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Gourmet Haven - Downtown Branch (#0421)</p>
+                </div>
+            </div>
         </div>
 
+        <!-- Center: Global Search -->
+        <div class="hidden md:flex items-center flex-1 max-w-md mx-8 relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-gray-400 text-xs"></i>
+            <input type="text" id="global-search" placeholder="Search Order ID, Table #, Customer, Dish or Invoice..." 
+                   class="w-full bg-dark-900/80 border border-gray-700/60 rounded-xl pl-9 pr-12 py-1.5 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-brand-500 transition">
+            <span class="absolute right-3 text-[10px] text-gray-500 bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700">⌘K</span>
+        </div>
+
+        <!-- Right: Controls, Alerts, Profile & Clock -->
         <div class="flex items-center gap-3">
-          <!-- Restaurant Operating Toggle -->
-          <div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1">
-            <span class="text-[11px] font-bold text-slate-400 px-2 uppercase tracking-wider">Store:</span>
-            <select id="restaurantStatusSelect" onchange="updateRestaurantOperatingStatus(this.value)" class="bg-slate-950 text-xs font-bold rounded-lg px-2 py-1 border-none focus:ring-0 text-emerald-400 cursor-pointer">
-              <option value="OPEN" class="text-emerald-400">OPEN</option>
-              <option value="BUSY" class="text-amber-400">BUSY</option>
-              <option value="CLOSED" class="text-rose-400">CLOSED</option>
-            </select>
-          </div>
+            <!-- System Clock -->
+            <div class="hidden lg:flex flex-col items-end mr-2 text-right">
+                <span id="live-clock" class="text-xs font-mono font-bold text-gray-200">12:00:00 PM</span>
+                <span id="live-date" class="text-[10px] text-gray-400">Sat, 26 Sep 2026</span>
+            </div>
 
-          <!-- Notification Center Drawer Trigger -->
-          <button onclick="toggleNotificationCenter()" class="relative p-2 text-slate-400 hover:text-white rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition">
-            <i class="fa-solid fa-bell text-sm"></i>
-            <span id="unreadNotifBadge" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-brand-500 rounded-full ring-2 ring-slate-950"></span>
-          </button>
+            <!-- Role Switcher (Simulated RBAC) -->
+            <div class="relative group">
+                <select id="role-selector" class="bg-dark-900 text-xs border border-gray-700 text-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer">
+                    <option value="admin">Role: Master Admin</option>
+                    <option value="manager">Role: Store Manager</option>
+                    <option value="chef">Role: Head Chef (KDS)</option>
+                    <option value="cashier">Role: Cashier</option>
+                    <option value="waiter">Role: Floor Waiter</option>
+                </select>
+            </div>
+
+            <!-- Quick Alert Counter -->
+            <button onclick="switchView('notifications')" class="relative p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-700/50 transition">
+                <i class="fa-regular fa-bell text-base"></i>
+                <span id="unread-alert-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">3</span>
+            </button>
+
+            <!-- Store Online Toggle -->
+            <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Live</span>
+            </div>
         </div>
-      </header>
+    </header>
 
-      <!-- VIEW CANVAS CONTAINER -->
-      <main class="flex-1 overflow-y-auto p-4 lg:p-8 space-y-8 relative" id="mainContainer">
-
-        <!-- ========================================== -->
-        <!-- VIEW 1: OVERVIEW DASHBOARD                 -->
-        <!-- ========================================== -->
-        <section id="view-overview" class="view-panel space-y-8">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 class="text-2xl font-black text-white tracking-tight">Operations Console</h1>
-              <p class="text-slate-400 text-xs">Real-time telemetry and revenue throughput analysis.</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="openModal('modalAddMenu')" class="bg-brand-500 hover:bg-brand-600 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-lg shadow-brand-500/20">
-                <i class="fa-solid fa-plus mr-1.5"></i> Add Dish
-              </button>
-              <button onclick="openModal('modalAddOffer')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700 transition">
-                <i class="fa-solid fa-tag mr-1.5"></i> New Promo
-              </button>
-            </div>
-          </div>
-
-          <!-- KPI Cards Grid -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-brand-500">
-              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Today's Revenue</div>
-              <div id="kpiRevenue" class="text-2xl font-black text-white">₹0</div>
-              <div class="text-[10px] text-slate-500 font-semibold mt-1">Net settled orders</div>
-            </div>
-            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-blue-500">
-              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Today's Orders</div>
-              <div id="kpiOrders" class="text-2xl font-black text-white">0</div>
-              <div class="text-[10px] text-slate-500 font-semibold mt-1">Fulfilled + Active</div>
-            </div>
-            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-purple-500">
-              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Active Table Res.</div>
-              <div id="kpiReservations" class="text-2xl font-black text-white">0</div>
-              <div class="text-[10px] text-slate-500 font-semibold mt-1">Today's bookings</div>
-            </div>
-            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
-              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Open Tickets</div>
-              <div id="kpiTickets" class="text-2xl font-black text-white">0</div>
-              <div class="text-[10px] text-slate-500 font-semibold mt-1">Requires resolution</div>
-            </div>
-          </div>
-
-          <!-- Realtime Dispatch Queue -->
-          <div class="glass-card rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-6">
-              <div class="flex items-center gap-3">
-                <div class="w-3 h-3 bg-brand-500 rounded-full animate-ping"></div>
-                <h3 class="font-extrabold text-base text-white">Live Kitchen Dispatch Pipeline</h3>
-              </div>
-              <button onclick="switchView('orders')" class="text-brand-500 hover:text-brand-400 text-xs font-bold">
-                View Full Queue <i class="fa-solid fa-arrow-right ml-1"></i>
-              </button>
-            </div>
-            <div id="liveOrderDispatchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- Dynamically Populated Live Cards -->
-            </div>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 2: ORDERS MANAGEMENT                  -->
-        <!-- ========================================== -->
-        <section id="view-orders" class="view-panel hidden space-y-6">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 class="text-2xl font-black text-white tracking-tight">Order Central</h1>
-              <p class="text-slate-400 text-xs">Lifecycle tracking from placement to dispatch settlement.</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="exportOrdersCSV()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-700">
-                <i class="fa-solid fa-file-csv mr-1.5"></i> Export CSV
-              </button>
-            </div>
-          </div>
-
-          <!-- Filter Tabs -->
-          <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800" id="orderStatusFilterTabs">
-            <button onclick="filterOrders('ALL')" class="filter-tab active bg-brand-500/20 text-brand-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">All Orders</button>
-            <button onclick="filterOrders('PLACED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">New Placed</button>
-            <button onclick="filterOrders('CONFIRMED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Confirmed</button>
-            <button onclick="filterOrders('PREPARING')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Preparing</button>
-            <button onclick="filterOrders('OUT_FOR_DELIVERY')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Out for Delivery</button>
-            <button onclick="filterOrders('DELIVERED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Delivered</button>
-            <button onclick="filterOrders('CANCELLED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Cancelled</button>
-          </div>
-
-          <!-- Orders Data Table -->
-          <div class="glass-card rounded-2xl overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-slate-900/80 text-slate-400 uppercase tracking-wider font-extrabold border-b border-slate-800">
-                  <tr>
-                    <th class="p-4">Order ID</th>
-                    <th class="p-4">Customer Details</th>
-                    <th class="p-4">Items Summary</th>
-                    <th class="p-4">Amount & Pay</th>
-                    <th class="p-4">Pipeline Status</th>
-                    <th class="p-4">Time</th>
-                    <th class="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="ordersTableBody" class="divide-y divide-slate-800/60 font-medium">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 3: RESERVATIONS                       -->
-        <!-- ========================================== -->
-        <section id="view-reservations" class="view-panel hidden space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-2xl font-black text-white tracking-tight">Table Bookings</h1>
-              <p class="text-slate-400 text-xs">Dining floor availability and seating management.</p>
-            </div>
-          </div>
-
-          <div class="glass-card rounded-2xl overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-slate-900/80 text-slate-400 uppercase tracking-wider font-extrabold border-b border-slate-800">
-                  <tr>
-                    <th class="p-4">Res. ID</th>
-                    <th class="p-4">Guest</th>
-                    <th class="p-4">Date & Slot</th>
-                    <th class="p-4">Guests</th>
-                    <th class="p-4">Status</th>
-                    <th class="p-4 text-right">Operations</th>
-                  </tr>
-                </thead>
-                <tbody id="reservationsTableBody" class="divide-y divide-slate-800/60 font-medium">
-                  <!-- Rendered dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 4: MENU CATALOG MANAGEMENT           -->
-        <!-- ========================================== -->
-        <section id="view-menu" class="view-panel hidden space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-2xl font-black text-white tracking-tight">Menu Catalog</h1>
-              <p class="text-slate-400 text-xs">Control dish offerings, pricing, and active inventory status.</p>
-            </div>
-            <button onclick="openModal('modalAddMenu')" class="bg-brand-500 hover:bg-brand-600 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl">
-              <i class="fa-solid fa-plus mr-1"></i> Add Dish
-            </button>
-          </div>
-
-          <div id="menuItemsGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <!-- Rendered dynamically -->
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 5: CATEGORY MANAGEMENT               -->
-        <!-- ========================================== -->
-        <section id="view-categories" class="view-panel hidden space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-2xl font-black text-white tracking-tight">Food Categories</h1>
-              <p class="text-slate-400 text-xs">Organize store catalog hierarchy.</p>
-            </div>
-            <button onclick="openModal('modalAddCategory')" class="bg-brand-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">
-              <i class="fa-solid fa-plus mr-1"></i> Add Category
-            </button>
-          </div>
-
-          <div id="categoriesGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <!-- Rendered dynamically -->
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 6: RESTAURANT PROFILE & SETTINGS      -->
-        <!-- ========================================== -->
-        <section id="view-restaurants" class="view-panel hidden space-y-6">
-          <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Store Meta & Parameters</h1>
-            <p class="text-slate-400 text-xs">Global business configurations read by customer apps.</p>
-          </div>
-
-          <div class="glass-card p-6 rounded-2xl max-w-2xl space-y-4">
-            <form id="restaurantSettingsForm" onsubmit="saveRestaurantSettings(event)">
-              <div class="space-y-4 text-xs">
-                <div>
-                  <label class="block font-bold text-slate-300 mb-1">Restaurant Title</label>
-                  <input type="text" id="resTitle" class="w-full glass-input rounded-xl p-2.5" required>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="block font-bold text-slate-300 mb-1">Support Phone</label>
-                    <input type="text" id="resPhone" class="w-full glass-input rounded-xl p-2.5" required>
-                  </div>
-                  <div>
-                    <label class="block font-bold text-slate-300 mb-1">Min Order Amount (₹)</label>
-                    <input type="number" id="resMinOrder" class="w-full glass-input rounded-xl p-2.5" required>
-                  </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="block font-bold text-slate-300 mb-1">Base Delivery Fee (₹)</label>
-                    <input type="number" id="resDeliveryFee" class="w-full glass-input rounded-xl p-2.5" required>
-                  </div>
-                  <div>
-                    <label class="block font-bold text-slate-300 mb-1">GST Tax Rate (%)</label>
-                    <input type="number" id="resTaxRate" step="0.1" class="w-full glass-input rounded-xl p-2.5" required>
-                  </div>
-                </div>
-                <div>
-                  <label class="block font-bold text-slate-300 mb-1">Physical Address</label>
-                  <textarea id="resAddress" rows="2" class="w-full glass-input rounded-xl p-2.5" required></textarea>
-                </div>
-                <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold px-6 py-2.5 rounded-xl transition">
-                  Save Store Settings
+    <!-- MAIN BODY: SIDEBAR + CONTENT -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="w-64 bg-dark-800 border-r border-gray-800/80 flex flex-col justify-between transition-all duration-300 shrink-0 z-20">
+            <div class="py-3 px-2 overflow-y-auto space-y-1">
+                <div class="px-3 pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Operations Core</div>
+                
+                <button onclick="switchView('dashboard')" class="nav-btn active w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-chart-line text-brand-500 w-4 text-center"></i>
+                        <span>Dashboard</span>
+                    </div>
                 </button>
-              </div>
+
+                <button onclick="switchView('live-orders')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-receipt text-amber-500 w-4 text-center"></i>
+                        <span>Live Orders</span>
+                    </div>
+                    <span id="badge-active-orders" class="bg-brand-500/20 text-brand-400 text-[10px] px-2 py-0.5 rounded-full font-bold">5</span>
+                </button>
+
+                <button onclick="switchView('kds')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-fire-burner text-red-400 w-4 text-center"></i>
+                        <span>Kitchen Display (KDS)</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                </button>
+
+                <button onclick="switchView('tables')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-chair text-emerald-400 w-4 text-center"></i>
+                        <span>Table Floor Plan</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('reservations')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-regular fa-calendar-check text-indigo-400 w-4 text-center"></i>
+                        <span>Reservations</span>
+                    </div>
+                </button>
+
+                <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Catalog & Stock</div>
+
+                <button onclick="switchView('menu')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-bowl-food text-yellow-400 w-4 text-center"></i>
+                        <span>Menu & Categories</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('inventory')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-boxes-stacked text-blue-400 w-4 text-center"></i>
+                        <span>Inventory & Recipe Cost</span>
+                    </div>
+                    <span class="text-[10px] text-amber-400 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded">2 Low</span>
+                </button>
+
+                <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Customers & Marketing</div>
+
+                <button onclick="switchView('customers')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-users text-teal-400 w-4 text-center"></i>
+                        <span>Customer CRM & Loyalty</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('coupons')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-ticket text-pink-400 w-4 text-center"></i>
+                        <span>Coupons & Offers</span>
+                    </div>
+                </button>
+
+                <div class="pt-4 px-3 pb-2 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Administration</div>
+
+                <button onclick="switchView('delivery')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-motorcycle text-cyan-400 w-4 text-center"></i>
+                        <span>Delivery Dispatch</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('staff')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-user-shield text-purple-400 w-4 text-center"></i>
+                        <span>Staff & RBAC Roles</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('analytics')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-chart-pie text-emerald-400 w-4 text-center"></i>
+                        <span>Reports & Analytics</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('audit')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-shield-halved text-gray-400 w-4 text-center"></i>
+                        <span>Audit Logs</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('settings')" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-gray-300 hover:bg-gray-700/40 hover:text-white transition group">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-sliders text-gray-400 w-4 text-center"></i>
+                        <span>Store Settings</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="p-3 border-t border-gray-800 bg-dark-900/60 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs font-bold">
+                        AD
+                    </div>
+                    <div class="text-[11px] leading-tight">
+                        <div class="font-bold text-gray-200">Alex Drake</div>
+                        <div class="text-gray-500 text-[10px]">Super Admin</div>
+                    </div>
+                </div>
+                <button title="System Logout" class="text-gray-500 hover:text-red-400 text-xs p-1">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN VIEW WORKSPACE -->
+        <main class="flex-1 overflow-y-auto bg-dark-900/90 p-4 md:p-6 space-y-6 relative" id="main-content">
+
+            <!-- ================= VIEW 1: ADVANCED DASHBOARD ================= -->
+            <section id="view-dashboard" class="view-panel space-y-6">
+                <!-- Top Header & Date Filter -->
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Executive Dashboard</h2>
+                        <p class="text-xs text-gray-400">Real-time command overview & key performance indicators</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1.5 bg-dark-800 hover:bg-gray-700 border border-gray-700 text-xs text-gray-300 rounded-lg flex items-center gap-2">
+                            <i class="fa-regular fa-calendar"></i> Today (Sep 26)
+                        </button>
+                        <button onclick="triggerNewOrderModal()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-xs text-white font-semibold rounded-lg flex items-center gap-2 shadow-lg shadow-brand-600/30">
+                            <i class="fa-solid fa-plus"></i> New Manual Order
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 13 KPI CARDS GRID -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                    <!-- KPI 1 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-emerald-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Today's Revenue</span>
+                        <div class="text-lg font-black text-white mt-1">₹48,250</div>
+                        <span class="text-[10px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5"><i class="fa-solid fa-arrow-up"></i> +14.2% vs yesterday</span>
+                    </div>
+                    <!-- KPI 2 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-brand-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Today's Orders</span>
+                        <div class="text-lg font-black text-white mt-1" id="dash-total-orders">142</div>
+                        <span class="text-[10px] text-brand-400 font-medium flex items-center gap-1 mt-0.5"><i class="fa-solid fa-fire"></i> High Volume</span>
+                    </div>
+                    <!-- KPI 3 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-indigo-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Avg Order Value</span>
+                        <div class="text-lg font-black text-white mt-1">₹339</div>
+                        <span class="text-[10px] text-gray-400 font-medium mt-0.5">Target: ₹350</span>
+                    </div>
+                    <!-- KPI 4 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-amber-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Active Orders</span>
+                        <div class="text-lg font-black text-amber-400 mt-1" id="dash-active-orders">8</div>
+                        <span class="text-[10px] text-amber-300 font-medium mt-0.5">Kitchen Busy</span>
+                    </div>
+                    <!-- KPI 5 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-blue-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Pending / New</span>
+                        <div class="text-lg font-black text-blue-400 mt-1" id="dash-pending-orders">2</div>
+                        <span class="text-[10px] text-gray-400 font-medium mt-0.5">Needs Accept</span>
+                    </div>
+                    <!-- KPI 6 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-emerald-400">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Completed</span>
+                        <div class="text-lg font-black text-gray-200 mt-1" id="dash-completed-orders">130</div>
+                        <span class="text-[10px] text-emerald-400 font-medium mt-0.5">91.5% Success</span>
+                    </div>
+                    <!-- KPI 7 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-red-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Cancelled</span>
+                        <div class="text-lg font-black text-red-400 mt-1">4</div>
+                        <span class="text-[10px] text-red-400 font-medium mt-0.5">2.8% Rate</span>
+                    </div>
+                    <!-- KPI 8 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-purple-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Dine-in Orders</span>
+                        <div class="text-lg font-black text-white mt-1">64</div>
+                        <span class="text-[10px] text-gray-400 font-medium mt-0.5">45% Total</span>
+                    </div>
+                    <!-- KPI 9 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-yellow-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Takeaway</span>
+                        <div class="text-lg font-black text-white mt-1">38</div>
+                        <span class="text-[10px] text-gray-400 font-medium mt-0.5">27% Total</span>
+                    </div>
+                    <!-- KPI 10 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-cyan-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Delivery Orders</span>
+                        <div class="text-lg font-black text-white mt-1">40</div>
+                        <span class="text-[10px] text-gray-400 font-medium mt-0.5">28% Total</span>
+                    </div>
+                    <!-- KPI 11 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-teal-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">New Customers</span>
+                        <div class="text-lg font-black text-white mt-1">19</div>
+                        <span class="text-[10px] text-teal-400 font-medium mt-0.5">+5 loyalty joins</span>
+                    </div>
+                    <!-- KPI 12 -->
+                    <div class="glass-card p-3.5 rounded-xl border-l-4 border-pink-500">
+                        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Table Occupancy</span>
+                        <div class="text-lg font-black text-pink-400 mt-1">75%</div>
+                        <span class="text-[10px] text-gray-400 font-medium mt-0.5">12/16 Tables Busy</span>
+                    </div>
+                </div>
+
+                <!-- CHARTS ROW 1 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Hourly Revenue Trend -->
+                    <div class="glass-panel p-5 rounded-2xl lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Hourly Sales & Peak Ordering Curve</h3>
+                                <p class="text-[11px] text-gray-400">Revenue trajectory across operational hours today</p>
+                            </div>
+                            <span class="text-xs bg-dark-900 border border-gray-700 px-2 py-1 rounded text-gray-300">Peak: 8 PM - 9 PM</span>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="chart-hourly-sales"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Orders by Type -->
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-bold text-sm text-white">Fulfillment Channel Breakdown</h3>
+                                <p class="text-[11px] text-gray-400">Dine-in vs Delivery vs Takeaway</p>
+                            </div>
+                        </div>
+                        <div class="h-64 flex items-center justify-center">
+                            <canvas id="chart-order-types"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHARTS ROW 2 & LIVE ACTIVITY FEED -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Top Selling Dishes -->
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <h3 class="font-bold text-sm text-white mb-1">Top Selling Items</h3>
+                        <p class="text-[11px] text-gray-400 mb-4">By volume sold today</p>
+                        <div class="h-56">
+                            <canvas id="chart-top-dishes"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Category Performance -->
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <h3 class="font-bold text-sm text-white mb-1">Category Revenue</h3>
+                        <p class="text-[11px] text-gray-400 mb-4">Share by menu category</p>
+                        <div class="h-56">
+                            <canvas id="chart-categories"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Live Activity Feed -->
+                    <div class="glass-panel p-5 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Operations Feed
+                                </h3>
+                                <span class="text-[10px] text-gray-400">Real-time Stream</span>
+                            </div>
+                            <div id="live-activity-stream" class="space-y-3 overflow-y-auto max-h-52 pr-1">
+                                <!-- Feed Items Dynamically Populated -->
+                            </div>
+                        </div>
+                        <button onclick="switchView('audit')" class="w-full mt-3 py-1.5 bg-dark-900 border border-gray-700 hover:bg-gray-800 text-xs text-gray-300 rounded-lg text-center font-medium transition">
+                            View Full Audit Log
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 2: LIVE ORDERS MANAGEMENT ================= -->
+            <section id="view-live-orders" class="view-panel space-y-4 hidden">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Live Order Command Center</h2>
+                        <p class="text-xs text-gray-400">Complete lifecycle management & instant action controls</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="triggerNewOrderModal()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-xs text-white font-semibold rounded-lg flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Add Manual Order
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Status Filter Tabs -->
+                <div class="flex items-center gap-2 border-b border-gray-800 pb-2 overflow-x-auto">
+                    <button onclick="filterOrders('ALL')" class="order-tab active px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-500/20 text-brand-400 border border-brand-500/30">All Orders (8)</button>
+                    <button onclick="filterOrders('NEW ORDER')" class="order-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:bg-dark-800">New (2)</button>
+                    <button onclick="filterOrders('PREPARING')" class="order-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:bg-dark-800">Preparing (3)</button>
+                    <button onclick="filterOrders('READY')" class="order-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:bg-dark-800">Ready (2)</button>
+                    <button onclick="filterOrders('SERVED / OUT FOR DELIVERY')" class="order-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:bg-dark-800">Served/Transit (1)</button>
+                    <button onclick="filterOrders('COMPLETED')" class="order-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:bg-dark-800">Completed</button>
+                    <button onclick="filterOrders('CANCELLED')" class="order-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:bg-dark-800">Cancelled</button>
+                </div>
+
+                <!-- ORDERS TABLE -->
+                <div class="glass-panel rounded-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-dark-800/90 text-gray-400 border-b border-gray-800 uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="py-3 px-4">Order ID & Type</th>
+                                    <th class="py-3 px-4">Customer</th>
+                                    <th class="py-3 px-4">Items & Special Note</th>
+                                    <th class="py-3 px-4">Total Amount</th>
+                                    <th class="py-3 px-4">Payment</th>
+                                    <th class="py-3 px-4">Workflow Status</th>
+                                    <th class="py-3 px-4 text-right">Instant Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body" class="divide-y divide-gray-800/60 text-gray-300">
+                                <!-- Order Rows Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 3: KITCHEN DISPLAY SYSTEM (KDS) ================= -->
+            <section id="view-kds" class="view-panel space-y-4 hidden">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-dark-800 p-4 rounded-xl border border-gray-800">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-red-500/20 text-red-400 rounded-lg">
+                            <i class="fa-solid fa-fire-burner text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-white leading-tight">Kitchen Operations Command (KDS)</h2>
+                            <p class="text-xs text-gray-400">Live ticket pipeline & preparation timers</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-gray-400"><i class="fa-solid fa-bell text-yellow-400 mr-1"></i> Kitchen Sound Alerts Active</span>
+                        <button onclick="renderKDS()" class="px-3 py-1.5 bg-dark-900 border border-gray-700 hover:bg-gray-700 text-xs text-gray-200 rounded-lg">
+                            <i class="fa-solid fa-rotate-right"></i> Refresh Kanban
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KDS KANBAN COLUMNS -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Column 1: New / Accepted -->
+                    <div class="bg-dark-800/60 border border-gray-800 rounded-xl p-3 flex flex-col h-[calc(100vh-210px)]">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-700 mb-3">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-blue-400 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-blue-400"></span> New Orders
+                            </h3>
+                            <span id="kds-count-new" class="bg-blue-500/20 text-blue-400 text-xs px-2 py-0.5 rounded font-bold">2</span>
+                        </div>
+                        <div id="kds-col-new" class="space-y-3 overflow-y-auto flex-1 pr-1">
+                            <!-- KDS Ticket Cards Dynamic -->
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Preparing -->
+                    <div class="bg-dark-800/60 border border-gray-800 rounded-xl p-3 flex flex-col h-[calc(100vh-210px)]">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-700 mb-3">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-400"></span> Preparing
+                            </h3>
+                            <span id="kds-count-preparing" class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded font-bold">3</span>
+                        </div>
+                        <div id="kds-col-preparing" class="space-y-3 overflow-y-auto flex-1 pr-1">
+                            <!-- Cards -->
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Ready -->
+                    <div class="bg-dark-800/60 border border-gray-800 rounded-xl p-3 flex flex-col h-[calc(100vh-210px)]">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-700 mb-3">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Ready for Pickup
+                            </h3>
+                            <span id="kds-count-ready" class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded font-bold">2</span>
+                        </div>
+                        <div id="kds-col-ready" class="space-y-3 overflow-y-auto flex-1 pr-1">
+                            <!-- Cards -->
+                        </div>
+                    </div>
+
+                    <!-- Column 4: Completed -->
+                    <div class="bg-dark-800/60 border border-gray-800 rounded-xl p-3 flex flex-col h-[calc(100vh-210px)]">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-700 mb-3">
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-gray-400 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-gray-500"></span> Completed
+                            </h3>
+                            <span id="kds-count-completed" class="bg-gray-700/50 text-gray-300 text-xs px-2 py-0.5 rounded font-bold">1</span>
+                        </div>
+                        <div id="kds-col-completed" class="space-y-3 overflow-y-auto flex-1 pr-1">
+                            <!-- Cards -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 4: TABLE MANAGEMENT ================= -->
+            <section id="view-tables" class="view-panel space-y-4 hidden">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Interactive Floor & Table Control</h2>
+                        <p class="text-xs text-gray-400">Visual table occupancy, billing, and seating transfers</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-xs">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Available</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Occupied</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-indigo-500"></span> Reserved</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-600"></span> Cleaning</span>
+                    </div>
+                </div>
+
+                <!-- TABLE GRID LAYOUT -->
+                <div id="table-floorplan-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <!-- Dynamic Floor Tables Generated by JS -->
+                </div>
+            </section>
+
+            <!-- ================= VIEW 5: RESERVATIONS ================= -->
+            <section id="view-reservations" class="view-panel space-y-4 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Reservation System</h2>
+                        <p class="text-xs text-gray-400">Table booking schedule & VIP guest arrivals</p>
+                    </div>
+                    <button onclick="alert('Opening Reservation Modal...')" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-xs text-white font-semibold rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> New Reservation
+                    </button>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-dark-800 text-gray-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="py-2.5 px-3">Resv ID</th>
+                                    <th class="py-2.5 px-3">Customer & Phone</th>
+                                    <th class="py-2.5 px-3">Date & Time</th>
+                                    <th class="py-2.5 px-3">Guests</th>
+                                    <th class="py-2.5 px-3">Assigned Table</th>
+                                    <th class="py-2.5 px-3">Occasion / Request</th>
+                                    <th class="py-2.5 px-3">Status</th>
+                                    <th class="py-2.5 px-3 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservations-table-body" class="divide-y divide-gray-800 text-gray-300">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 6: MENU MANAGEMENT ================= -->
+            <section id="view-menu" class="view-panel space-y-4 hidden">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Menu Management CMS</h2>
+                        <p class="text-xs text-gray-400">Dish pricing, modifiers, recipe costing & instant stock toggles</p>
+                    </div>
+                    <button onclick="triggerNewDishModal()" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-xs text-white font-semibold rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Add New Dish
+                    </button>
+                </div>
+
+                <!-- Menu Categories Filter Bar -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2" id="menu-category-tabs">
+                    <!-- Dynamic Categories -->
+                </div>
+
+                <!-- MENU DISHES GRID -->
+                <div id="menu-dishes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <!-- Dishes Dynamic -->
+                </div>
+            </section>
+
+            <!-- ================= VIEW 7: INVENTORY & RECIPE COSTING ================= -->
+            <section id="view-inventory" class="view-panel space-y-4 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Raw Stock Inventory & Food Costing</h2>
+                        <p class="text-xs text-gray-400">Track raw ingredients, minimum alert thresholds & recipe profit margins</p>
+                    </div>
+                    <button onclick="alert('Opening Stock Entry Modal...')" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-xs text-white font-semibold rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Stock In / Purchase Entry
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Ingredient Stock List -->
+                    <div class="glass-panel p-4 rounded-2xl lg:col-span-2 space-y-3">
+                        <h3 class="font-bold text-sm text-white">Raw Ingredient Inventory Tracker</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-dark-800 text-gray-400 uppercase text-[10px]">
+                                    <tr>
+                                        <th class="p-2">Ingredient</th>
+                                        <th class="p-2">In Stock</th>
+                                        <th class="p-2">Min Threshold</th>
+                                        <th class="p-2">Unit Cost</th>
+                                        <th class="p-2">Supplier</th>
+                                        <th class="p-2">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body" class="divide-y divide-gray-800 text-gray-300">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recipe Costing Analysis -->
+                    <div class="glass-panel p-4 rounded-2xl space-y-4">
+                        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-amber-500"></i> Recipe Food-Cost Analyzer
+                        </h3>
+                        <p class="text-xs text-gray-400">Sample Dish Breakdown: <span class="text-white font-bold">Paneer Butter Masala</span></p>
+
+                        <div class="space-y-2 text-xs border-t border-b border-gray-800 py-3">
+                            <div class="flex justify-between text-gray-400">
+                                <span>Paneer (150g @ ₹0.3/g)</span>
+                                <span class="text-gray-200">₹45.00</span>
+                            </div>
+                            <div class="flex justify-between text-gray-400">
+                                <span>Butter & Cream (50ml)</span>
+                                <span class="text-gray-200">₹18.00</span>
+                            </div>
+                            <div class="flex justify-between text-gray-400">
+                                <span>Tomato Gravy & Spices</span>
+                                <span class="text-gray-200">₹12.00</span>
+                            </div>
+                            <div class="flex justify-between font-bold text-white pt-2 border-t border-gray-800">
+                                <span>Total Ingredient Cost</span>
+                                <span>₹75.00</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Selling Price:</span>
+                                <span class="font-bold text-emerald-400">₹320.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Food Cost %:</span>
+                                <span class="font-bold text-brand-400">23.4% (Optimal)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Gross Margin:</span>
+                                <span class="font-bold text-emerald-400">76.6% (₹245.00)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 8: CUSTOMERS & LOYALTY ================= -->
+            <section id="view-customers" class="view-panel space-y-4 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Customer CRM & Loyalty Program</h2>
+                        <p class="text-xs text-gray-400">Customer purchase history, tier segmentation & loyalty points</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-dark-800 text-gray-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="py-2.5 px-3">Customer Profile</th>
+                                    <th class="py-2.5 px-3">Total Spent</th>
+                                    <th class="py-2.5 px-3">Total Orders</th>
+                                    <th class="py-2.5 px-3">Loyalty Tier</th>
+                                    <th class="py-2.5 px-3">Points</th>
+                                    <th class="py-2.5 px-3">Segment Tag</th>
+                                    <th class="py-2.5 px-3">Last Visit</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customers-table-body" class="divide-y divide-gray-800 text-gray-300">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 9: COUPONS & OFFERS ================= -->
+            <section id="view-coupons" class="view-panel space-y-4 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Coupons & Promo Engine</h2>
+                        <p class="text-xs text-gray-400">Manage campaign discounts & cart rules</p>
+                    </div>
+                    <button onclick="alert('Creating Promo Code...')" class="px-3 py-1.5 bg-brand-600 hover:bg-brand-500 text-xs text-white font-semibold rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Create New Offer
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="coupons-grid">
+                    <!-- Dynamic -->
+                </div>
+            </section>
+
+            <!-- ================= VIEW 10: DELIVERY DISPATCH ================= -->
+            <section id="view-delivery" class="view-panel space-y-4 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Delivery Rider Dispatch Control</h2>
+                        <p class="text-xs text-gray-400">Live order assignment and rider tracking</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="delivery-orders-grid">
+                    <!-- Dynamic Delivery Tracker Cards -->
+                </div>
+            </section>
+
+            <!-- ================= VIEW 11: STAFF & RBAC ROLES ================= -->
+            <section id="view-staff" class="view-panel space-y-4 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Staff Roster & Access Controls</h2>
+                        <p class="text-xs text-gray-400">Role-based permission matrix & active store team</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-dark-800 text-gray-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-2.5">Staff Name</th>
+                                    <th class="p-2.5">Role Level</th>
+                                    <th class="p-2.5">Phone / Contact</th>
+                                    <th class="p-2.5">Allowed Modules</th>
+                                    <th class="p-2.5">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staff-table-body" class="divide-y divide-gray-800 text-gray-300">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 12: ANALYTICS & REPORTS ================= -->
+            <section id="view-analytics" class="view-panel space-y-6 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Advanced Reports & Analytics</h2>
+                        <p class="text-xs text-gray-400">Financial audits, taxes, food margins & channel metrics</p>
+                    </div>
+                    <button onclick="downloadCSVReport()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-xs text-white font-semibold rounded-lg flex items-center gap-2">
+                        <i class="fa-solid fa-file-csv"></i> Export Operations CSV
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <h3 class="font-bold text-sm text-white mb-2">Monthly Revenue Trend (2026)</h3>
+                        <div class="h-60">
+                            <canvas id="chart-monthly-revenue"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl">
+                        <h3 class="font-bold text-sm text-white mb-2">Payment Method Share</h3>
+                        <div class="h-60 flex items-center justify-center">
+                            <canvas id="chart-payment-methods"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 13: AUDIT LOGS ================= -->
+            <section id="view-audit" class="view-panel space-y-4 hidden">
+                <div>
+                    <h2 class="text-xl font-bold text-white tracking-tight">System Audit & Security Logs</h2>
+                    <p class="text-xs text-gray-400">Timestamped ledger of critical operational actions</p>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-dark-800 text-gray-400 uppercase text-[10px]">
+                                <tr>
+                                    <th class="p-2.5">Timestamp</th>
+                                    <th class="p-2.5">User Role</th>
+                                    <th class="p-2.5">Action Executed</th>
+                                    <th class="p-2.5">Module</th>
+                                    <th class="p-2.5">Device IP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audit-logs-table-body" class="divide-y divide-gray-800 text-gray-300">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= VIEW 14: NOTIFICATIONS ================= -->
+            <section id="view-notifications" class="view-panel space-y-4 hidden">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Alert Center & Notifications</h2>
+                        <p class="text-xs text-gray-400">Real-time alerts for delayed orders, low stock & cancellations</p>
+                    </div>
+                    <button onclick="clearNotifications()" class="text-xs text-gray-400 hover:text-white">Clear All</button>
+                </div>
+
+                <div class="glass-panel p-4 rounded-2xl space-y-3" id="notifications-list">
+                    <!-- Dynamic -->
+                </div>
+            </section>
+
+            <!-- ================= VIEW 15: STORE SETTINGS ================= -->
+            <section id="view-settings" class="view-panel space-y-6 hidden">
+                <div>
+                    <h2 class="text-xl font-bold text-white tracking-tight">Restaurant Configuration & Billing Setup</h2>
+                    <p class="text-xs text-gray-400">Global store tax parameters, charges, and printable info</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-5 rounded-2xl space-y-4">
+                        <h3 class="font-bold text-sm text-white">General Information</h3>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Restaurant Name</label>
+                            <input type="text" value="AURA Gourmet Haven" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Address</label>
+                            <input type="text" value="Plot 42, Financial District, Downtown" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Phone Number</label>
+                                <input type="text" value="+91 98765 43210" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">GST / Tax Number</label>
+                                <input type="text" value="36AAAAA0000A1Z5" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-2xl space-y-4">
+                        <h3 class="font-bold text-sm text-white">Taxes & Mandatory Service Charges</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">GST Rate (%)</label>
+                                <input type="number" value="5" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Packaging Charge (₹)</label>
+                                <input type="number" value="25" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Standard Delivery Fee (₹)</label>
+                                <input type="number" value="40" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">Service Charge (%)</label>
+                                <input type="number" value="2.5" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-xs text-white">
+                            </div>
+                        </div>
+                        <button onclick="showToast('Settings saved successfully!')" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-xs font-bold text-white rounded-lg">Save Changes</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ================= MODALS & OVERLAYS ================= -->
+
+    <!-- ORDER DETAIL & INVOICE RECEIPT MODAL -->
+    <div id="modal-order-detail" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-dark-800 border border-gray-700 w-full max-w-xl rounded-2xl shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                <div>
+                    <h3 class="font-bold text-base text-white flex items-center gap-2">
+                        Order Details <span id="modal-order-id" class="text-brand-500">#ORD-1024</span>
+                    </h3>
+                    <p class="text-xs text-gray-400" id="modal-order-time">Placed: 26 Sep 2026, 08:15 PM</p>
+                </div>
+                <button onclick="closeModal('modal-order-detail')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div id="modal-order-content" class="space-y-4 text-xs">
+                <!-- Populated via JS -->
+            </div>
+
+            <!-- Print Receipt Container -->
+            <div id="printable-receipt" class="hidden"></div>
+
+            <div class="flex justify-end gap-3 pt-3 border-t border-gray-700">
+                <button onclick="printOrderReceipt()" class="px-3 py-1.5 bg-dark-900 border border-gray-700 hover:bg-gray-700 text-xs text-gray-200 rounded-lg flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i> Print Invoice
+                </button>
+                <button onclick="closeModal('modal-order-detail')" class="px-4 py-1.5 bg-brand-600 text-xs text-white font-bold rounded-lg">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MANUAL NEW ORDER MODAL -->
+    <div id="modal-new-order" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-dark-800 border border-gray-700 w-full max-w-2xl rounded-2xl shadow-2xl p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                <h3 class="font-bold text-base text-white">Create New POS Order</h3>
+                <button onclick="closeModal('modal-new-order')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="form-new-order" onsubmit="submitNewOrder(event)" class="space-y-4 text-xs">
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-gray-400 mb-1">Customer Name</label>
+                        <input type="text" id="new-cust-name" required placeholder="John Doe" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Phone Number</label>
+                        <input type="text" id="new-cust-phone" required placeholder="+91 98765 00000" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Order Type</label>
+                        <select id="new-order-type" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-white">
+                            <option value="Dine-in">Dine-in</option>
+                            <option value="Takeaway">Takeaway</option>
+                            <option value="Delivery">Delivery</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-400 mb-1">Select Table (For Dine-in)</label>
+                        <select id="new-order-table" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-white">
+                            <option value="T-01">Table 01 (Cap: 2)</option>
+                            <option value="T-02">Table 02 (Cap: 4)</option>
+                            <option value="T-03">Table 03 (Cap: 4)</option>
+                            <option value="T-04">Table 04 (Cap: 6)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Payment Method</label>
+                        <select id="new-payment-method" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-white">
+                            <option value="UPI / QR">UPI / QR Code</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Credit/Debit Card">Credit/Debit Card</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-gray-400 mb-1">Select Primary Dish</label>
+                    <select id="new-order-dish" class="w-full bg-dark-900 border border-gray-700 rounded-lg p-2 text-white">
+                        <option value="Paneer Tikka Butter Masala|340">Paneer Tikka Butter Masala - ₹340</option>
+                        <option value="Chicken Dum Biryani|380">Chicken Dum Biryani - ₹380</option>
+                        <option value="Truffle Mushroom Pizza|450">Truffle Mushroom Pizza - ₹450</option>
+                        <option value="Garlic Butter Naan|60">Garlic Butter Naan - ₹60</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-gray-700">
+                    <button type="button" onclick="closeModal('modal-new-order')" class="px-4 py-2 bg-dark-900 border border-gray-700 text-gray-300 rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-lg">Submit & Print KDS Ticket</button>
+                </div>
             </form>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 7: CUSTOMER CRM                       -->
-        <!-- ========================================== -->
-        <section id="view-customers" class="view-panel hidden space-y-6">
-          <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Registered Customers</h1>
-            <p class="text-slate-400 text-xs">Profiles and activity records.</p>
-          </div>
-
-          <div class="glass-card rounded-2xl overflow-hidden">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900/80 text-slate-400 uppercase font-extrabold border-b border-slate-800">
-                <tr>
-                  <th class="p-4">UID</th>
-                  <th class="p-4">Customer Name</th>
-                  <th class="p-4">Email</th>
-                  <th class="p-4">Phone</th>
-                  <th class="p-4">System Role</th>
-                  <th class="p-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="customersTableBody" class="divide-y divide-slate-800/60 font-medium">
-                <!-- Rendered dynamically -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 8: OFFERS & COUPONS                   -->
-        <!-- ========================================== -->
-        <section id="view-offers" class="view-panel hidden space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-2xl font-black text-white tracking-tight">Coupons & Campaigns</h1>
-              <p class="text-slate-400 text-xs">Discount rules validated by order checkouts.</p>
-            </div>
-            <button onclick="openModal('modalAddOffer')" class="bg-brand-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">
-              <i class="fa-solid fa-plus mr-1"></i> New Coupon
-            </button>
-          </div>
-
-          <div id="offersGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Rendered dynamically -->
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 9: SUPPORT TICKETS                    -->
-        <!-- ========================================== -->
-        <section id="view-tickets" class="view-panel hidden space-y-6">
-          <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Customer Support Queue</h1>
-            <p class="text-slate-400 text-xs">Synchronized ticket inbox submitted from customer apps.</p>
-          </div>
-
-          <div class="glass-card rounded-2xl overflow-hidden">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900/80 text-slate-400 uppercase font-extrabold border-b border-slate-800">
-                <tr>
-                  <th class="p-4">Ticket Ref</th>
-                  <th class="p-4">Subject</th>
-                  <th class="p-4">Category</th>
-                  <th class="p-4">Status</th>
-                  <th class="p-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="ticketsTableBody" class="divide-y divide-slate-800/60 font-medium">
-                <!-- Rendered dynamically -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 10: STAFF & RBAC (ADMIN ONLY)        -->
-        <!-- ========================================== -->
-        <section id="view-staff" class="view-panel hidden space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-2xl font-black text-white tracking-tight">Staff Account Governance</h1>
-              <p class="text-slate-400 text-xs">Manage system access levels and assign operational permissions.</p>
-            </div>
-          </div>
-
-          <div class="glass-card rounded-2xl overflow-hidden">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900/80 text-slate-400 uppercase font-extrabold border-b border-slate-800">
-                <tr>
-                  <th class="p-4">User</th>
-                  <th class="p-4">Email</th>
-                  <th class="p-4">Assigned Role</th>
-                  <th class="p-4 text-right">Role Mutation</th>
-                </tr>
-              </thead>
-              <tbody id="staffTableBody" class="divide-y divide-slate-800/60 font-medium">
-                <!-- Rendered dynamically -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 11: AUDIT LOGS (ADMIN ONLY)           -->
-        <!-- ========================================== -->
-        <section id="view-audit" class="view-panel hidden space-y-6">
-          <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Security Audit Trail</h1>
-            <p class="text-slate-400 text-xs">Immutable system records of operational updates.</p>
-          </div>
-
-          <div class="glass-card rounded-2xl overflow-hidden p-4">
-            <div id="auditLogContainer" class="space-y-3 font-mono text-xs">
-              <!-- Logs populated -->
-            </div>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VIEW 12: SYSTEM HEALTH                     -->
-        <!-- ========================================== -->
-        <section id="view-system" class="view-panel hidden space-y-6">
-          <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Infrastructure Health</h1>
-            <p class="text-slate-400 text-xs">Live connection statuses and telemetry diagnostic indicators.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="glass-card p-5 rounded-2xl">
-              <div class="text-slate-400 text-xs font-bold uppercase mb-2">Realtime Database</div>
-              <div class="flex items-center gap-2 text-emerald-400 font-extrabold text-sm">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> CONNECTED
-              </div>
-            </div>
-            <div class="glass-card p-5 rounded-2xl">
-              <div class="text-slate-400 text-xs font-bold uppercase mb-2">Firebase Auth Context</div>
-              <div id="sysAuthStatus" class="flex items-center gap-2 text-emerald-400 font-extrabold text-sm">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> ACTIVE
-              </div>
-            </div>
-            <div class="glass-card p-5 rounded-2xl">
-              <div class="text-slate-400 text-xs font-bold uppercase mb-2">Client Connection</div>
-              <div class="flex items-center gap-2 text-emerald-400 font-extrabold text-sm">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> ONLINE
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
+        </div>
     </div>
-  </div>
 
-  <!-- ========================================== -->
-  <!-- MODALS CONTAINER                          -->
-  <!-- ========================================== -->
-
-  <!-- Add Menu Item Modal -->
-  <div id="modalAddMenu" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-lg rounded-2xl p-6 space-y-4 relative">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-extrabold text-white text-base">Add Menu Dish</h3>
-        <button onclick="closeModal('modalAddMenu')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form onsubmit="handleSaveMenuItem(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">Dish Name</label>
-          <input type="text" id="menuName" class="w-full glass-input rounded-xl p-2.5" required>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-slate-300 mb-1">Price (₹)</label>
-            <input type="number" id="menuPrice" class="w-full glass-input rounded-xl p-2.5" required>
-          </div>
-          <div>
-            <label class="block font-bold text-slate-300 mb-1">Category</label>
-            <select id="menuCategorySelect" class="w-full glass-input rounded-xl p-2.5 bg-slate-900" required>
-              <!-- Filled dynamically -->
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">Image URL</label>
-          <input type="url" id="menuImageUrl" class="w-full glass-input rounded-xl p-2.5" placeholder="https://..." required>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">Description</label>
-          <textarea id="menuDesc" rows="2" class="w-full glass-input rounded-xl p-2.5" required></textarea>
-        </div>
-        <div class="flex items-center gap-4 pt-2">
-          <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-300">
-            <input type="checkbox" id="menuIsVeg" class="rounded accent-brand-500"> Veg Item
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-300">
-            <input type="checkbox" id="menuIsAvailable" checked class="rounded accent-brand-500"> Available
-          </label>
-        </div>
-        <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold py-2.5 rounded-xl transition mt-4">
-          Commit to Menu Catalog
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Add Category Modal -->
-  <div id="modalAddCategory" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-sm rounded-2xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-extrabold text-white text-base">New Food Category</h3>
-        <button onclick="closeModal('modalAddCategory')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form onsubmit="handleSaveCategory(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">Category Title</label>
-          <input type="text" id="catName" class="w-full glass-input rounded-xl p-2.5" required>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">FontAwesome Icon Class</label>
-          <input type="text" id="catIcon" placeholder="fa-pizza-slice" class="w-full glass-input rounded-xl p-2.5" required>
-        </div>
-        <button type="submit" class="w-full bg-brand-500 text-slate-950 font-extrabold py-2.5 rounded-xl mt-2">
-          Save Category
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Add Offer Modal -->
-  <div id="modalAddOffer" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-md rounded-2xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-extrabold text-white text-base">Create Discount Coupon</h3>
-        <button onclick="closeModal('modalAddOffer')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <form onsubmit="handleSaveOffer(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">Promo Code (Uppercase)</label>
-          <input type="text" id="offerCode" class="w-full glass-input rounded-xl p-2.5 uppercase font-mono" required>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-slate-300 mb-1">Discount Amount (₹)</label>
-            <input type="number" id="offerDiscount" class="w-full glass-input rounded-xl p-2.5" required>
-          </div>
-          <div>
-            <label class="block font-bold text-slate-300 mb-1">Min Order Total (₹)</label>
-            <input type="number" id="offerMinSpend" class="w-full glass-input rounded-xl p-2.5" required>
-          </div>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">Description</label>
-          <input type="text" id="offerDesc" class="w-full glass-input rounded-xl p-2.5" required>
-        </div>
-        <button type="submit" class="w-full bg-brand-500 text-slate-950 font-extrabold py-2.5 rounded-xl mt-2">
-          Publish Offer
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Order Detail Drawer Modal -->
-  <div id="modalOrderDetail" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex justify-end">
-    <div class="glass-card w-full max-w-md h-full p-6 space-y-6 overflow-y-auto border-l border-slate-800">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-        <div>
-          <h3 class="font-black text-white text-lg" id="odModalId">Order #---</h3>
-          <p class="text-slate-400 text-xs" id="odModalTime">--</p>
-        </div>
-        <button onclick="closeModal('modalOrderDetail')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-
-      <div class="space-y-4 text-xs">
-        <!-- Customer Block -->
-        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
-          <div class="font-bold text-slate-400 uppercase text-[10px]">Customer Data</div>
-          <div id="odCustomerName" class="font-bold text-white text-sm">--</div>
-          <div id="odCustomerPhone" class="text-slate-300">--</div>
-          <div id="odCustomerAddress" class="text-slate-400 text-[11px] pt-1">--</div>
-        </div>
-
-        <!-- Items Breakdown -->
-        <div>
-          <div class="font-bold text-slate-400 uppercase text-[10px] mb-2">Order Line Items</div>
-          <div id="odItemsList" class="space-y-2">
-            <!-- Populated -->
-          </div>
-        </div>
-
-        <!-- Financial Breakdown -->
-        <div class="border-t border-slate-800 pt-3 space-y-1.5 font-semibold">
-          <div class="flex justify-between text-slate-400"><span>Subtotal:</span><span id="odSubtotal">₹0</span></div>
-          <div class="flex justify-between text-slate-400"><span>Tax:</span><span id="odTax">₹0</span></div>
-          <div class="flex justify-between text-slate-400"><span>Delivery Fee:</span><span id="odDelivery">₹0</span></div>
-          <div class="flex justify-between text-white text-sm font-black pt-2 border-t border-slate-800/80"><span>Grand Total:</span><span id="odTotal" class="text-brand-500">₹0</span></div>
-        </div>
-
-        <!-- Status Override Control -->
-        <div class="pt-4 border-t border-slate-800 space-y-2">
-          <label class="block font-bold text-slate-300">Update Operational Status</label>
-          <select id="odStatusSelect" onchange="handleModalStatusUpdate(this.value)" class="w-full glass-input rounded-xl p-2.5 bg-slate-900 text-white font-bold">
-            <option value="PLACED">PLACED</option>
-            <option value="CONFIRMED">CONFIRMED</option>
-            <option value="PREPARING">PREPARING</option>
-            <option value="OUT_FOR_DELIVERY">OUT_FOR_DELIVERY</option>
-            <option value="DELIVERED">DELIVERED</option>
-            <option value="CANCELLED">CANCELLED</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Support Ticket Reply Modal -->
-  <div id="modalTicketReply" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-lg rounded-2xl p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-extrabold text-white text-base">Support Resolution Dispatch</h3>
-        <button onclick="closeModal('modalTicketReply')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="space-y-3 text-xs">
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-          <div id="ticketSubjectModal" class="font-bold text-white text-sm mb-1">--</div>
-          <div id="ticketMessageModal" class="text-slate-300">--</div>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-300 mb-1">Resolution Response</label>
-          <textarea id="ticketReplyText" rows="3" class="w-full glass-input rounded-xl p-2.5" placeholder="Type resolution note sent to customer..."></textarea>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="resolveCurrentTicket('RESOLVED')" class="flex-1 bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold py-2.5 rounded-xl transition">
-            Mark Resolved & Dispatch
-          </button>
-          <button onclick="resolveCurrentTicket('CLOSED')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2.5 rounded-xl border border-slate-700">
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST NOTIFICATIONS -->
-  <div id="toastBox" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-  <!-- ========================================== -->
-  <!-- JAVASCRIPT ENGINE & FIREBASE INTEGRATION   -->
-  <!-- ========================================== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getDatabase, ref, get, set, update, push, remove, onValue, query, orderByChild, serverTimestamp 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    // Standardized Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
-      authDomain: "yukti-247.firebaseapp.com",
-      databaseURL: "https://yukti-247-default-rtdb.firebaseio.com",
-      projectId: "yukti-247",
-      storageBucket: "yukti-247.firebasestorage.app",
-      messagingSenderId: "244123454826",
-      appId: "1:244123454826:web:56b4d88c3628bb06cfa913",
-      measurementId: "G-6BGFCBKTD7"
-    };
-
-    // App State
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    let currentUser = null;
-    let currentUserRole = null;
-    let activeView = 'overview';
-
-    let cacheData = {
-      orders: {},
-      reservations: {},
-      menu: {},
-      categories: {},
-      customers: {},
-      offers: {},
-      tickets: {},
-      settings: {}
-    };
-
-    let activeSelectedOrderId = null;
-    let activeSelectedTicketId = null;
-
-    // --- AUTHENTICATION & RBAC GUARD ---
-    onAuthStateChanged(auth, async (user) => {
-      const overlay = document.getElementById('authGuardOverlay');
-      const statusText = document.getElementById('authStatusText');
-      const actions = document.getElementById('authActions');
-      const spinner = document.getElementById('authSpinner');
-
-      if (!user) {
-        statusText.textContent = "Unauthorized access attempt. Redirecting...";
-        setTimeout(() => window.location.href = 'index.html', 1200);
-        return;
-      }
-
-      currentUser = user;
-      statusText.textContent = "Verifying Role Permissions...";
-
-      try {
-        const userSnap = await get(ref(db, `users/${user.uid}`));
-        if (!userSnap.exists()) {
-          showAuthError("User record missing from system index.");
-          return;
-        }
-
-        const userData = userSnap.val();
-        currentUserRole = (userData.role || '').toUpperCase();
-
-        if (currentUserRole === 'CUSTOMER') {
-          window.location.href = 'customer.html';
-          return;
-        }
-        if (currentUserRole === 'PARTNER') {
-          window.location.href = 'partner.html';
-          return;
-        }
-
-        if (currentUserRole !== 'ADMIN' && currentUserRole !== 'STAFF') {
-          showAuthError("Access Restricted: Invalid operational credentials.");
-          return;
-        }
-
-        // Apply RBAC UI Rules
-        if (currentUserRole === 'STAFF') {
-          document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
-        }
-
-        // Render Admin User Profile
-        document.getElementById('adminName').textContent = userData.fullName || user.email.split('@')[0];
-        document.getElementById('adminRoleBadge').textContent = currentUserRole;
-        document.getElementById('adminAvatar').textContent = (userData.fullName || 'A').charAt(0).toUpperCase();
-
-        // Successful Auth Completion
-        overlay.classList.add('opacity-0');
-        setTimeout(() => {
-          overlay.classList.add('hidden');
-          document.getElementById('adminApp').classList.remove('hidden');
-        }, 300);
-
-        // Bind Realtime Listeners
-        initDatabaseListeners();
-
-      } catch (error) {
-        console.error("Auth Guard Failure:", error);
-        showAuthError("Security Verification Timeout.");
-      }
-    });
-
-    function showAuthError(msg) {
-      document.getElementById('authStatusText').textContent = msg;
-      document.getElementById('authSpinner').classList.add('hidden');
-      document.getElementById('authActions').classList.remove('hidden');
-    }
-
-    window.logoutAdmin = () => {
-      signOut(auth).then(() => window.location.href = 'index.html');
-    };
-
-    // --- REALTIME DATABASE LISTENERS ---
-    function initDatabaseListeners() {
-      // 1. Live Orders
-      onValue(ref(db, 'orders'), (snapshot) => {
-        cacheData.orders = snapshot.val() || {};
-        renderOrdersView();
-        renderOverviewTelemetry();
-        logAuditAction("SYNC", "Orders synchronized.");
-      });
-
-      // 2. Table Reservations
-      onValue(ref(db, 'reservations'), (snapshot) => {
-        cacheData.reservations = snapshot.val() || {};
-        renderReservationsView();
-        renderOverviewTelemetry();
-      });
-
-      // 3. Menu Items
-      onValue(ref(db, 'menuItems'), (snapshot) => {
-        cacheData.menu = snapshot.val() || {};
-        renderMenuView();
-      });
-
-      // 4. Categories
-      onValue(ref(db, 'categories'), (snapshot) => {
-        cacheData.categories = snapshot.val() || {};
-        renderCategoriesView();
-        populateCategoryDropdowns();
-      });
-
-      // 5. Customers
-      onValue(ref(db, 'users'), (snapshot) => {
-        cacheData.customers = snapshot.val() || {};
-        renderCustomersView();
-        renderStaffView();
-      });
-
-      // 6. Offers
-      onValue(ref(db, 'offers'), (snapshot) => {
-        cacheData.offers = snapshot.val() || {};
-        renderOffersView();
-      });
-
-      // 7. Support Tickets
-      onValue(ref(db, 'supportTickets'), (snapshot) => {
-        cacheData.tickets = snapshot.val() || {};
-        renderTicketsView();
-        renderOverviewTelemetry();
-      });
-
-      // 8. Restaurant Settings
-      onValue(ref(db, 'restaurant/settings'), (snapshot) => {
-        cacheData.settings = snapshot.val() || {};
-        populateRestaurantSettingsForm();
-      });
-
-      // 9. Audit Logs
-      onValue(ref(db, 'auditLogs'), (snapshot) => {
-        renderAuditLogs(snapshot.val() || {});
-      });
-    }
-
-    // --- VIEW SWITCHING NAVIGATION ---
-    window.switchView = (viewId) => {
-      activeView = viewId;
-      document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('bg-slate-800', 'text-white'));
-
-      const targetView = document.getElementById(`view-${viewId}`);
-      const targetNav = document.getElementById(`nav-${viewId}`);
-
-      if (targetView) targetView.classList.remove('hidden');
-      if (targetNav) targetNav.classList.add('bg-slate-800', 'text-white');
-
-      // Close mobile sidebar if open
-      document.getElementById('sidebar').classList.remove('open');
-    };
-
-    window.toggleSidebar = () => {
-      document.getElementById('sidebar').classList.toggle('-translate-x-full');
-    };
-
-    // --- RENDER OVERVIEW TELEMETRY ---
-    function renderOverviewTelemetry() {
-      const orders = Object.values(cacheData.orders);
-      const today = new Date().toISOString().split('T')[0];
-
-      // Calculate Revenue & KPI
-      let todayRev = 0;
-      let todayOrderCount = 0;
-      let liveActiveCount = 0;
-
-      orders.forEach(o => {
-        const orderDate = new Date(o.createdAt || Date.now()).toISOString().split('T')[0];
-        if (orderDate === today) {
-          todayOrderCount++;
-          if (o.status === 'DELIVERED') todayRev += Number(o.grandTotal || o.totalAmount || 0);
-        }
-        if (['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes(o.status)) {
-          liveActiveCount++;
-        }
-      });
-
-      document.getElementById('kpiRevenue').textContent = `₹${todayRev.toLocaleString()}`;
-      document.getElementById('kpiOrders').textContent = todayOrderCount;
-      document.getElementById('badgeLiveOrders').textContent = liveActiveCount;
-
-      // Reservations KPI
-      const resList = Object.values(cacheData.reservations);
-      document.getElementById('kpiReservations').textContent = resList.length;
-      document.getElementById('badgeLiveRes').textContent = resList.filter(r => r.status === 'PENDING').length;
-
-      // Tickets KPI
-      const ticketList = Object.values(cacheData.tickets);
-      const openTickets = ticketList.filter(t => t.status === 'OPEN').length;
-      document.getElementById('kpiTickets').textContent = openTickets;
-      document.getElementById('badgeLiveTickets').textContent = openTickets;
-
-      // Render Live Kitchen Dispatch Cards
-      const dispatchBox = document.getElementById('liveOrderDispatchContainer');
-      const activeOrders = orders.filter(o => ['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes(o.status));
-
-      if (activeOrders.length === 0) {
-        dispatchBox.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-semibold text-xs">No active orders in kitchen pipeline.</div>`;
-        return;
-      }
-
-      dispatchBox.innerHTML = activeOrders.map(o => `
-        <div class="glass-card p-4 rounded-xl space-y-3 border-l-4 ${getStatusBorderColor(o.status)}">
-          <div class="flex items-center justify-between">
-            <span class="font-black text-white text-xs">#${o.id || o.key}</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${getStatusBadgeStyle(o.status)}">${o.status}</span>
-          </div>
-          <div class="text-xs text-slate-300 font-bold">${o.customerName || 'Walk-in Guest'}</div>
-          <div class="text-[11px] text-slate-400 truncate">${formatItemsSummary(o.items)}</div>
-          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
-            <span class="font-extrabold text-white text-xs">₹${o.grandTotal || o.totalAmount}</span>
-            <button onclick="openOrderDetail('${o.key}')" class="text-brand-500 hover:text-brand-400 font-bold text-xs">
-              Manage <i class="fa-solid fa-gear ml-1"></i>
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // --- RENDER ORDERS TABLE ---
-    let orderFilter = 'ALL';
-    window.filterOrders = (status) => {
-      orderFilter = status;
-      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('bg-brand-500/20', 'text-brand-400'));
-      renderOrdersView();
-    };
-
-    function renderOrdersView() {
-      const tableBody = document.getElementById('ordersTableBody');
-      let orders = Object.keys(cacheData.orders).map(k => ({ key: k, ...cacheData.orders[k] }));
-
-      if (orderFilter !== 'ALL') {
-        orders = orders.filter(o => o.status === orderFilter);
-      }
-
-      if (orders.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500 font-semibold">No records found matching criteria.</td></tr>`;
-        return;
-      }
-
-      tableBody.innerHTML = orders.map(o => `
-        <tr class="hover:bg-slate-900/40 transition">
-          <td class="p-4 font-mono font-bold text-brand-400">#${o.id || o.key.slice(-6)}</td>
-          <td class="p-4">
-            <div class="font-bold text-white">${o.customerName || 'N/A'}</div>
-            <div class="text-slate-500 text-[10px]">${o.customerPhone || ''}</div>
-          </td>
-          <td class="p-4 text-slate-300 max-w-xs truncate">${formatItemsSummary(o.items)}</td>
-          <td class="p-4">
-            <div class="font-black text-white">₹${o.grandTotal || o.totalAmount || 0}</div>
-            <div class="text-[10px] font-bold text-slate-500">${o.paymentMethod || 'COD'}</div>
-          </td>
-          <td class="p-4">
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${getStatusBadgeStyle(o.status)}">${o.status}</span>
-          </td>
-          <td class="p-4 text-slate-400 text-[11px]">${new Date(o.createdAt || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
-          <td class="p-4 text-right">
-            <button onclick="openOrderDetail('${o.key}')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-1.5 rounded-lg border border-slate-700">
-              Inspect
-            </button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    // --- ORDER DETAIL DRAWER CONTROL ---
-    window.openOrderDetail = (orderKey) => {
-      activeSelectedOrderId = orderKey;
-      const o = cacheData.orders[orderKey];
-      if (!o) return;
-
-      document.getElementById('odModalId').textContent = `Order #${o.id || orderKey.slice(-6)}`;
-      document.getElementById('odModalTime').textContent = new Date(o.createdAt || Date.now()).toLocaleString();
-      document.getElementById('odCustomerName').textContent = o.customerName || 'N/A';
-      document.getElementById('odCustomerPhone').textContent = o.customerPhone || 'N/A';
-      document.getElementById('odCustomerAddress').textContent = o.deliveryAddress || 'Pick-up Order';
-
-      // Items list
-      const itemsList = document.getElementById('odItemsList');
-      if (Array.isArray(o.items)) {
-        itemsList.innerHTML = o.items.map(i => `
-          <div class="flex justify-between items-center text-slate-300">
-            <span>${i.name} <strong class="text-white">x${i.quantity || 1}</strong></span>
-            <span class="font-mono">₹${(i.price || 0) * (i.quantity || 1)}</span>
-          </div>
-        `).join('');
-      } else {
-        itemsList.innerHTML = `<div class="text-slate-400">${formatItemsSummary(o.items)}</div>`;
-      }
-
-      document.getElementById('odSubtotal').textContent = `₹${o.subtotal || o.totalAmount || 0}`;
-      document.getElementById('odTax').textContent = `₹${o.tax || 0}`;
-      document.getElementById('odDelivery').textContent = `₹${o.deliveryFee || 0}`;
-      document.getElementById('odTotal').textContent = `₹${o.grandTotal || o.totalAmount || 0}`;
-      document.getElementById('odStatusSelect').value = o.status || 'PLACED';
-
-      openModal('modalOrderDetail');
-    };
-
-    window.handleModalStatusUpdate = async (newStatus) => {
-      if (!activeSelectedOrderId) return;
-      try {
-        await update(ref(db, `orders/${activeSelectedOrderId}`), {
-          status: newStatus,
-          updatedAt: serverTimestamp()
+    <!-- TOAST NOTIFICATIONS CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ================= APPLICATION LOGIC & DATA ENGINE ================= -->
+    <script>
+        // GLOBAL APP STATE
+        const state = {
+            orders: [
+                {
+                    id: "ORD-1024",
+                    customer: "Ananya Sharma",
+                    phone: "+91 98112 34567",
+                    type: "Dine-in",
+                    table: "T-03",
+                    address: "N/A (Dine-in)",
+                    items: [
+                        { name: "Paneer Tikka Butter Masala", qty: 1, price: 340, mods: "Extra Butter, Mild Spice" },
+                        { name: "Garlic Butter Naan", qty: 3, price: 60, mods: "Crispy" }
+                    ],
+                    subtotal: 520,
+                    gst: 26,
+                    charges: 15,
+                    discount: 50,
+                    grandTotal: 511,
+                    paymentMethod: "UPI",
+                    paymentStatus: "Paid",
+                    status: "PREPARING",
+                    time: "20 mins ago",
+                    prepTime: "15 mins",
+                    urgency: "Normal"
+                },
+                {
+                    id: "ORD-1025",
+                    customer: "Vikram Malhotra",
+                    phone: "+91 98765 12345",
+                    type: "Delivery",
+                    table: "N/A",
+                    address: "Tower B-402, Crest Apartments",
+                    items: [
+                        { name: "Chicken Dum Biryani", qty: 2, price: 380, mods: "Double Salan" }
+                    ],
+                    subtotal: 760,
+                    gst: 38,
+                    charges: 65,
+                    discount: 0,
+                    grandTotal: 863,
+                    paymentMethod: "Card",
+                    paymentStatus: "Paid",
+                    status: "NEW ORDER",
+                    time: "5 mins ago",
+                    prepTime: "25 mins",
+                    urgency: "Normal"
+                },
+                {
+                    id: "ORD-1026",
+                    customer: "Rohan Verma",
+                    phone: "+91 99001 88221",
+                    type: "Dine-in",
+                    table: "T-01",
+                    address: "N/A",
+                    items: [
+                        { name: "Truffle Mushroom Pizza", qty: 1, price: 450, mods: "Thin Crust" }
+                    ],
+                    subtotal: 450,
+                    gst: 22.5,
+                    charges: 10,
+                    discount: 0,
+                    grandTotal: 482.5,
+                    paymentMethod: "Cash",
+                    paymentStatus: "Pending",
+                    status: "PREPARING",
+                    time: "28 mins ago",
+                    prepTime: "20 mins",
+                    urgency: "Delayed"
+                },
+                {
+                    id: "ORD-1027",
+                    customer: "Sneha Reddy",
+                    phone: "+91 94412 00991",
+                    type: "Takeaway",
+                    table: "N/A",
+                    address: "N/A",
+                    items: [
+                        { name: "Paneer Tikka Butter Masala", qty: 1, price: 340, mods: "" }
+                    ],
+                    subtotal: 340,
+                    gst: 17,
+                    charges: 25,
+                    discount: 20,
+                    grandTotal: 362,
+                    paymentMethod: "UPI",
+                    paymentStatus: "Paid",
+                    status: "READY",
+                    time: "32 mins ago",
+                    prepTime: "10 mins",
+                    urgency: "Normal"
+                }
+            ],
+            tables: [
+                { id: "T-01", cap: 2, status: "Occupied", orderId: "ORD-1026", duration: "35m", customer: "Rohan V." },
+                { id: "T-02", cap: 4, status: "Available", orderId: "-", duration: "-", customer: "-" },
+                { id: "T-03", cap: 4, status: "Occupied", orderId: "ORD-1024", duration: "20m", customer: "Ananya S." },
+                { id: "T-04", cap: 6, status: "Reserved", orderId: "-", duration: "-", customer: "Dr. Kapoor (8 PM)" },
+                { id: "T-05", cap: 2, status: "Available", orderId: "-", duration: "-", customer: "-" },
+                { id: "T-06", cap: 4, status: "Cleaning", orderId: "-", duration: "-", customer: "-" },
+                { id: "T-07", cap: 8, status: "Available", orderId: "-", duration: "-", customer: "-" },
+                { id: "T-08", cap: 4, status: "Available", orderId: "-", duration: "-", customer: "-" }
+            ],
+            menu: [
+                { id: 1, name: "Paneer Tikka Butter Masala", cat: "Main Course", price: 340, veg: true, spicy: "Medium", best: true, avail: true },
+                { id: 2, name: "Chicken Dum Biryani", cat: "Biryani & Rice", price: 380, veg: false, spicy: "High", best: true, avail: true },
+                { id: 3, name: "Truffle Mushroom Pizza", cat: "Italian", price: 450, veg: true, spicy: "Mild", best: false, avail: true },
+                { id: 4, name: "Garlic Butter Naan", cat: "Breads", price: 60, veg: true, spicy: "None", best: false, avail: true }
+            ],
+            inventory: [
+                { name: "Cottage Cheese (Paneer)", qty: "4.2 kg", min: "5.0 kg", cost: "₹300 / kg", supplier: "Dairy Craft Co.", status: "Low Stock" },
+                { name: "Basmati Rice", qty: "32 kg", min: "10 kg", cost: "₹110 / kg", supplier: "Agro Grains", status: "Optimal" },
+                { name: "Fresh Cooking Cream", qty: "1.5 L", min: "3.0 L", cost: "₹180 / L", supplier: "Dairy Craft Co.", status: "Low Stock" },
+                { name: "Truffle Oil", qty: "800 ml", min: "200 ml", cost: "₹2,400 / L", supplier: "Gourmet Imports", status: "Optimal" }
+            ],
+            customers: [
+                { name: "Ananya Sharma", phone: "+91 98112 34567", spend: "₹14,250", orders: 18, tier: "Gold", points: 420, tag: "Regular" },
+                { name: "Vikram Malhotra", phone: "+91 98765 12345", spend: "₹28,900", orders: 34, tier: "Platinum", points: 1150, tag: "VIP" },
+                { name: "Rohan Verma", phone: "+91 99001 88221", spend: "₹2,100", orders: 3, tier: "Basic", points: 60, tag: "New" }
+            ],
+            reservations: [
+                { id: "RSV-880", customer: "Dr. Kapoor", phone: "+91 98220 11223", datetime: "Today, 08:00 PM", guests: 5, table: "T-04", request: "Anniversary Cake", status: "Confirmed" },
+                { id: "RSV-881", customer: "Meera Nair", phone: "+91 97110 55443", datetime: "Today, 09:15 PM", guests: 2, table: "T-02", request: "Quiet Corner", status: "Requested" }
+            ],
+            auditLogs: [
+                { time: "20:14:02", role: "Manager", action: "Updated Order #ORD-1024 status to PREPARING", module: "Live Orders", ip: "192.168.1.14" },
+                { time: "20:05:11", role: "Admin", action: "Edited GST parameter from 5% to 5%", module: "Settings", ip: "192.168.1.2" }
+            ],
+            notifications: [
+                { time: "10m ago", text: "Low stock alert: Fresh Cooking Cream is below threshold (1.5L left)", type: "warning" },
+                { time: "22m ago", text: "Order #ORD-1026 kitchen preparation time delayed (>25 mins)", type: "danger" }
+            ]
+        };
+
+        // DOM INITIALIZATION
+        document.addEventListener("DOMContentLoaded", () => {
+            initLiveClock();
+            renderDashboardCharts();
+            renderLiveActivity();
+            renderOrdersTable();
+            renderKDS();
+            renderTableFloorplan();
+            renderReservations();
+            renderMenuCMS();
+            renderInventory();
+            renderCustomers();
+            renderCoupons();
+            renderDelivery();
+            renderStaff();
+            renderAuditLogs();
+            renderNotifications();
+
+            // Keyboard Shortcuts
+            window.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('global-search').focus();
+                }
+            });
         });
 
-        // Log Audit Trail
-        logAuditAction("ORDER_STATUS_UPDATE", `Order #${activeSelectedOrderId} shifted to ${newStatus}`);
-        showToast(`Order status updated to ${newStatus}`);
-      } catch (e) {
-        showToast("Failed to update status", "error");
-      }
-    };
+        // VIEW ROUTER
+        function switchView(viewId) {
+            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
+            const target = document.getElementById('view-' + viewId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
 
-    // --- RENDER MENU & CATALOG ---
-    function renderMenuView() {
-      const grid = document.getElementById('menuItemsGrid');
-      const items = Object.keys(cacheData.menu).map(k => ({ key: k, ...cacheData.menu[k] }));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active', 'bg-gray-700/60', 'text-white'));
+            event.currentTarget?.classList?.add('active', 'bg-gray-700/60', 'text-white');
+        }
 
-      if (items.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-semibold">No menu items added yet.</div>`;
-        return;
-      }
+        // CLOCK
+        function initLiveClock() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('live-clock').innerText = now.toLocaleTimeString();
+            }, 1000);
+        }
 
-      grid.innerHTML = items.map(item => `
-        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between p-4 space-y-3">
-          <img src="${item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}" class="w-full h-32 object-cover rounded-xl">
-          <div>
-            <div class="flex items-center justify-between">
-              <span class="font-extrabold text-white text-sm">${item.name}</span>
-              <span class="font-mono font-black text-brand-500 text-xs">₹${item.price}</span>
-            </div>
-            <p class="text-slate-400 text-[11px] line-clamp-2 mt-1">${item.description || ''}</p>
-          </div>
-          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
-            <button onclick="toggleMenuAvailability('${item.key}', ${!item.available})" class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.available ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
-              ${item.available ? 'AVAILABLE' : 'DISABLED'}
-            </button>
-            <button onclick="deleteMenuItem('${item.key}')" class="text-slate-500 hover:text-red-400 text-xs p-1">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
+        // CHARTS RENDERING (Chart.js)
+        function renderDashboardCharts() {
+            // Hourly Sales Chart
+            const ctxHourly = document.getElementById('chart-hourly-sales').getContext('2d');
+            new Chart(ctxHourly, {
+                type: 'line',
+                data: {
+                    labels: ['12 PM', '2 PM', '4 PM', '6 PM', '8 PM', '10 PM'],
+                    datasets: [{
+                        label: 'Sales (₹)',
+                        data: [4200, 8500, 3100, 11200, 16800, 4450],
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.15)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
 
-    window.handleSaveMenuItem = async (e) => {
-      e.preventDefault();
-      const newItem = {
-        name: document.getElementById('menuName').value,
-        price: Number(document.getElementById('menuPrice').value),
-        category: document.getElementById('menuCategorySelect').value,
-        image: document.getElementById('menuImageUrl').value,
-        description: document.getElementById('menuDesc').value,
-        isVeg: document.getElementById('menuIsVeg').checked,
-        available: document.getElementById('menuIsAvailable').checked,
-        createdAt: serverTimestamp()
-      };
+            // Order Types Chart
+            const ctxTypes = document.getElementById('chart-order-types').getContext('2d');
+            new Chart(ctxTypes, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Dine-in', 'Takeaway', 'Delivery'],
+                    datasets: [{
+                        data: [64, 38, 40],
+                        backgroundColor: ['#a855f7', '#eab308', '#06b6d4']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } } }
+                }
+            });
 
-      try {
-        await push(ref(db, 'menuItems'), newItem);
-        logAuditAction("CREATE_MENU_ITEM", `Added dish ${newItem.name}`);
-        showToast("Dish added to menu catalog!");
-        closeModal('modalAddMenu');
-      } catch (err) {
-        showToast("Error creating item", "error");
-      }
-    };
+            // Top Dishes Chart
+            const ctxDishes = document.getElementById('chart-top-dishes').getContext('2d');
+            new Chart(ctxDishes, {
+                type: 'bar',
+                data: {
+                    labels: ['Paneer Masala', 'Biryani', 'Pizza', 'Naan'],
+                    datasets: [{
+                        data: [42, 38, 29, 85],
+                        backgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
 
-    window.toggleMenuAvailability = async (key, status) => {
-      await update(ref(db, `menuItems/${key}`), { available: status });
-      showToast("Inventory status updated");
-    };
+            // Category Performance Chart
+            const ctxCat = document.getElementById('chart-categories').getContext('2d');
+            new Chart(ctxCat, {
+                type: 'bar',
+                data: {
+                    labels: ['Mains', 'Rice', 'Italian', 'Breads'],
+                    datasets: [{
+                        data: [18400, 14440, 13050, 5100],
+                        backgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#9ca3af' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
 
-    window.deleteMenuItem = async (key) => {
-      if (currentUserRole !== 'ADMIN') {
-        showToast("Unauthorized: Admin role required", "error");
-        return;
-      }
-      if (confirm("Delete dish permanently?")) {
-        await remove(ref(db, `menuItems/${key}`));
-        logAuditAction("DELETE_MENU_ITEM", `Deleted item ID ${key}`);
-        showToast("Item purged from menu");
-      }
-    };
+            // Monthly Chart (Analytics View)
+            const ctxMonthly = document.getElementById('chart-monthly-revenue').getContext('2d');
+            new Chart(ctxMonthly, {
+                type: 'line',
+                data: {
+                    labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    datasets: [{
+                        label: 'Revenue (₹)',
+                        data: [980000, 1120000, 1050000, 1280000, 1420000],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#9ca3af' } },
+                        y: { ticks: { color: '#9ca3af' } }
+                    }
+                }
+            });
 
-    // --- RENDER RESERVATIONS TABLE ---
-    function renderReservationsView() {
-      const table = document.getElementById('reservationsTableBody');
-      const list = Object.keys(cacheData.reservations).map(k => ({ key: k, ...cacheData.reservations[k] }));
+            // Payment Methods Chart
+            const ctxPay = document.getElementById('chart-payment-methods').getContext('2d');
+            new Chart(ctxPay, {
+                type: 'pie',
+                data: {
+                    labels: ['UPI / QR', 'Cards', 'Cash'],
+                    datasets: [{
+                        data: [58, 28, 14],
+                        backgroundColor: ['#6366f1', '#ec4899', '#f59e0b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } } }
+                }
+            });
+        }
 
-      if (list.length === 0) {
-        table.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500 font-semibold">No table reservations logged.</td></tr>`;
-        return;
-      }
+        // LIVE ACTIVITY STREAM
+        function renderLiveActivity() {
+            const container = document.getElementById('live-activity-stream');
+            const items = [
+                { icon: 'fa-shopping-bag', color: 'text-brand-500', title: 'New Delivery Order #ORD-1025', time: '5m ago' },
+                { icon: 'fa-check-circle', color: 'text-emerald-400', title: 'Table 03 Order Paid via UPI (₹511)', time: '12m ago' },
+                { icon: 'fa-fire', color: 'text-amber-400', title: 'KDS Ticket #1024 moved to PREPARING', time: '20m ago' }
+            ];
+            container.innerHTML = items.map(item => `
+                <div class="flex items-center gap-3 bg-dark-900/60 p-2 rounded-lg border border-gray-800 text-xs">
+                    <i class="fa-solid ${item.icon} ${item.color} text-sm"></i>
+                    <div class="flex-1">
+                        <div class="text-gray-200 font-medium">${item.title}</div>
+                        <div class="text-[10px] text-gray-500">${item.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-      table.innerHTML = list.map(r => `
-        <tr class="hover:bg-slate-900/40">
-          <td class="p-4 font-mono font-bold text-purple-400">#${r.key.slice(-6)}</td>
-          <td class="p-4 font-bold text-white">${r.guestName || r.customerName || 'Guest'}</td>
-          <td class="p-4 text-slate-300">${r.date || 'Today'} @ ${r.timeSlot || '7:00 PM'}</td>
-          <td class="p-4 font-bold text-white">${r.guests || 2} People</td>
-          <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-extrabold bg-purple-500/20 text-purple-400">${r.status || 'CONFIRMED'}</span></td>
-          <td class="p-4 text-right">
-            <button onclick="updateReservationStatus('${r.key}', 'SEATED')" class="text-xs bg-brand-500/20 text-brand-400 font-bold px-2 py-1 rounded">Seat</button>
-          </td>
-        </tr>
-      `).join('');
-    }
+        // ORDERS MANAGEMENT
+        function renderOrdersTable(filter = 'ALL') {
+            const tbody = document.getElementById('orders-table-body');
+            const filtered = filter === 'ALL' ? state.orders : state.orders.filter(o => o.status === filter);
 
-    window.updateReservationStatus = async (key, status) => {
-      await update(ref(db, `reservations/${key}`), { status });
-      showToast(`Reservation marked as ${status}`);
-    };
+            tbody.innerHTML = filtered.map(order => `
+                <tr class="hover:bg-gray-800/40 transition">
+                    <td class="py-3 px-4">
+                        <div class="font-bold text-white">${order.id}</div>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-gray-800 text-gray-400 border border-gray-700">${order.type}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="font-medium text-gray-200">${order.customer}</div>
+                        <div class="text-[10px] text-gray-500">${order.phone}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="text-gray-300">${order.items.map(i => `${i.qty}x ${i.name}`).join(', ')}</div>
+                        <div class="text-[10px] text-amber-400 italic">${order.items[0]?.mods ? 'Note: ' + order.items[0].mods : ''}</div>
+                    </td>
+                    <td class="py-3 px-4 font-bold text-emerald-400">₹${order.grandTotal}</td>
+                    <td class="py-3 px-4">
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded ${order.paymentStatus === 'Paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">${order.paymentStatus} (${order.paymentMethod})</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="status-badge ${getStatusBadgeStyle(order.status)}">${order.status}</span>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <div class="flex items-center justify-end gap-1.5">
+                            <button onclick="viewOrderDetails('${order.id}')" class="p-1.5 bg-dark-900 border border-gray-700 hover:bg-gray-700 text-gray-300 rounded" title="View Details">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                            <button onclick="advanceOrderStatus('${order.id}')" class="p-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded" title="Next Status Step">
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-    // --- CATEGORY MANAGEMENT ---
-    function renderCategoriesView() {
-      const grid = document.getElementById('categoriesGrid');
-      const list = Object.keys(cacheData.categories).map(k => ({ key: k, ...cacheData.categories[k] }));
+        function getStatusBadgeStyle(status) {
+            switch(status) {
+                case 'NEW ORDER': return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
+                case 'PREPARING': return 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+                case 'READY': return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+                case 'SERVED / OUT FOR DELIVERY': return 'bg-purple-500/20 text-purple-400 border border-purple-500/30';
+                case 'COMPLETED': return 'bg-gray-700 text-gray-300';
+                case 'CANCELLED': return 'bg-red-500/20 text-red-400';
+                default: return 'bg-gray-800 text-gray-400';
+            }
+        }
 
-      grid.innerHTML = list.map(c => `
-        <div class="glass-card p-4 rounded-xl flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <i class="fa-solid ${c.icon || 'fa-utensils'} text-brand-500 text-lg"></i>
-            <span class="font-extrabold text-white text-xs">${c.name}</span>
-          </div>
-          <button onclick="deleteCategory('${c.key}')" class="text-slate-600 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      `).join('');
-    }
+        function filterOrders(status) {
+            document.querySelectorAll('.order-tab').forEach(tab => tab.classList.remove('active', 'bg-brand-500/20', 'text-brand-400', 'border'));
+            event.target.classList.add('active', 'bg-brand-500/20', 'text-brand-400', 'border');
+            renderOrdersTable(status);
+        }
 
-    window.handleSaveCategory = async (e) => {
-      e.preventDefault();
-      const newCat = {
-        name: document.getElementById('catName').value,
-        icon: document.getElementById('catIcon').value
-      };
-      await push(ref(db, 'categories'), newCat);
-      showToast("Category created!");
-      closeModal('modalAddCategory');
-    };
+        function advanceOrderStatus(orderId) {
+            const order = state.orders.find(o => o.id === orderId);
+            if (!order) return;
 
-    function populateCategoryDropdowns() {
-      const select = document.getElementById('menuCategorySelect');
-      const cats = Object.values(cacheData.categories);
-      select.innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-    }
+            const workflow = ['NEW ORDER', 'ACCEPTED', 'PREPARING', 'READY', 'SERVED / OUT FOR DELIVERY', 'COMPLETED'];
+            const currentIndex = workflow.indexOf(order.status);
+            if (currentIndex >= 0 && currentIndex < workflow.length - 1) {
+                order.status = workflow[currentIndex + 1];
+                showToast(`Order ${orderId} moved to ${order.status}`);
+                logAuditAction(`Updated Order ${orderId} to ${order.status}`);
+                renderOrdersTable();
+                renderKDS();
+                updateDashboardCounters();
+            }
+        }
 
-    // --- RESTAURANT SETTINGS ---
-    function populateRestaurantSettingsForm() {
-      const s = cacheData.settings;
-      if (!s) return;
-      document.getElementById('resTitle').value = s.title || 'FeastHub Kitchen';
-      document.getElementById('resPhone').value = s.phone || '';
-      document.getElementById('resMinOrder').value = s.minOrder || 100;
-      document.getElementById('resDeliveryFee').value = s.deliveryFee || 40;
-      document.getElementById('resTaxRate').value = s.taxRate || 5;
-      document.getElementById('resAddress').value = s.address || '';
-    }
+        // KITCHEN DISPLAY SYSTEM (KDS)
+        function renderKDS() {
+            const colNew = document.getElementById('kds-col-new');
+            const colPrep = document.getElementById('kds-col-preparing');
+            const colReady = document.getElementById('kds-col-ready');
+            const colComp = document.getElementById('kds-col-completed');
 
-    window.saveRestaurantSettings = async (e) => {
-      e.preventDefault();
-      const updated = {
-        title: document.getElementById('resTitle').value,
-        phone: document.getElementById('resPhone').value,
-        minOrder: Number(document.getElementById('resMinOrder').value),
-        deliveryFee: Number(document.getElementById('resDeliveryFee').value),
-        taxRate: Number(document.getElementById('resTaxRate').value),
-        address: document.getElementById('resAddress').value
-      };
-      await update(ref(db, 'restaurant/settings'), updated);
-      logAuditAction("SETTINGS_UPDATE", "Saved restaurant global settings");
-      showToast("Store configurations committed live!");
-    };
+            const newOrders = state.orders.filter(o => o.status === 'NEW ORDER' || o.status === 'ACCEPTED');
+            const prepOrders = state.orders.filter(o => o.status === 'PREPARING');
+            const readyOrders = state.orders.filter(o => o.status === 'READY');
+            const compOrders = state.orders.filter(o => o.status === 'COMPLETED' || o.status === 'SERVED / OUT FOR DELIVERY');
 
-    window.updateRestaurantOperatingStatus = async (status) => {
-      await update(ref(db, 'restaurant/settings'), { operatingStatus: status });
-      logAuditAction("OPERATING_STATUS_MUTATION", `Store shifted to ${status}`);
-      showToast(`Restaurant status set to ${status}`);
-    };
+            document.getElementById('kds-count-new').innerText = newOrders.length;
+            document.getElementById('kds-count-preparing').innerText = prepOrders.length;
+            document.getElementById('kds-count-ready').innerText = readyOrders.length;
+            document.getElementById('kds-count-completed').innerText = compOrders.length;
 
-    // --- CUSTOMER CRM ---
-    function renderCustomersView() {
-      const tbody = document.getElementById('customersTableBody');
-      const users = Object.keys(cacheData.customers).map(k => ({ uid: k, ...cacheData.customers[k] }));
+            colNew.innerHTML = newOrders.map(o => createKDSCardHTML(o)).join('');
+            colPrep.innerHTML = prepOrders.map(o => createKDSCardHTML(o)).join('');
+            colReady.innerHTML = readyOrders.map(o => createKDSCardHTML(o)).join('');
+            colComp.innerHTML = compOrders.map(o => createKDSCardHTML(o)).join('');
+        }
 
-      tbody.innerHTML = users.map(u => `
-        <tr class="hover:bg-slate-900/40">
-          <td class="p-4 font-mono text-slate-500">${u.uid.slice(0, 8)}...</td>
-          <td class="p-4 font-bold text-white">${u.fullName || 'User'}</td>
-          <td class="p-4 text-slate-400">${u.email || 'N/A'}</td>
-          <td class="p-4 text-slate-400">${u.phone || 'N/A'}</td>
-          <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${u.role === 'ADMIN' ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-800 text-slate-300'}">${u.role || 'CUSTOMER'}</span></td>
-          <td class="p-4 text-right"><button class="text-xs text-brand-500 font-bold">Inspect</button></td>
-        </tr>
-      `).join('');
-    }
+        function createKDSCardHTML(order) {
+            const urgencyBg = order.urgency === 'Delayed' ? 'border-red-500/80 bg-red-950/20' : 'border-gray-700 bg-dark-900/80';
+            return `
+                <div class="p-3.5 rounded-xl border ${urgencyBg} space-y-2.5 text-xs shadow-md">
+                    <div class="flex justify-between items-center pb-2 border-b border-gray-800">
+                        <div>
+                            <span class="font-bold text-white">${order.id}</span>
+                            <span class="text-[10px] text-gray-400 block">${order.type} • Table ${order.table}</span>
+                        </div>
+                        <span class="text-[10px] font-mono font-bold bg-dark-800 px-2 py-0.5 rounded text-amber-400 border border-amber-500/30">
+                            ⏱️ ${order.time}
+                        </span>
+                    </div>
 
-    // --- OFFERS & COUPONS ---
-    function renderOffersView() {
-      const grid = document.getElementById('offersGrid');
-      const list = Object.keys(cacheData.offers).map(k => ({ key: k, ...cacheData.offers[k] }));
+                    <div class="space-y-1">
+                        ${order.items.map(item => `
+                            <div class="flex justify-between text-gray-200 font-medium">
+                                <span><span class="text-brand-500 font-bold">${item.qty}x</span>${item.name}</span>
+                            </div>
+                            ${item.mods ? `<div class="text-[10px] text-amber-300 italic pl-3">↳ ${item.mods}</div>` : ''}
+                        `).join('')}
+                    </div>
 
-      grid.innerHTML = list.map(o => `
-        <div class="glass-card p-5 rounded-2xl border-dashed border-2 border-brand-500/30 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="font-mono font-black text-brand-400 text-base">${o.code}</span>
-            <span class="text-white font-extrabold text-xs">₹${o.discount} OFF</span>
-          </div>
-          <p class="text-slate-400 text-xs">${o.description}</p>
-          <div class="text-[10px] text-slate-500 font-bold pt-2 border-t border-slate-800">Min spend: ₹${o.minSpend}</div>
-        </div>
-      `).join('');
-    }
+                    <div class="flex items-center justify-between pt-2 border-t border-gray-800">
+                        <button onclick="advanceOrderStatus('${order.id}')" class="w-full py-1.5 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded text-[11px] transition">
+                            ${order.status === 'PREPARING' ? 'Mark Ready ✓' : 'Start Preparation →'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
-    window.handleSaveOffer = async (e) => {
-      e.preventDefault();
-      const newOffer = {
-        code: document.getElementById('offerCode').value.toUpperCase(),
-        discount: Number(document.getElementById('offerDiscount').value),
-        minSpend: Number(document.getElementById('offerMinSpend').value),
-        description: document.getElementById('offerDesc').value
-      };
-      await push(ref(db, 'offers'), newOffer);
-      showToast("Promo offer published!");
-      closeModal('modalAddOffer');
-    };
+        // TABLE FLOOR PLAN
+        function renderTableFloorplan() {
+            const grid = document.getElementById('table-floorplan-grid');
+            grid.innerHTML = state.tables.map(t => {
+                let statusBg = 'border-emerald-500/40 bg-emerald-950/10';
+                let badgeClass = 'bg-emerald-500/20 text-emerald-400';
+                if (t.status === 'Occupied') {
+                    statusBg = 'border-amber-500/40 bg-amber-950/10';
+                    badgeClass = 'bg-amber-500/20 text-amber-400';
+                } else if (t.status === 'Reserved') {
+                    statusBg = 'border-indigo-500/40 bg-indigo-950/10';
+                    badgeClass = 'bg-indigo-500/20 text-indigo-400';
+                } else if (t.status === 'Cleaning') {
+                    statusBg = 'border-yellow-600/40 bg-yellow-950/10';
+                    badgeClass = 'bg-yellow-600/20 text-yellow-400';
+                }
 
-    // --- SUPPORT TICKETS ---
-    function renderTicketsView() {
-      const tbody = document.getElementById('ticketsTableBody');
-      const tickets = Object.keys(cacheData.tickets).map(k => ({ key: k, ...cacheData.tickets[k] }));
+                return `
+                    <div class="glass-card p-4 rounded-xl border ${statusBg} flex flex-col justify-between h-36">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-black text-lg text-white">${t.id}</h4>
+                                <p class="text-[10px] text-gray-400">Cap: ${t.cap} Guests</p>
+                            </div>
+                            <span class="text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${badgeClass}">${t.status}</span>
+                        </div>
 
-      tbody.innerHTML = tickets.map(t => `
-        <tr class="hover:bg-slate-900/40">
-          <td class="p-4 font-mono text-amber-500 font-bold">#${t.key.slice(-6)}</td>
-          <td class="p-4 font-bold text-white">${t.subject || 'Support Inquiry'}</td>
-          <td class="p-4 text-slate-400">${t.category || 'General'}</td>
-          <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/20 text-amber-400">${t.status || 'OPEN'}</span></td>
-          <td class="p-4 text-right">
-            <button onclick="openTicketReplyModal('${t.key}')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-1 rounded">Reply</button>
-          </td>
-        </tr>
-      `).join('');
-    }
+                        <div class="text-xs space-y-0.5">
+                            <div class="text-gray-300 font-medium truncate">${t.customer}</div>
+                            <div class="text-[10px] text-gray-500">Duration: ${t.duration}</div>
+                        </div>
 
-    window.openTicketReplyModal = (key) => {
-      activeSelectedTicketId = key;
-      const t = cacheData.tickets[key];
-      document.getElementById('ticketSubjectModal').textContent = t.subject || 'Support Ticket';
-      document.getElementById('ticketMessageModal').textContent = t.message || '';
-      openModal('modalTicketReply');
-    };
+                        <div class="flex items-center justify-between pt-2 border-t border-gray-800/60 text-[11px]">
+                            ${t.status === 'Occupied' ? `
+                                <button onclick="viewOrderDetails('${t.orderId}')" class="text-brand-400 hover:underline font-semibold">View Bill</button>
+                                <button onclick="toggleTableStatus('${t.id}')" class="text-gray-400 hover:text-white">Clear</button>
+                            ` : `
+                                <button onclick="toggleTableStatus('${t.id}')" class="text-emerald-400 hover:underline font-semibold">Seat Guests</button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
-    window.resolveCurrentTicket = async (status) => {
-      if (!activeSelectedTicketId) return;
-      const reply = document.getElementById('ticketReplyText').value;
-      await update(ref(db, `supportTickets/${activeSelectedTicketId}`), {
-        status: status,
-        adminReply: reply,
-        resolvedAt: serverTimestamp()
-      });
-      showToast(`Ticket status set to ${status}`);
-      closeModal('modalTicketReply');
-    };
+        function toggleTableStatus(tableId) {
+            const table = state.tables.find(t => t.id === tableId);
+            if (!table) return;
+            if (table.status === 'Available') {
+                table.status = 'Occupied';
+                table.customer = 'Walk-in Guests';
+                table.duration = '1m';
+            } else {
+                table.status = 'Available';
+                table.customer = '-';
+                table.duration = '-';
+            }
+            renderTableFloorplan();
+            showToast(`Table ${tableId} updated to ${table.status}`);
+        }
 
-    // --- STAFF RBAC MANAGEMENT ---
-    function renderStaffView() {
-      const tbody = document.getElementById('staffTableBody');
-      const users = Object.keys(cacheData.customers).map(k => ({ uid: k, ...cacheData.customers[k] }));
+        // MENU MANAGEMENT
+        function renderMenuCMS() {
+            const tabs = document.getElementById('menu-category-tabs');
+            const grid = document.getElementById('menu-dishes-grid');
 
-      tbody.innerHTML = users.map(u => `
-        <tr class="hover:bg-slate-900/40">
-          <td class="p-4 font-bold text-white">${u.fullName || 'Staff User'}</td>
-          <td class="p-4 text-slate-400">${u.email}</td>
-          <td class="p-4 font-bold text-brand-400 text-xs">${u.role || 'CUSTOMER'}</td>
-          <td class="p-4 text-right">
-            <select onchange="mutateUserRole('${u.uid}', this.value)" class="bg-slate-900 border border-slate-800 text-xs font-bold rounded p-1 text-white">
-              <option value="CUSTOMER" ${u.role === 'CUSTOMER' ? 'selected' : ''}>CUSTOMER</option>
-              <option value="STAFF" ${u.role === 'STAFF' ? 'selected' : ''}>STAFF</option>
-              <option value="ADMIN" ${u.role === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
-            </select>
-          </td>
-        </tr>
-      `).join('');
-    }
+            const categories = ['All Categories', 'Main Course', 'Biryani & Rice', 'Italian', 'Breads'];
+            tabs.innerHTML = categories.map((cat, idx) => `
+                <button class="px-3 py-1.5 text-xs font-semibold rounded-lg ${idx === 0 ? 'bg-brand-600 text-white' : 'bg-dark-800 text-gray-400 hover:bg-gray-700'}">${cat}</button>
+            `).join('');
 
-    window.mutateUserRole = async (targetUid, newRole) => {
-      if (currentUserRole !== 'ADMIN') {
-        showToast("Access Denied: Only Admin can mutate roles", "error");
-        return;
-      }
-      await update(ref(db, `users/${targetUid}`), { role: newRole });
-      logAuditAction("ROLE_MUTATION", `User ${targetUid} promoted/demoted to ${newRole}`);
-      showToast(`User role updated to ${newRole}`);
-    };
+            grid.innerHTML = state.menu.map(dish => `
+                <div class="glass-panel p-4 rounded-xl border border-gray-800 space-y-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider ${dish.veg ? 'text-emerald-400' : 'text-red-400'}">
+                                ${dish.veg ? '🟢 Veg' : '🔴 Non-Veg'}
+                            </span>
+                            <h4 class="font-bold text-sm text-white mt-0.5">${dish.name}</h4>
+                            <p class="text-[10px] text-gray-400">${dish.cat} • Spice: ${dish.spicy}</p>
+                        </div>
+                        <span class="font-black text-emerald-400 text-sm">₹${dish.price}</span>
+                    </div>
 
-    // --- SECURITY AUDIT LOGGING ---
-    async function logAuditAction(action, details) {
-      const logEntry = {
-        action,
-        details,
-        performedBy: currentUser ? currentUser.email : 'System',
-        timestamp: serverTimestamp()
-      };
-      await push(ref(db, 'auditLogs'), logEntry);
-    }
+                    <div class="flex items-center justify-between pt-2 border-t border-gray-800 text-xs">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" ${dish.avail ? 'checked' : ''} onchange="toggleDishAvail(${dish.id})" class="rounded bg-dark-900 border-gray-700 text-brand-500">
+                            <span class="text-gray-300 text-[11px]">In Stock</span>
+                        </label>
+                        <button onclick="alert('Editing dish parameters...')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-    function renderAuditLogs(logObj) {
-      const container = document.getElementById('auditLogContainer');
-      const logs = Object.values(logObj).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        function toggleDishAvail(dishId) {
+            const dish = state.menu.find(d => d.id === dishId);
+            if (dish) {
+                dish.avail = !dish.avail;
+                showToast(`${dish.name} is now ${dish.avail ? 'Available' : 'Disabled'}`);
+            }
+        }
 
-      container.innerHTML = logs.map(l => `
-        <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800/80 flex items-center justify-between">
-          <div>
-            <span class="text-brand-500 font-extrabold">[${l.action}]</span>
-            <span class="text-slate-300 ml-2">${l.details}</span>
-          </div>
-          <span class="text-slate-500 text-[10px]">${l.performedBy}</span>
-        </div>
-      `).join('');
-    }
+        // INVENTORY
+        function renderInventory() {
+            const tbody = document.getElementById('inventory-table-body');
+            tbody.innerHTML = state.inventory.map(item => `
+                <tr>
+                    <td class="p-2 font-medium text-white">${item.name}</td>
+                    <td class="p-2 text-gray-300 font-mono">${item.qty}</td>
+                    <td class="p-2 text-gray-400 font-mono">${item.min}</td>
+                    <td class="p-2 text-gray-300">${item.cost}</td>
+                    <td class="p-2 text-gray-400">${item.supplier}</td>
+                    <td class="p-2">
+                        <span class="text-[10px] px-2 py-0.5 rounded font-bold ${item.status === 'Low Stock' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'}">${item.status}</span>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-    // --- HELPER UTILITIES ---
-    function getStatusBadgeStyle(status) {
-      switch (status) {
-        case 'PLACED': return 'bg-blue-500/20 text-blue-400';
-        case 'CONFIRMED': return 'bg-purple-500/20 text-purple-400';
-        case 'PREPARING': return 'bg-amber-500/20 text-amber-400';
-        case 'OUT_FOR_DELIVERY': return 'bg-cyan-500/20 text-cyan-400';
-        case 'DELIVERED': return 'bg-emerald-500/20 text-emerald-400';
-        case 'CANCELLED': return 'bg-rose-500/20 text-rose-400';
-        default: return 'bg-slate-800 text-slate-400';
-      }
-    }
+        // CUSTOMERS
+        function renderCustomers() {
+            const tbody = document.getElementById('customers-table-body');
+            tbody.innerHTML = state.customers.map(c => `
+                <tr>
+                    <td class="py-2.5 px-3">
+                        <div class="font-bold text-white">${c.name}</div>
+                        <div class="text-[10px] text-gray-500">${c.phone}</div>
+                    </td>
+                    <td class="py-2.5 px-3 font-bold text-emerald-400">${c.spend}</td>
+                    <td class="py-2.5 px-3 text-gray-300">${c.orders} orders</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-[10px] rounded font-bold">${c.tier}</span></td>
+                    <td class="py-2.5 px-3 font-mono text-amber-400">${c.points} pts</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-brand-500/20 text-brand-400 text-[10px] rounded font-semibold">${c.tag}</span></td>
+                    <td class="py-2.5 px-3 text-gray-400 text-[11px]">Today</td>
+                </tr>
+            `).join('');
+        }
 
-    function getStatusBorderColor(status) {
-      switch (status) {
-        case 'PLACED': return 'border-l-blue-500';
-        case 'CONFIRMED': return 'border-l-purple-500';
-        case 'PREPARING': return 'border-l-amber-500';
-        case 'OUT_FOR_DELIVERY': return 'border-l-cyan-500';
-        case 'DELIVERED': return 'border-l-emerald-500';
-        default: return 'border-l-slate-700';
-      }
-    }
+        // RESERVATION
+        function renderReservations() {
+            const tbody = document.getElementById('reservations-table-body');
+            tbody.innerHTML = state.reservations.map(r => `
+                <tr>
+                    <td class="py-2.5 px-3 font-mono font-bold text-brand-400">${r.id}</td>
+                    <td class="py-2.5 px-3">
+                        <div class="font-medium text-white">${r.customer}</div>
+                        <div class="text-[10px] text-gray-500">${r.phone}</div>
+                    </td>
+                    <td class="py-2.5 px-3 text-gray-300">${r.datetime}</td>
+                    <td class="py-2.5 px-3 text-gray-300">${r.guests} People</td>
+                    <td class="py-2.5 px-3 font-bold text-white">${r.table}</td>
+                    <td class="py-2.5 px-3 text-gray-400 italic">${r.request}</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[10px] rounded font-bold">${r.status}</span></td>
+                    <td class="py-2.5 px-3 text-right">
+                        <button onclick="showToast('Reservation confirmed')" class="text-xs bg-dark-900 border border-gray-700 px-2 py-1 rounded hover:bg-gray-700">Seat Now</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-    function formatItemsSummary(items) {
-      if (!items) return 'Standard Feast Combo';
-      if (Array.isArray(items)) return items.map(i => `${i.name} (x${i.quantity||1})`).join(', ');
-      return String(items);
-    }
+        // COUPONS
+        function renderCoupons() {
+            const container = document.getElementById('coupons-grid');
+            container.innerHTML = `
+                <div class="glass-panel p-4 rounded-xl border border-brand-500/30 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-mono font-bold text-brand-400 text-sm">AURA50</span>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">ACTIVE</span>
+                    </div>
+                    <p class="text-xs text-white font-semibold">50% Off up to ₹100 on orders above ₹399</p>
+                    <div class="text-[10px] text-gray-400">Used: 142 times • Expires in 4 days</div>
+                </div>
+            `;
+        }
 
-    window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
-    window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
+        // DELIVERY DISPATCH
+        function renderDelivery() {
+            const container = document.getElementById('delivery-orders-grid');
+            const deliveryOrders = state.orders.filter(o => o.type === 'Delivery');
+            container.innerHTML = deliveryOrders.map(d => `
+                <div class="glass-panel p-4 rounded-xl border border-gray-800 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-white text-xs">${d.id}</span>
+                        <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded font-bold">Rider Assigned</span>
+                    </div>
+                    <div class="text-xs space-y-1">
+                        <div class="text-gray-300 font-medium">${d.customer} (${d.phone})</div>
+                        <div class="text-gray-400 text-[11px]"><i class="fa-solid fa-location-dot text-red-400"></i> ${d.address}</div>
+                    </div>
+                    <div class="pt-2 border-t border-gray-800 flex justify-between items-center text-xs">
+                        <span class="text-gray-400">Rider: <strong class="text-white">Rajesh Kumar</strong></span>
+                        <button onclick="showToast('Tracking Rider Live GPS')" class="px-2 py-1 bg-dark-900 border border-gray-700 rounded text-[10px]">Track GPS</button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-    function showToast(msg, type = "success") {
-      const box = document.getElementById('toastBox');
-      const toast = document.createElement('div');
-      toast.className = `p-3 rounded-xl text-xs font-bold shadow-xl border backdrop-blur-md flex items-center gap-2 transition duration-300 ${
-        type === 'success' ? 'bg-emerald-950/90 border-emerald-500/40 text-emerald-200' : 'bg-rose-950/90 border-rose-500/40 text-rose-200'
-      }`;
-      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${msg}`;
-      box.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
-  </script>
+        // STAFF
+        function renderStaff() {
+            const tbody = document.getElementById('staff-table-body');
+            const staffList = [
+                { name: "Alex Drake", role: "Super Admin", phone: "+91 98000 11111", modules: "Full Access (All Modules)", status: "Active" },
+                { name: "Chef Marcus", role: "Head Chef", phone: "+91 98000 22222", modules: "KDS, Inventory, Recipe Costing", status: "Active" },
+                { name: "Priya Singh", role: "Cashier", phone: "+91 98000 33333", modules: "Live Orders, Billing, Customers", status: "Active" }
+            ];
+            tbody.innerHTML = staffList.map(s => `
+                <tr>
+                    <td class="p-2.5 font-bold text-white">${s.name}</td>
+                    <td class="p-2.5 text-brand-400 font-medium">${s.role}</td>
+                    <td class="p-2.5 text-gray-400 font-mono">${s.phone}</td>
+                    <td class="p-2.5 text-gray-300">${s.modules}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-[10px] rounded font-bold">${s.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // AUDIT LOGS
+        function renderAuditLogs() {
+            const tbody = document.getElementById('audit-logs-table-body');
+            tbody.innerHTML = state.auditLogs.map(a => `
+                <tr>
+                    <td class="p-2.5 font-mono text-gray-400">${a.time}</td>
+                    <td class="p-2.5 font-medium text-amber-400">${a.role}</td>
+                    <td class="p-2.5 text-gray-200">${a.action}</td>
+                    <td class="p-2.5 text-gray-400">${a.module}</td>
+                    <td class="p-2.5 font-mono text-gray-500">${a.ip}</td>
+                </tr>
+            `).join('');
+        }
+
+        // NOTIFICATIONS
+        function renderNotifications() {
+            const list = document.getElementById('notifications-list');
+            list.innerHTML = state.notifications.map(n => `
+                <div class="p-3 bg-dark-900 border border-gray-800 rounded-xl flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
+                        <span class="text-gray-200">${n.text}</span>
+                    </div>
+                    <span class="text-[10px] text-gray-500 font-mono">${n.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function logAuditAction(action) {
+            const now = new Date();
+            state.auditLogs.unshift({
+                time: now.toLocaleTimeString(),
+                role: "Master Admin",
+                action: action,
+                module: "Command Center",
+                ip: "192.168.1.1"
+            });
+            renderAuditLogs();
+        }
+
+        // MODAL MANAGEMENT & ORDER DETAILS
+        function viewOrderDetails(orderId) {
+            const order = state.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            document.getElementById('modal-order-id').innerText = '#' + order.id;
+            document.getElementById('modal-order-time').innerText = `Placed: ${order.time} | Channel: ${order.type}`;
+
+            const content = document.getElementById('modal-order-content');
+            content.innerHTML = `
+                <div class="grid grid-cols-2 gap-3 bg-dark-900 p-3 rounded-xl border border-gray-800">
+                    <div>
+                        <div class="text-gray-400">Customer Details:</div>
+                        <div class="font-bold text-white">${order.customer}</div>
+                        <div class="text-gray-400">${order.phone}</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-400">Table / Address:</div>
+                        <div class="font-bold text-white">${order.table}</div>
+                        <div class="text-gray-400 truncate">${order.address}</div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="font-bold text-gray-300">Ordered Items:</div>
+                    <div class="divide-y divide-gray-800 bg-dark-900/60 rounded-xl p-3 border border-gray-800">
+                        ${order.items.map(i => `
+                            <div class="py-1.5 flex justify-between items-center">
+                                <div>
+                                    <span class="text-white font-medium">${i.qty}x ${i.name}</span>${i.mods ? `<div class="text-[10px] text-amber-400">Mod: ${i.mods}</div>` : ''}
+                                </div>
+                                <span class="font-bold text-gray-200">₹${i.price * i.qty}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="space-y-1 text-right text-gray-400 border-t border-gray-800 pt-3">
+                    <div class="flex justify-between"><span>Subtotal:</span><span class="text-gray-200">₹${order.subtotal}</span></div>
+                    <div class="flex justify-between"><span>GST (5%):</span><span class="text-gray-200">₹${order.gst}</span></div>
+                    <div class="flex justify-between"><span>Packaging / Delivery Fees:</span><span class="text-gray-200">₹${order.charges}</span></div>
+                    <div class="flex justify-between text-emerald-400"><span>Coupon Discount:</span><span>-₹${order.discount}</span></div>
+                    <div class="flex justify-between text-sm font-black text-white pt-1 border-t border-gray-800">
+                        <span>Grand Total:</span>
+                        <span class="text-emerald-400">₹${order.grandTotal}</span>
+                    </div>
+                </div>
+            `;
+
+            // Setup printable receipt
+            document.getElementById('printable-receipt').innerHTML = `
+                <h2>AURA GOURMET HAVEN</h2>
+                <p>Tax Invoice - ${order.id}</p>
+                <hr/>
+                <p>Customer: ${order.customer} (${order.phone})</p>
+                <p>Table: ${order.table} | Date: Sat, 26 Sep 2026</p>
+                <hr/>
+                ${order.items.map(i => `<p>${i.qty}x ${i.name} - ₹${i.price * i.qty}</p>`).join('')}
+                <hr/>
+                <h3>Grand Total: ₹${order.grandTotal}</h3>
+                <p>Thank you for dining with us!</p>
+            `;
+
+            document.getElementById('modal-order-detail').classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function triggerNewOrderModal() {
+            document.getElementById('modal-new-order').classList.remove('hidden');
+        }
+
+        function submitNewOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-cust-name').value;
+            const phone = document.getElementById('new-cust-phone').value;
+            const type = document.getElementById('new-order-type').value;
+            const table = document.getElementById('new-order-table').value;
+            const payment = document.getElementById('new-payment-method').value;
+            const dishVal = document.getElementById('new-order-dish').value.split('|');
+
+            const dishName = dishVal[0];
+            const dishPrice = parseFloat(dishVal[1]);
+
+            const newId = `ORD-${1024 + state.orders.length}`;
+            const newOrder = {
+                id: newId,
+                customer: name,
+                phone: phone,
+                type: type,
+                table: type === 'Dine-in' ? table : 'N/A',
+                address: type === 'Delivery' ? 'Downtown Address' : 'N/A',
+                items: [{ name: dishName, qty: 1, price: dishPrice, mods: 'POS Manual Order' }],
+                subtotal: dishPrice,
+                gst: dishPrice * 0.05,
+                charges: 15,
+                discount: 0,
+                grandTotal: dishPrice + (dishPrice * 0.05) + 15,
+                paymentMethod: payment,
+                paymentStatus: "Paid",
+                status: "NEW ORDER",
+                time: "Just now",
+                prepTime: "15 mins",
+                urgency: "Normal"
+            };
+
+            state.orders.unshift(newOrder);
+            closeModal('modal-new-order');
+            showToast(`New Order ${newId} created successfully!`);
+            logAuditAction(`Created POS Order ${newId} for ${name}`);
+            
+            renderOrdersTable();
+            renderKDS();
+            updateDashboardCounters();
+        }
+
+        function printOrderReceipt() {
+            window.print();
+        }
+
+        function downloadCSVReport() {
+            const csvContent = "data:text/csv;charset=utf-8,Order ID,Customer,Total,Status\n" + 
+                state.orders.map(o => `${o.id},${o.customer},${o.grandTotal},${o.status}`).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "AURA_Restaurant_Report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Exported operational report CSV!");
+        }
+
+        function updateDashboardCounters() {
+            document.getElementById('dash-total-orders').innerText = state.orders.length;
+            document.getElementById('dash-active-orders').innerText = state.orders.filter(o => o.status !== 'COMPLETED' && o.status !== 'CANCELLED').length;
+            document.getElementById('dash-pending-orders').innerText = state.orders.filter(o => o.status === 'NEW ORDER').length;
+            document.getElementById('dash-completed-orders').innerText = state.orders.filter(o => o.status === 'COMPLETED').length;
+            document.getElementById('badge-active-orders').innerText = state.orders.filter(o => o.status !== 'COMPLETED').length;
+        }
+
+        function clearNotifications() {
+            state.notifications = [];
+            renderNotifications();
+            document.getElementById('unread-alert-badge').innerText = '0';
+            showToast("Notifications cleared");
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-dark-800 border border-brand-500 text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 pointer-events-auto transition duration-300 transform translate-y-2';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-500"></i> ${message}`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
