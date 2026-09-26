@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full bg-slate-950">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeastHub | Enterprise Operations Console</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            accent: {
+              500: '#f59e0b',
+              600: '#d97706',
+            },
+            dark: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-input {
+      background: rgba(2, 6, 23, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+    }
+    .glass-input:focus {
+      border-color: #10b981;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+  </style>
+</head>
+
+<body class="h-full text-slate-100 font-sans antialiased bg-slate-950 flex flex-col overflow-hidden">
+
+  <!-- ========================================== -->
+  <!-- AUTHENTICATION / LOADING OVERLAY          -->
+  <!-- ========================================== -->
+  <div id="authGuardOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl transition-opacity duration-300">
+    <div class="glass-card p-8 rounded-2xl max-w-md w-full mx-4 text-center border border-slate-800 shadow-2xl relative overflow-hidden">
+      <div class="absolute -top-10 -left-10 w-32 h-32 bg-brand-500/10 rounded-full blur-2xl"></div>
+      <div class="inline-flex p-4 rounded-2xl bg-brand-500/10 text-brand-500 mb-6">
+        <i class="fa-solid fa-shield-cat text-4xl animate-pulse"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-white tracking-tight mb-2">FeastHub Gateway</h2>
+      <p id="authStatusText" class="text-slate-400 text-sm mb-6 font-medium">Initializing Security Protocol...</p>
+      
+      <div id="authSpinner" class="flex justify-center mb-6">
+        <div class="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+
+      <div id="authActions" class="hidden space-y-3">
+        <button onclick="window.location.reload()" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold rounded-xl transition">
+          <i class="fa-solid fa-rotate-right mr-2"></i>Retry Authorization
+        </button>
+        <button onclick="window.location.href='index.html'" class="w-full py-2.5 px-4 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-semibold rounded-xl border border-red-500/20 transition">
+          <i class="fa-solid fa-right-from-bracket mr-2"></i>Exit Portal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MAIN ADMIN APP SYSTEM LAYOUT              -->
+  <!-- ========================================== -->
+  <div id="adminApp" class="hidden flex-1 flex h-full overflow-hidden">
+
+    <!-- SIDEBAR NAV (Desktop) -->
+    <aside id="sidebar" class="w-64 bg-slate-900/80 border-r border-slate-800 flex flex-col transition-all duration-300 z-30 shrink-0">
+      <!-- Brand Logo Header -->
+      <div class="h-16 flex items-center justify-between px-6 border-b border-slate-800/80">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/20">
+            <i class="fa-solid fa-utensils text-lg"></i>
+          </div>
+          <span class="font-extrabold text-lg text-white tracking-tight">FeastHub<span class="text-brand-500">.</span></span>
+        </div>
+        <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+        <div>
+          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Core Operations</div>
+          <nav class="space-y-1">
+            <button onclick="switchView('overview')" id="nav-overview" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-chart-pie w-5 text-center text-brand-500"></i> Overview
+            </button>
+            <button onclick="switchView('orders')" id="nav-orders" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <span class="flex items-center gap-3"><i class="fa-solid fa-receipt w-5 text-center text-blue-400"></i> Orders</span>
+              <span id="badgeLiveOrders" class="bg-blue-500/20 text-blue-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            </button>
+            <button onclick="switchView('reservations')" id="nav-reservations" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <span class="flex items-center gap-3"><i class="fa-solid fa-calendar-check w-5 text-center text-purple-400"></i> Reservations</span>
+              <span id="badgeLiveRes" class="bg-purple-500/20 text-purple-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            </button>
+          </nav>
+        </div>
+
+        <div>
+          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">Catalog & Store</div>
+          <nav class="space-y-1">
+            <button onclick="switchView('menu')" id="nav-menu" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-burger w-5 text-center text-amber-400"></i> Menu Catalog
+            </button>
+            <button onclick="switchView('categories')" id="nav-categories" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-list-ul w-5 text-center text-teal-400"></i> Categories
+            </button>
+            <button onclick="switchView('restaurants')" id="nav-restaurants" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-store w-5 text-center text-emerald-400"></i> Restaurant Profile
+            </button>
+          </nav>
+        </div>
+
+        <div>
+          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">CRM & Marketing</div>
+          <nav class="space-y-1">
+            <button onclick="switchView('customers')" id="nav-customers" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-users w-5 text-center text-indigo-400"></i> Customers
+            </button>
+            <button onclick="switchView('offers')" id="nav-offers" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-ticket w-5 text-center text-rose-400"></i> Offers & Coupons
+            </button>
+            <button onclick="switchView('tickets')" id="nav-tickets" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <span class="flex items-center gap-3"><i class="fa-solid fa-headset w-5 text-center text-amber-500"></i> Support Tickets</span>
+              <span id="badgeLiveTickets" class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            </button>
+          </nav>
+        </div>
+
+        <div>
+          <div class="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-2">System & Governance</div>
+          <nav class="space-y-1">
+            <button onclick="switchView('staff')" id="nav-staff" class="nav-item admin-only w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-user-shield w-5 text-center text-cyan-400"></i> Staff & RBAC
+            </button>
+            <button onclick="switchView('audit')" id="nav-audit" class="nav-item admin-only w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-clock-rotate-left w-5 text-center text-slate-400"></i> Audit Logs
+            </button>
+            <button onclick="switchView('system')" id="nav-system" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+              <i class="fa-solid fa-heart-pulse w-5 text-center text-emerald-500"></i> System Health
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- User Footprint Footer -->
+      <div class="p-4 border-t border-slate-800 bg-slate-900/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <div id="adminAvatar" class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white text-sm shrink-0">
+              A
+            </div>
+            <div class="truncate">
+              <div id="adminName" class="text-sm font-bold text-white truncate">Administrator</div>
+              <div id="adminRoleBadge" class="text-[10px] font-extrabold uppercase tracking-wider text-brand-500">ADMIN</div>
+            </div>
+          </div>
+          <button onclick="logoutAdmin()" class="text-slate-400 hover:text-red-400 p-2 transition" title="Logout">
+            <i class="fa-solid fa-power-off text-base"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT WRAPPER -->
+    <div class="flex-1 flex flex-col min-w-0 bg-slate-950 overflow-hidden">
+
+      <!-- TOP BAR HEADER -->
+      <header class="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur-xl flex items-center justify-between px-4 lg:px-8 shrink-0 z-20">
+        <div class="flex items-center gap-4">
+          <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+          
+          <div class="relative hidden sm:block w-72">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input type="text" id="globalSearchInput" onkeyup="handleGlobalSearch(event)" placeholder="Search Order ID, Customer, Menu..." class="w-full glass-input rounded-xl pl-9 pr-4 py-1.5 text-xs font-medium focus:ring-1 focus:ring-brand-500">
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Restaurant Operating Toggle -->
+          <div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1">
+            <span class="text-[11px] font-bold text-slate-400 px-2 uppercase tracking-wider">Store:</span>
+            <select id="restaurantStatusSelect" onchange="updateRestaurantOperatingStatus(this.value)" class="bg-slate-950 text-xs font-bold rounded-lg px-2 py-1 border-none focus:ring-0 text-emerald-400 cursor-pointer">
+              <option value="OPEN" class="text-emerald-400">OPEN</option>
+              <option value="BUSY" class="text-amber-400">BUSY</option>
+              <option value="CLOSED" class="text-rose-400">CLOSED</option>
+            </select>
+          </div>
+
+          <!-- Notification Center Drawer Trigger -->
+          <button onclick="toggleNotificationCenter()" class="relative p-2 text-slate-400 hover:text-white rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition">
+            <i class="fa-solid fa-bell text-sm"></i>
+            <span id="unreadNotifBadge" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-brand-500 rounded-full ring-2 ring-slate-950"></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW CANVAS CONTAINER -->
+      <main class="flex-1 overflow-y-auto p-4 lg:p-8 space-y-8 relative" id="mainContainer">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: OVERVIEW DASHBOARD                 -->
+        <!-- ========================================== -->
+        <section id="view-overview" class="view-panel space-y-8">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl font-black text-white tracking-tight">Operations Console</h1>
+              <p class="text-slate-400 text-xs">Real-time telemetry and revenue throughput analysis.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openModal('modalAddMenu')" class="bg-brand-500 hover:bg-brand-600 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-lg shadow-brand-500/20">
+                <i class="fa-solid fa-plus mr-1.5"></i> Add Dish
+              </button>
+              <button onclick="openModal('modalAddOffer')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700 transition">
+                <i class="fa-solid fa-tag mr-1.5"></i> New Promo
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Cards Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-brand-500">
+              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Today's Revenue</div>
+              <div id="kpiRevenue" class="text-2xl font-black text-white">₹0</div>
+              <div class="text-[10px] text-slate-500 font-semibold mt-1">Net settled orders</div>
+            </div>
+            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-blue-500">
+              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Today's Orders</div>
+              <div id="kpiOrders" class="text-2xl font-black text-white">0</div>
+              <div class="text-[10px] text-slate-500 font-semibold mt-1">Fulfilled + Active</div>
+            </div>
+            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-purple-500">
+              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Active Table Res.</div>
+              <div id="kpiReservations" class="text-2xl font-black text-white">0</div>
+              <div class="text-[10px] text-slate-500 font-semibold mt-1">Today's bookings</div>
+            </div>
+            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
+              <div class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Open Tickets</div>
+              <div id="kpiTickets" class="text-2xl font-black text-white">0</div>
+              <div class="text-[10px] text-slate-500 font-semibold mt-1">Requires resolution</div>
+            </div>
+          </div>
+
+          <!-- Realtime Dispatch Queue -->
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 bg-brand-500 rounded-full animate-ping"></div>
+                <h3 class="font-extrabold text-base text-white">Live Kitchen Dispatch Pipeline</h3>
+              </div>
+              <button onclick="switchView('orders')" class="text-brand-500 hover:text-brand-400 text-xs font-bold">
+                View Full Queue <i class="fa-solid fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+            <div id="liveOrderDispatchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Dynamically Populated Live Cards -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: ORDERS MANAGEMENT                  -->
+        <!-- ========================================== -->
+        <section id="view-orders" class="view-panel hidden space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl font-black text-white tracking-tight">Order Central</h1>
+              <p class="text-slate-400 text-xs">Lifecycle tracking from placement to dispatch settlement.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="exportOrdersCSV()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-700">
+                <i class="fa-solid fa-file-csv mr-1.5"></i> Export CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-800" id="orderStatusFilterTabs">
+            <button onclick="filterOrders('ALL')" class="filter-tab active bg-brand-500/20 text-brand-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">All Orders</button>
+            <button onclick="filterOrders('PLACED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">New Placed</button>
+            <button onclick="filterOrders('CONFIRMED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Confirmed</button>
+            <button onclick="filterOrders('PREPARING')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Preparing</button>
+            <button onclick="filterOrders('OUT_FOR_DELIVERY')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Out for Delivery</button>
+            <button onclick="filterOrders('DELIVERED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Delivered</button>
+            <button onclick="filterOrders('CANCELLED')" class="filter-tab bg-slate-900 text-slate-400 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap">Cancelled</button>
+          </div>
+
+          <!-- Orders Data Table -->
+          <div class="glass-card rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-900/80 text-slate-400 uppercase tracking-wider font-extrabold border-b border-slate-800">
+                  <tr>
+                    <th class="p-4">Order ID</th>
+                    <th class="p-4">Customer Details</th>
+                    <th class="p-4">Items Summary</th>
+                    <th class="p-4">Amount & Pay</th>
+                    <th class="p-4">Pipeline Status</th>
+                    <th class="p-4">Time</th>
+                    <th class="p-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody" class="divide-y divide-slate-800/60 font-medium">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: RESERVATIONS                       -->
+        <!-- ========================================== -->
+        <section id="view-reservations" class="view-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-black text-white tracking-tight">Table Bookings</h1>
+              <p class="text-slate-400 text-xs">Dining floor availability and seating management.</p>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-900/80 text-slate-400 uppercase tracking-wider font-extrabold border-b border-slate-800">
+                  <tr>
+                    <th class="p-4">Res. ID</th>
+                    <th class="p-4">Guest</th>
+                    <th class="p-4">Date & Slot</th>
+                    <th class="p-4">Guests</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4 text-right">Operations</th>
+                  </tr>
+                </thead>
+                <tbody id="reservationsTableBody" class="divide-y divide-slate-800/60 font-medium">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: MENU CATALOG MANAGEMENT           -->
+        <!-- ========================================== -->
+        <section id="view-menu" class="view-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-black text-white tracking-tight">Menu Catalog</h1>
+              <p class="text-slate-400 text-xs">Control dish offerings, pricing, and active inventory status.</p>
+            </div>
+            <button onclick="openModal('modalAddMenu')" class="bg-brand-500 hover:bg-brand-600 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl">
+              <i class="fa-solid fa-plus mr-1"></i> Add Dish
+            </button>
+          </div>
+
+          <div id="menuItemsGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: CATEGORY MANAGEMENT               -->
+        <!-- ========================================== -->
+        <section id="view-categories" class="view-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-black text-white tracking-tight">Food Categories</h1>
+              <p class="text-slate-400 text-xs">Organize store catalog hierarchy.</p>
+            </div>
+            <button onclick="openModal('modalAddCategory')" class="bg-brand-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">
+              <i class="fa-solid fa-plus mr-1"></i> Add Category
+            </button>
+          </div>
+
+          <div id="categoriesGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 6: RESTAURANT PROFILE & SETTINGS      -->
+        <!-- ========================================== -->
+        <section id="view-restaurants" class="view-panel hidden space-y-6">
+          <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Store Meta & Parameters</h1>
+            <p class="text-slate-400 text-xs">Global business configurations read by customer apps.</p>
+          </div>
+
+          <div class="glass-card p-6 rounded-2xl max-w-2xl space-y-4">
+            <form id="restaurantSettingsForm" onsubmit="saveRestaurantSettings(event)">
+              <div class="space-y-4 text-xs">
+                <div>
+                  <label class="block font-bold text-slate-300 mb-1">Restaurant Title</label>
+                  <input type="text" id="resTitle" class="w-full glass-input rounded-xl p-2.5" required>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold text-slate-300 mb-1">Support Phone</label>
+                    <input type="text" id="resPhone" class="w-full glass-input rounded-xl p-2.5" required>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-300 mb-1">Min Order Amount (₹)</label>
+                    <input type="number" id="resMinOrder" class="w-full glass-input rounded-xl p-2.5" required>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold text-slate-300 mb-1">Base Delivery Fee (₹)</label>
+                    <input type="number" id="resDeliveryFee" class="w-full glass-input rounded-xl p-2.5" required>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-300 mb-1">GST Tax Rate (%)</label>
+                    <input type="number" id="resTaxRate" step="0.1" class="w-full glass-input rounded-xl p-2.5" required>
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-300 mb-1">Physical Address</label>
+                  <textarea id="resAddress" rows="2" class="w-full glass-input rounded-xl p-2.5" required></textarea>
+                </div>
+                <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold px-6 py-2.5 rounded-xl transition">
+                  Save Store Settings
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 7: CUSTOMER CRM                       -->
+        <!-- ========================================== -->
+        <section id="view-customers" class="view-panel hidden space-y-6">
+          <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Registered Customers</h1>
+            <p class="text-slate-400 text-xs">Profiles and activity records.</p>
+          </div>
+
+          <div class="glass-card rounded-2xl overflow-hidden">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900/80 text-slate-400 uppercase font-extrabold border-b border-slate-800">
+                <tr>
+                  <th class="p-4">UID</th>
+                  <th class="p-4">Customer Name</th>
+                  <th class="p-4">Email</th>
+                  <th class="p-4">Phone</th>
+                  <th class="p-4">System Role</th>
+                  <th class="p-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableBody" class="divide-y divide-slate-800/60 font-medium">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 8: OFFERS & COUPONS                   -->
+        <!-- ========================================== -->
+        <section id="view-offers" class="view-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-black text-white tracking-tight">Coupons & Campaigns</h1>
+              <p class="text-slate-400 text-xs">Discount rules validated by order checkouts.</p>
+            </div>
+            <button onclick="openModal('modalAddOffer')" class="bg-brand-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl">
+              <i class="fa-solid fa-plus mr-1"></i> New Coupon
+            </button>
+          </div>
+
+          <div id="offersGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 9: SUPPORT TICKETS                    -->
+        <!-- ========================================== -->
+        <section id="view-tickets" class="view-panel hidden space-y-6">
+          <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Customer Support Queue</h1>
+            <p class="text-slate-400 text-xs">Synchronized ticket inbox submitted from customer apps.</p>
+          </div>
+
+          <div class="glass-card rounded-2xl overflow-hidden">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900/80 text-slate-400 uppercase font-extrabold border-b border-slate-800">
+                <tr>
+                  <th class="p-4">Ticket Ref</th>
+                  <th class="p-4">Subject</th>
+                  <th class="p-4">Category</th>
+                  <th class="p-4">Status</th>
+                  <th class="p-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsTableBody" class="divide-y divide-slate-800/60 font-medium">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 10: STAFF & RBAC (ADMIN ONLY)        -->
+        <!-- ========================================== -->
+        <section id="view-staff" class="view-panel hidden space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-black text-white tracking-tight">Staff Account Governance</h1>
+              <p class="text-slate-400 text-xs">Manage system access levels and assign operational permissions.</p>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl overflow-hidden">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-900/80 text-slate-400 uppercase font-extrabold border-b border-slate-800">
+                <tr>
+                  <th class="p-4">User</th>
+                  <th class="p-4">Email</th>
+                  <th class="p-4">Assigned Role</th>
+                  <th class="p-4 text-right">Role Mutation</th>
+                </tr>
+              </thead>
+              <tbody id="staffTableBody" class="divide-y divide-slate-800/60 font-medium">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 11: AUDIT LOGS (ADMIN ONLY)           -->
+        <!-- ========================================== -->
+        <section id="view-audit" class="view-panel hidden space-y-6">
+          <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Security Audit Trail</h1>
+            <p class="text-slate-400 text-xs">Immutable system records of operational updates.</p>
+          </div>
+
+          <div class="glass-card rounded-2xl overflow-hidden p-4">
+            <div id="auditLogContainer" class="space-y-3 font-mono text-xs">
+              <!-- Logs populated -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 12: SYSTEM HEALTH                     -->
+        <!-- ========================================== -->
+        <section id="view-system" class="view-panel hidden space-y-6">
+          <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Infrastructure Health</h1>
+            <p class="text-slate-400 text-xs">Live connection statuses and telemetry diagnostic indicators.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-card p-5 rounded-2xl">
+              <div class="text-slate-400 text-xs font-bold uppercase mb-2">Realtime Database</div>
+              <div class="flex items-center gap-2 text-emerald-400 font-extrabold text-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span> CONNECTED
+              </div>
+            </div>
+            <div class="glass-card p-5 rounded-2xl">
+              <div class="text-slate-400 text-xs font-bold uppercase mb-2">Firebase Auth Context</div>
+              <div id="sysAuthStatus" class="flex items-center gap-2 text-emerald-400 font-extrabold text-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> ACTIVE
+              </div>
+            </div>
+            <div class="glass-card p-5 rounded-2xl">
+              <div class="text-slate-400 text-xs font-bold uppercase mb-2">Client Connection</div>
+              <div class="flex items-center gap-2 text-emerald-400 font-extrabold text-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> ONLINE
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODALS CONTAINER                          -->
+  <!-- ========================================== -->
+
+  <!-- Add Menu Item Modal -->
+  <div id="modalAddMenu" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-lg rounded-2xl p-6 space-y-4 relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-white text-base">Add Menu Dish</h3>
+        <button onclick="closeModal('modalAddMenu')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="handleSaveMenuItem(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Dish Name</label>
+          <input type="text" id="menuName" class="w-full glass-input rounded-xl p-2.5" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Price (₹)</label>
+            <input type="number" id="menuPrice" class="w-full glass-input rounded-xl p-2.5" required>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Category</label>
+            <select id="menuCategorySelect" class="w-full glass-input rounded-xl p-2.5 bg-slate-900" required>
+              <!-- Filled dynamically -->
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Image URL</label>
+          <input type="url" id="menuImageUrl" class="w-full glass-input rounded-xl p-2.5" placeholder="https://..." required>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Description</label>
+          <textarea id="menuDesc" rows="2" class="w-full glass-input rounded-xl p-2.5" required></textarea>
+        </div>
+        <div class="flex items-center gap-4 pt-2">
+          <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-300">
+            <input type="checkbox" id="menuIsVeg" class="rounded accent-brand-500"> Veg Item
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-300">
+            <input type="checkbox" id="menuIsAvailable" checked class="rounded accent-brand-500"> Available
+          </label>
+        </div>
+        <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold py-2.5 rounded-xl transition mt-4">
+          Commit to Menu Catalog
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Category Modal -->
+  <div id="modalAddCategory" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-sm rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-white text-base">New Food Category</h3>
+        <button onclick="closeModal('modalAddCategory')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="handleSaveCategory(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Category Title</label>
+          <input type="text" id="catName" class="w-full glass-input rounded-xl p-2.5" required>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">FontAwesome Icon Class</label>
+          <input type="text" id="catIcon" placeholder="fa-pizza-slice" class="w-full glass-input rounded-xl p-2.5" required>
+        </div>
+        <button type="submit" class="w-full bg-brand-500 text-slate-950 font-extrabold py-2.5 rounded-xl mt-2">
+          Save Category
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Offer Modal -->
+  <div id="modalAddOffer" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-md rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-white text-base">Create Discount Coupon</h3>
+        <button onclick="closeModal('modalAddOffer')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="handleSaveOffer(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Promo Code (Uppercase)</label>
+          <input type="text" id="offerCode" class="w-full glass-input rounded-xl p-2.5 uppercase font-mono" required>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Discount Amount (₹)</label>
+            <input type="number" id="offerDiscount" class="w-full glass-input rounded-xl p-2.5" required>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Min Order Total (₹)</label>
+            <input type="number" id="offerMinSpend" class="w-full glass-input rounded-xl p-2.5" required>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Description</label>
+          <input type="text" id="offerDesc" class="w-full glass-input rounded-xl p-2.5" required>
+        </div>
+        <button type="submit" class="w-full bg-brand-500 text-slate-950 font-extrabold py-2.5 rounded-xl mt-2">
+          Publish Offer
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Detail Drawer Modal -->
+  <div id="modalOrderDetail" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex justify-end">
+    <div class="glass-card w-full max-w-md h-full p-6 space-y-6 overflow-y-auto border-l border-slate-800">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div>
+          <h3 class="font-black text-white text-lg" id="odModalId">Order #---</h3>
+          <p class="text-slate-400 text-xs" id="odModalTime">--</p>
+        </div>
+        <button onclick="closeModal('modalOrderDetail')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <!-- Customer Block -->
+        <div class="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
+          <div class="font-bold text-slate-400 uppercase text-[10px]">Customer Data</div>
+          <div id="odCustomerName" class="font-bold text-white text-sm">--</div>
+          <div id="odCustomerPhone" class="text-slate-300">--</div>
+          <div id="odCustomerAddress" class="text-slate-400 text-[11px] pt-1">--</div>
+        </div>
+
+        <!-- Items Breakdown -->
+        <div>
+          <div class="font-bold text-slate-400 uppercase text-[10px] mb-2">Order Line Items</div>
+          <div id="odItemsList" class="space-y-2">
+            <!-- Populated -->
+          </div>
+        </div>
+
+        <!-- Financial Breakdown -->
+        <div class="border-t border-slate-800 pt-3 space-y-1.5 font-semibold">
+          <div class="flex justify-between text-slate-400"><span>Subtotal:</span><span id="odSubtotal">₹0</span></div>
+          <div class="flex justify-between text-slate-400"><span>Tax:</span><span id="odTax">₹0</span></div>
+          <div class="flex justify-between text-slate-400"><span>Delivery Fee:</span><span id="odDelivery">₹0</span></div>
+          <div class="flex justify-between text-white text-sm font-black pt-2 border-t border-slate-800/80"><span>Grand Total:</span><span id="odTotal" class="text-brand-500">₹0</span></div>
+        </div>
+
+        <!-- Status Override Control -->
+        <div class="pt-4 border-t border-slate-800 space-y-2">
+          <label class="block font-bold text-slate-300">Update Operational Status</label>
+          <select id="odStatusSelect" onchange="handleModalStatusUpdate(this.value)" class="w-full glass-input rounded-xl p-2.5 bg-slate-900 text-white font-bold">
+            <option value="PLACED">PLACED</option>
+            <option value="CONFIRMED">CONFIRMED</option>
+            <option value="PREPARING">PREPARING</option>
+            <option value="OUT_FOR_DELIVERY">OUT_FOR_DELIVERY</option>
+            <option value="DELIVERED">DELIVERED</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Support Ticket Reply Modal -->
+  <div id="modalTicketReply" class="modal-overlay hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-lg rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-white text-base">Support Resolution Dispatch</h3>
+        <button onclick="closeModal('modalTicketReply')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+          <div id="ticketSubjectModal" class="font-bold text-white text-sm mb-1">--</div>
+          <div id="ticketMessageModal" class="text-slate-300">--</div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-300 mb-1">Resolution Response</label>
+          <textarea id="ticketReplyText" rows="3" class="w-full glass-input rounded-xl p-2.5" placeholder="Type resolution note sent to customer..."></textarea>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="resolveCurrentTicket('RESOLVED')" class="flex-1 bg-brand-500 hover:bg-brand-600 text-slate-950 font-extrabold py-2.5 rounded-xl transition">
+            Mark Resolved & Dispatch
+          </button>
+          <button onclick="resolveCurrentTicket('CLOSED')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2.5 rounded-xl border border-slate-700">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toastBox" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT ENGINE & FIREBASE INTEGRATION   -->
+  <!-- ========================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getDatabase, ref, get, set, update, push, remove, onValue, query, orderByChild, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Standardized Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfmm4RSOckkFvAFMWrTPuF38koEz2kAkE",
+      authDomain: "yukti-247.firebaseapp.com",
+      databaseURL: "https://yukti-247-default-rtdb.firebaseio.com",
+      projectId: "yukti-247",
+      storageBucket: "yukti-247.firebasestorage.app",
+      messagingSenderId: "244123454826",
+      appId: "1:244123454826:web:56b4d88c3628bb06cfa913",
+      measurementId: "G-6BGFCBKTD7"
+    };
+
+    // App State
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    let currentUser = null;
+    let currentUserRole = null;
+    let activeView = 'overview';
+
+    let cacheData = {
+      orders: {},
+      reservations: {},
+      menu: {},
+      categories: {},
+      customers: {},
+      offers: {},
+      tickets: {},
+      settings: {}
+    };
+
+    let activeSelectedOrderId = null;
+    let activeSelectedTicketId = null;
+
+    // --- AUTHENTICATION & RBAC GUARD ---
+    onAuthStateChanged(auth, async (user) => {
+      const overlay = document.getElementById('authGuardOverlay');
+      const statusText = document.getElementById('authStatusText');
+      const actions = document.getElementById('authActions');
+      const spinner = document.getElementById('authSpinner');
+
+      if (!user) {
+        statusText.textContent = "Unauthorized access attempt. Redirecting...";
+        setTimeout(() => window.location.href = 'index.html', 1200);
+        return;
+      }
+
+      currentUser = user;
+      statusText.textContent = "Verifying Role Permissions...";
+
+      try {
+        const userSnap = await get(ref(db, `users/${user.uid}`));
+        if (!userSnap.exists()) {
+          showAuthError("User record missing from system index.");
+          return;
+        }
+
+        const userData = userSnap.val();
+        currentUserRole = (userData.role || '').toUpperCase();
+
+        if (currentUserRole === 'CUSTOMER') {
+          window.location.href = 'customer.html';
+          return;
+        }
+        if (currentUserRole === 'PARTNER') {
+          window.location.href = 'partner.html';
+          return;
+        }
+
+        if (currentUserRole !== 'ADMIN' && currentUserRole !== 'STAFF') {
+          showAuthError("Access Restricted: Invalid operational credentials.");
+          return;
+        }
+
+        // Apply RBAC UI Rules
+        if (currentUserRole === 'STAFF') {
+          document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
+        }
+
+        // Render Admin User Profile
+        document.getElementById('adminName').textContent = userData.fullName || user.email.split('@')[0];
+        document.getElementById('adminRoleBadge').textContent = currentUserRole;
+        document.getElementById('adminAvatar').textContent = (userData.fullName || 'A').charAt(0).toUpperCase();
+
+        // Successful Auth Completion
+        overlay.classList.add('opacity-0');
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          document.getElementById('adminApp').classList.remove('hidden');
+        }, 300);
+
+        // Bind Realtime Listeners
+        initDatabaseListeners();
+
+      } catch (error) {
+        console.error("Auth Guard Failure:", error);
+        showAuthError("Security Verification Timeout.");
+      }
+    });
+
+    function showAuthError(msg) {
+      document.getElementById('authStatusText').textContent = msg;
+      document.getElementById('authSpinner').classList.add('hidden');
+      document.getElementById('authActions').classList.remove('hidden');
+    }
+
+    window.logoutAdmin = () => {
+      signOut(auth).then(() => window.location.href = 'index.html');
+    };
+
+    // --- REALTIME DATABASE LISTENERS ---
+    function initDatabaseListeners() {
+      // 1. Live Orders
+      onValue(ref(db, 'orders'), (snapshot) => {
+        cacheData.orders = snapshot.val() || {};
+        renderOrdersView();
+        renderOverviewTelemetry();
+        logAuditAction("SYNC", "Orders synchronized.");
+      });
+
+      // 2. Table Reservations
+      onValue(ref(db, 'reservations'), (snapshot) => {
+        cacheData.reservations = snapshot.val() || {};
+        renderReservationsView();
+        renderOverviewTelemetry();
+      });
+
+      // 3. Menu Items
+      onValue(ref(db, 'menuItems'), (snapshot) => {
+        cacheData.menu = snapshot.val() || {};
+        renderMenuView();
+      });
+
+      // 4. Categories
+      onValue(ref(db, 'categories'), (snapshot) => {
+        cacheData.categories = snapshot.val() || {};
+        renderCategoriesView();
+        populateCategoryDropdowns();
+      });
+
+      // 5. Customers
+      onValue(ref(db, 'users'), (snapshot) => {
+        cacheData.customers = snapshot.val() || {};
+        renderCustomersView();
+        renderStaffView();
+      });
+
+      // 6. Offers
+      onValue(ref(db, 'offers'), (snapshot) => {
+        cacheData.offers = snapshot.val() || {};
+        renderOffersView();
+      });
+
+      // 7. Support Tickets
+      onValue(ref(db, 'supportTickets'), (snapshot) => {
+        cacheData.tickets = snapshot.val() || {};
+        renderTicketsView();
+        renderOverviewTelemetry();
+      });
+
+      // 8. Restaurant Settings
+      onValue(ref(db, 'restaurant/settings'), (snapshot) => {
+        cacheData.settings = snapshot.val() || {};
+        populateRestaurantSettingsForm();
+      });
+
+      // 9. Audit Logs
+      onValue(ref(db, 'auditLogs'), (snapshot) => {
+        renderAuditLogs(snapshot.val() || {});
+      });
+    }
+
+    // --- VIEW SWITCHING NAVIGATION ---
+    window.switchView = (viewId) => {
+      activeView = viewId;
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('bg-slate-800', 'text-white'));
+
+      const targetView = document.getElementById(`view-${viewId}`);
+      const targetNav = document.getElementById(`nav-${viewId}`);
+
+      if (targetView) targetView.classList.remove('hidden');
+      if (targetNav) targetNav.classList.add('bg-slate-800', 'text-white');
+
+      // Close mobile sidebar if open
+      document.getElementById('sidebar').classList.remove('open');
+    };
+
+    window.toggleSidebar = () => {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    };
+
+    // --- RENDER OVERVIEW TELEMETRY ---
+    function renderOverviewTelemetry() {
+      const orders = Object.values(cacheData.orders);
+      const today = new Date().toISOString().split('T')[0];
+
+      // Calculate Revenue & KPI
+      let todayRev = 0;
+      let todayOrderCount = 0;
+      let liveActiveCount = 0;
+
+      orders.forEach(o => {
+        const orderDate = new Date(o.createdAt || Date.now()).toISOString().split('T')[0];
+        if (orderDate === today) {
+          todayOrderCount++;
+          if (o.status === 'DELIVERED') todayRev += Number(o.grandTotal || o.totalAmount || 0);
+        }
+        if (['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes(o.status)) {
+          liveActiveCount++;
+        }
+      });
+
+      document.getElementById('kpiRevenue').textContent = `₹${todayRev.toLocaleString()}`;
+      document.getElementById('kpiOrders').textContent = todayOrderCount;
+      document.getElementById('badgeLiveOrders').textContent = liveActiveCount;
+
+      // Reservations KPI
+      const resList = Object.values(cacheData.reservations);
+      document.getElementById('kpiReservations').textContent = resList.length;
+      document.getElementById('badgeLiveRes').textContent = resList.filter(r => r.status === 'PENDING').length;
+
+      // Tickets KPI
+      const ticketList = Object.values(cacheData.tickets);
+      const openTickets = ticketList.filter(t => t.status === 'OPEN').length;
+      document.getElementById('kpiTickets').textContent = openTickets;
+      document.getElementById('badgeLiveTickets').textContent = openTickets;
+
+      // Render Live Kitchen Dispatch Cards
+      const dispatchBox = document.getElementById('liveOrderDispatchContainer');
+      const activeOrders = orders.filter(o => ['PLACED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes(o.status));
+
+      if (activeOrders.length === 0) {
+        dispatchBox.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-semibold text-xs">No active orders in kitchen pipeline.</div>`;
+        return;
+      }
+
+      dispatchBox.innerHTML = activeOrders.map(o => `
+        <div class="glass-card p-4 rounded-xl space-y-3 border-l-4 ${getStatusBorderColor(o.status)}">
+          <div class="flex items-center justify-between">
+            <span class="font-black text-white text-xs">#${o.id || o.key}</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${getStatusBadgeStyle(o.status)}">${o.status}</span>
+          </div>
+          <div class="text-xs text-slate-300 font-bold">${o.customerName || 'Walk-in Guest'}</div>
+          <div class="text-[11px] text-slate-400 truncate">${formatItemsSummary(o.items)}</div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <span class="font-extrabold text-white text-xs">₹${o.grandTotal || o.totalAmount}</span>
+            <button onclick="openOrderDetail('${o.key}')" class="text-brand-500 hover:text-brand-400 font-bold text-xs">
+              Manage <i class="fa-solid fa-gear ml-1"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- RENDER ORDERS TABLE ---
+    let orderFilter = 'ALL';
+    window.filterOrders = (status) => {
+      orderFilter = status;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('bg-brand-500/20', 'text-brand-400'));
+      renderOrdersView();
+    };
+
+    function renderOrdersView() {
+      const tableBody = document.getElementById('ordersTableBody');
+      let orders = Object.keys(cacheData.orders).map(k => ({ key: k, ...cacheData.orders[k] }));
+
+      if (orderFilter !== 'ALL') {
+        orders = orders.filter(o => o.status === orderFilter);
+      }
+
+      if (orders.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500 font-semibold">No records found matching criteria.</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = orders.map(o => `
+        <tr class="hover:bg-slate-900/40 transition">
+          <td class="p-4 font-mono font-bold text-brand-400">#${o.id || o.key.slice(-6)}</td>
+          <td class="p-4">
+            <div class="font-bold text-white">${o.customerName || 'N/A'}</div>
+            <div class="text-slate-500 text-[10px]">${o.customerPhone || ''}</div>
+          </td>
+          <td class="p-4 text-slate-300 max-w-xs truncate">${formatItemsSummary(o.items)}</td>
+          <td class="p-4">
+            <div class="font-black text-white">₹${o.grandTotal || o.totalAmount || 0}</div>
+            <div class="text-[10px] font-bold text-slate-500">${o.paymentMethod || 'COD'}</div>
+          </td>
+          <td class="p-4">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${getStatusBadgeStyle(o.status)}">${o.status}</span>
+          </td>
+          <td class="p-4 text-slate-400 text-[11px]">${new Date(o.createdAt || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+          <td class="p-4 text-right">
+            <button onclick="openOrderDetail('${o.key}')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-1.5 rounded-lg border border-slate-700">
+              Inspect
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // --- ORDER DETAIL DRAWER CONTROL ---
+    window.openOrderDetail = (orderKey) => {
+      activeSelectedOrderId = orderKey;
+      const o = cacheData.orders[orderKey];
+      if (!o) return;
+
+      document.getElementById('odModalId').textContent = `Order #${o.id || orderKey.slice(-6)}`;
+      document.getElementById('odModalTime').textContent = new Date(o.createdAt || Date.now()).toLocaleString();
+      document.getElementById('odCustomerName').textContent = o.customerName || 'N/A';
+      document.getElementById('odCustomerPhone').textContent = o.customerPhone || 'N/A';
+      document.getElementById('odCustomerAddress').textContent = o.deliveryAddress || 'Pick-up Order';
+
+      // Items list
+      const itemsList = document.getElementById('odItemsList');
+      if (Array.isArray(o.items)) {
+        itemsList.innerHTML = o.items.map(i => `
+          <div class="flex justify-between items-center text-slate-300">
+            <span>${i.name} <strong class="text-white">x${i.quantity || 1}</strong></span>
+            <span class="font-mono">₹${(i.price || 0) * (i.quantity || 1)}</span>
+          </div>
+        `).join('');
+      } else {
+        itemsList.innerHTML = `<div class="text-slate-400">${formatItemsSummary(o.items)}</div>`;
+      }
+
+      document.getElementById('odSubtotal').textContent = `₹${o.subtotal || o.totalAmount || 0}`;
+      document.getElementById('odTax').textContent = `₹${o.tax || 0}`;
+      document.getElementById('odDelivery').textContent = `₹${o.deliveryFee || 0}`;
+      document.getElementById('odTotal').textContent = `₹${o.grandTotal || o.totalAmount || 0}`;
+      document.getElementById('odStatusSelect').value = o.status || 'PLACED';
+
+      openModal('modalOrderDetail');
+    };
+
+    window.handleModalStatusUpdate = async (newStatus) => {
+      if (!activeSelectedOrderId) return;
+      try {
+        await update(ref(db, `orders/${activeSelectedOrderId}`), {
+          status: newStatus,
+          updatedAt: serverTimestamp()
+        });
+
+        // Log Audit Trail
+        logAuditAction("ORDER_STATUS_UPDATE", `Order #${activeSelectedOrderId} shifted to ${newStatus}`);
+        showToast(`Order status updated to ${newStatus}`);
+      } catch (e) {
+        showToast("Failed to update status", "error");
+      }
+    };
+
+    // --- RENDER MENU & CATALOG ---
+    function renderMenuView() {
+      const grid = document.getElementById('menuItemsGrid');
+      const items = Object.keys(cacheData.menu).map(k => ({ key: k, ...cacheData.menu[k] }));
+
+      if (items.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 font-semibold">No menu items added yet.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => `
+        <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between p-4 space-y-3">
+          <img src="${item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'}" class="w-full h-32 object-cover rounded-xl">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-white text-sm">${item.name}</span>
+              <span class="font-mono font-black text-brand-500 text-xs">₹${item.price}</span>
+            </div>
+            <p class="text-slate-400 text-[11px] line-clamp-2 mt-1">${item.description || ''}</p>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <button onclick="toggleMenuAvailability('${item.key}', ${!item.available})" class="text-[10px] font-bold px-2 py-1 rounded-lg ${item.available ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
+              ${item.available ? 'AVAILABLE' : 'DISABLED'}
+            </button>
+            <button onclick="deleteMenuItem('${item.key}')" class="text-slate-500 hover:text-red-400 text-xs p-1">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.handleSaveMenuItem = async (e) => {
+      e.preventDefault();
+      const newItem = {
+        name: document.getElementById('menuName').value,
+        price: Number(document.getElementById('menuPrice').value),
+        category: document.getElementById('menuCategorySelect').value,
+        image: document.getElementById('menuImageUrl').value,
+        description: document.getElementById('menuDesc').value,
+        isVeg: document.getElementById('menuIsVeg').checked,
+        available: document.getElementById('menuIsAvailable').checked,
+        createdAt: serverTimestamp()
+      };
+
+      try {
+        await push(ref(db, 'menuItems'), newItem);
+        logAuditAction("CREATE_MENU_ITEM", `Added dish ${newItem.name}`);
+        showToast("Dish added to menu catalog!");
+        closeModal('modalAddMenu');
+      } catch (err) {
+        showToast("Error creating item", "error");
+      }
+    };
+
+    window.toggleMenuAvailability = async (key, status) => {
+      await update(ref(db, `menuItems/${key}`), { available: status });
+      showToast("Inventory status updated");
+    };
+
+    window.deleteMenuItem = async (key) => {
+      if (currentUserRole !== 'ADMIN') {
+        showToast("Unauthorized: Admin role required", "error");
+        return;
+      }
+      if (confirm("Delete dish permanently?")) {
+        await remove(ref(db, `menuItems/${key}`));
+        logAuditAction("DELETE_MENU_ITEM", `Deleted item ID ${key}`);
+        showToast("Item purged from menu");
+      }
+    };
+
+    // --- RENDER RESERVATIONS TABLE ---
+    function renderReservationsView() {
+      const table = document.getElementById('reservationsTableBody');
+      const list = Object.keys(cacheData.reservations).map(k => ({ key: k, ...cacheData.reservations[k] }));
+
+      if (list.length === 0) {
+        table.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500 font-semibold">No table reservations logged.</td></tr>`;
+        return;
+      }
+
+      table.innerHTML = list.map(r => `
+        <tr class="hover:bg-slate-900/40">
+          <td class="p-4 font-mono font-bold text-purple-400">#${r.key.slice(-6)}</td>
+          <td class="p-4 font-bold text-white">${r.guestName || r.customerName || 'Guest'}</td>
+          <td class="p-4 text-slate-300">${r.date || 'Today'} @ ${r.timeSlot || '7:00 PM'}</td>
+          <td class="p-4 font-bold text-white">${r.guests || 2} People</td>
+          <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-extrabold bg-purple-500/20 text-purple-400">${r.status || 'CONFIRMED'}</span></td>
+          <td class="p-4 text-right">
+            <button onclick="updateReservationStatus('${r.key}', 'SEATED')" class="text-xs bg-brand-500/20 text-brand-400 font-bold px-2 py-1 rounded">Seat</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.updateReservationStatus = async (key, status) => {
+      await update(ref(db, `reservations/${key}`), { status });
+      showToast(`Reservation marked as ${status}`);
+    };
+
+    // --- CATEGORY MANAGEMENT ---
+    function renderCategoriesView() {
+      const grid = document.getElementById('categoriesGrid');
+      const list = Object.keys(cacheData.categories).map(k => ({ key: k, ...cacheData.categories[k] }));
+
+      grid.innerHTML = list.map(c => `
+        <div class="glass-card p-4 rounded-xl flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid ${c.icon || 'fa-utensils'} text-brand-500 text-lg"></i>
+            <span class="font-extrabold text-white text-xs">${c.name}</span>
+          </div>
+          <button onclick="deleteCategory('${c.key}')" class="text-slate-600 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    window.handleSaveCategory = async (e) => {
+      e.preventDefault();
+      const newCat = {
+        name: document.getElementById('catName').value,
+        icon: document.getElementById('catIcon').value
+      };
+      await push(ref(db, 'categories'), newCat);
+      showToast("Category created!");
+      closeModal('modalAddCategory');
+    };
+
+    function populateCategoryDropdowns() {
+      const select = document.getElementById('menuCategorySelect');
+      const cats = Object.values(cacheData.categories);
+      select.innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    }
+
+    // --- RESTAURANT SETTINGS ---
+    function populateRestaurantSettingsForm() {
+      const s = cacheData.settings;
+      if (!s) return;
+      document.getElementById('resTitle').value = s.title || 'FeastHub Kitchen';
+      document.getElementById('resPhone').value = s.phone || '';
+      document.getElementById('resMinOrder').value = s.minOrder || 100;
+      document.getElementById('resDeliveryFee').value = s.deliveryFee || 40;
+      document.getElementById('resTaxRate').value = s.taxRate || 5;
+      document.getElementById('resAddress').value = s.address || '';
+    }
+
+    window.saveRestaurantSettings = async (e) => {
+      e.preventDefault();
+      const updated = {
+        title: document.getElementById('resTitle').value,
+        phone: document.getElementById('resPhone').value,
+        minOrder: Number(document.getElementById('resMinOrder').value),
+        deliveryFee: Number(document.getElementById('resDeliveryFee').value),
+        taxRate: Number(document.getElementById('resTaxRate').value),
+        address: document.getElementById('resAddress').value
+      };
+      await update(ref(db, 'restaurant/settings'), updated);
+      logAuditAction("SETTINGS_UPDATE", "Saved restaurant global settings");
+      showToast("Store configurations committed live!");
+    };
+
+    window.updateRestaurantOperatingStatus = async (status) => {
+      await update(ref(db, 'restaurant/settings'), { operatingStatus: status });
+      logAuditAction("OPERATING_STATUS_MUTATION", `Store shifted to ${status}`);
+      showToast(`Restaurant status set to ${status}`);
+    };
+
+    // --- CUSTOMER CRM ---
+    function renderCustomersView() {
+      const tbody = document.getElementById('customersTableBody');
+      const users = Object.keys(cacheData.customers).map(k => ({ uid: k, ...cacheData.customers[k] }));
+
+      tbody.innerHTML = users.map(u => `
+        <tr class="hover:bg-slate-900/40">
+          <td class="p-4 font-mono text-slate-500">${u.uid.slice(0, 8)}...</td>
+          <td class="p-4 font-bold text-white">${u.fullName || 'User'}</td>
+          <td class="p-4 text-slate-400">${u.email || 'N/A'}</td>
+          <td class="p-4 text-slate-400">${u.phone || 'N/A'}</td>
+          <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${u.role === 'ADMIN' ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-800 text-slate-300'}">${u.role || 'CUSTOMER'}</span></td>
+          <td class="p-4 text-right"><button class="text-xs text-brand-500 font-bold">Inspect</button></td>
+        </tr>
+      `).join('');
+    }
+
+    // --- OFFERS & COUPONS ---
+    function renderOffersView() {
+      const grid = document.getElementById('offersGrid');
+      const list = Object.keys(cacheData.offers).map(k => ({ key: k, ...cacheData.offers[k] }));
+
+      grid.innerHTML = list.map(o => `
+        <div class="glass-card p-5 rounded-2xl border-dashed border-2 border-brand-500/30 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-mono font-black text-brand-400 text-base">${o.code}</span>
+            <span class="text-white font-extrabold text-xs">₹${o.discount} OFF</span>
+          </div>
+          <p class="text-slate-400 text-xs">${o.description}</p>
+          <div class="text-[10px] text-slate-500 font-bold pt-2 border-t border-slate-800">Min spend: ₹${o.minSpend}</div>
+        </div>
+      `).join('');
+    }
+
+    window.handleSaveOffer = async (e) => {
+      e.preventDefault();
+      const newOffer = {
+        code: document.getElementById('offerCode').value.toUpperCase(),
+        discount: Number(document.getElementById('offerDiscount').value),
+        minSpend: Number(document.getElementById('offerMinSpend').value),
+        description: document.getElementById('offerDesc').value
+      };
+      await push(ref(db, 'offers'), newOffer);
+      showToast("Promo offer published!");
+      closeModal('modalAddOffer');
+    };
+
+    // --- SUPPORT TICKETS ---
+    function renderTicketsView() {
+      const tbody = document.getElementById('ticketsTableBody');
+      const tickets = Object.keys(cacheData.tickets).map(k => ({ key: k, ...cacheData.tickets[k] }));
+
+      tbody.innerHTML = tickets.map(t => `
+        <tr class="hover:bg-slate-900/40">
+          <td class="p-4 font-mono text-amber-500 font-bold">#${t.key.slice(-6)}</td>
+          <td class="p-4 font-bold text-white">${t.subject || 'Support Inquiry'}</td>
+          <td class="p-4 text-slate-400">${t.category || 'General'}</td>
+          <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-500/20 text-amber-400">${t.status || 'OPEN'}</span></td>
+          <td class="p-4 text-right">
+            <button onclick="openTicketReplyModal('${t.key}')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-1 rounded">Reply</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.openTicketReplyModal = (key) => {
+      activeSelectedTicketId = key;
+      const t = cacheData.tickets[key];
+      document.getElementById('ticketSubjectModal').textContent = t.subject || 'Support Ticket';
+      document.getElementById('ticketMessageModal').textContent = t.message || '';
+      openModal('modalTicketReply');
+    };
+
+    window.resolveCurrentTicket = async (status) => {
+      if (!activeSelectedTicketId) return;
+      const reply = document.getElementById('ticketReplyText').value;
+      await update(ref(db, `supportTickets/${activeSelectedTicketId}`), {
+        status: status,
+        adminReply: reply,
+        resolvedAt: serverTimestamp()
+      });
+      showToast(`Ticket status set to ${status}`);
+      closeModal('modalTicketReply');
+    };
+
+    // --- STAFF RBAC MANAGEMENT ---
+    function renderStaffView() {
+      const tbody = document.getElementById('staffTableBody');
+      const users = Object.keys(cacheData.customers).map(k => ({ uid: k, ...cacheData.customers[k] }));
+
+      tbody.innerHTML = users.map(u => `
+        <tr class="hover:bg-slate-900/40">
+          <td class="p-4 font-bold text-white">${u.fullName || 'Staff User'}</td>
+          <td class="p-4 text-slate-400">${u.email}</td>
+          <td class="p-4 font-bold text-brand-400 text-xs">${u.role || 'CUSTOMER'}</td>
+          <td class="p-4 text-right">
+            <select onchange="mutateUserRole('${u.uid}', this.value)" class="bg-slate-900 border border-slate-800 text-xs font-bold rounded p-1 text-white">
+              <option value="CUSTOMER" ${u.role === 'CUSTOMER' ? 'selected' : ''}>CUSTOMER</option>
+              <option value="STAFF" ${u.role === 'STAFF' ? 'selected' : ''}>STAFF</option>
+              <option value="ADMIN" ${u.role === 'ADMIN' ? 'selected' : ''}>ADMIN</option>
+            </select>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.mutateUserRole = async (targetUid, newRole) => {
+      if (currentUserRole !== 'ADMIN') {
+        showToast("Access Denied: Only Admin can mutate roles", "error");
+        return;
+      }
+      await update(ref(db, `users/${targetUid}`), { role: newRole });
+      logAuditAction("ROLE_MUTATION", `User ${targetUid} promoted/demoted to ${newRole}`);
+      showToast(`User role updated to ${newRole}`);
+    };
+
+    // --- SECURITY AUDIT LOGGING ---
+    async function logAuditAction(action, details) {
+      const logEntry = {
+        action,
+        details,
+        performedBy: currentUser ? currentUser.email : 'System',
+        timestamp: serverTimestamp()
+      };
+      await push(ref(db, 'auditLogs'), logEntry);
+    }
+
+    function renderAuditLogs(logObj) {
+      const container = document.getElementById('auditLogContainer');
+      const logs = Object.values(logObj).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      container.innerHTML = logs.map(l => `
+        <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800/80 flex items-center justify-between">
+          <div>
+            <span class="text-brand-500 font-extrabold">[${l.action}]</span>
+            <span class="text-slate-300 ml-2">${l.details}</span>
+          </div>
+          <span class="text-slate-500 text-[10px]">${l.performedBy}</span>
+        </div>
+      `).join('');
+    }
+
+    // --- HELPER UTILITIES ---
+    function getStatusBadgeStyle(status) {
+      switch (status) {
+        case 'PLACED': return 'bg-blue-500/20 text-blue-400';
+        case 'CONFIRMED': return 'bg-purple-500/20 text-purple-400';
+        case 'PREPARING': return 'bg-amber-500/20 text-amber-400';
+        case 'OUT_FOR_DELIVERY': return 'bg-cyan-500/20 text-cyan-400';
+        case 'DELIVERED': return 'bg-emerald-500/20 text-emerald-400';
+        case 'CANCELLED': return 'bg-rose-500/20 text-rose-400';
+        default: return 'bg-slate-800 text-slate-400';
+      }
+    }
+
+    function getStatusBorderColor(status) {
+      switch (status) {
+        case 'PLACED': return 'border-l-blue-500';
+        case 'CONFIRMED': return 'border-l-purple-500';
+        case 'PREPARING': return 'border-l-amber-500';
+        case 'OUT_FOR_DELIVERY': return 'border-l-cyan-500';
+        case 'DELIVERED': return 'border-l-emerald-500';
+        default: return 'border-l-slate-700';
+      }
+    }
+
+    function formatItemsSummary(items) {
+      if (!items) return 'Standard Feast Combo';
+      if (Array.isArray(items)) return items.map(i => `${i.name} (x${i.quantity||1})`).join(', ');
+      return String(items);
+    }
+
+    window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
+    window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
+
+    function showToast(msg, type = "success") {
+      const box = document.getElementById('toastBox');
+      const toast = document.createElement('div');
+      toast.className = `p-3 rounded-xl text-xs font-bold shadow-xl border backdrop-blur-md flex items-center gap-2 transition duration-300 ${
+        type === 'success' ? 'bg-emerald-950/90 border-emerald-500/40 text-emerald-200' : 'bg-rose-950/90 border-rose-500/40 text-rose-200'
+      }`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${msg}`;
+      box.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  </script>
+</body>
+</html>
